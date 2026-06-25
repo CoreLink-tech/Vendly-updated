@@ -46,7 +46,7 @@ const STATUS_COLOR: Record<string, string> = {
   ready_for_pickup: '#f97316',
   logistics_assigned: '#06b6d4',
   picked_up: '#6366f1',
-  in_transit: '#39FF14',
+  in_transit: '#22c55e',
   delivered: '#22c55e',
   completed: '#22c55e',
 };
@@ -121,9 +121,9 @@ export default function OrdersPage() {
             onClick={() => setFilterStatus(s.value)}
             className="whitespace-nowrap text-xs px-3 py-1.5 rounded-full border transition-colors shrink-0"
             style={{
-              borderColor: filterStatus === s.value ? '#39FF14' : '#2a2a2a',
-              color: filterStatus === s.value ? '#39FF14' : '#888888',
-              backgroundColor: filterStatus === s.value ? '#39FF1410' : 'transparent',
+              borderColor: filterStatus === s.value ? '#22c55e' : '#2a2a2a',
+              color: filterStatus === s.value ? '#22c55e' : '#888888',
+              backgroundColor: filterStatus === s.value ? '#22c55e10' : 'transparent',
             }}
           >
             {s.label}
@@ -136,7 +136,7 @@ export default function OrdersPage() {
           <div
             className="w-5 h-5 border-2 rounded-full"
             style={{
-              borderColor: '#39FF14',
+              borderColor: '#22c55e',
               borderTopColor: 'transparent',
               animation: 'spin 0.8s linear infinite',
             }}
@@ -293,7 +293,7 @@ export default function OrdersPage() {
                       style={{ borderColor: '#2a2a2a' }}
                     >
                       <span style={{ color: '#f5f5f5' }}>Total</span>
-                      <span style={{ color: '#39FF14' }}>
+                      <span style={{ color: '#22c55e' }}>
                         ₦{Number(selected.total).toLocaleString()}
                       </span>
                     </div>
@@ -345,9 +345,9 @@ export default function OrdersPage() {
                       disabled={updating || selected.status === s.value}
                       className="text-xs py-2 px-3 rounded-lg border transition-colors disabled:opacity-40 text-left"
                       style={{
-                        borderColor: selected.status === s.value ? '#39FF14' : '#2a2a2a',
-                        color: selected.status === s.value ? '#39FF14' : '#888888',
-                        backgroundColor: selected.status === s.value ? '#39FF1410' : 'transparent',
+                        borderColor: selected.status === s.value ? '#22c55e' : '#2a2a2a',
+                        color: selected.status === s.value ? '#22c55e' : '#888888',
+                        backgroundColor: selected.status === s.value ? '#22c55e10' : 'transparent',
                       }}
                     >
                       {s.label}
@@ -364,7 +364,7 @@ export default function OrdersPage() {
                   }}
                   disabled={updating}
                   className="w-full py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-                  style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                  style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
                 >
                   {updating
                     ? 'Updating…'

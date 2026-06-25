@@ -24,7 +24,7 @@ const STATUS_COLOR: Record<string, string> = {
   ready_for_pickup: '#f97316',
   logistics_assigned: '#06b6d4',
   picked_up: '#6366f1',
-  in_transit: '#39FF14',
+  in_transit: '#22c55e',
   delivered: '#22c55e',
   completed: '#22c55e',
 };
@@ -63,7 +63,7 @@ export default function AdminOrdersPage() {
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#39FF14',
+                borderColor: '#22c55e',
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}

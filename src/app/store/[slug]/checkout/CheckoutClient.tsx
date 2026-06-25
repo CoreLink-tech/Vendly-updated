@@ -87,7 +87,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
         <div className="w-full max-w-md text-center">
           <div
             className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl"
-            style={{ backgroundColor: '#39FF1420' }}
+            style={{ backgroundColor: '#22c55e20' }}
           >
             ✅
           </div>
@@ -97,7 +97,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
           <p className="text-sm mb-1" style={{ color: '#888888' }}>
             Your order number is:
           </p>
-          <code className="text-lg font-mono font-bold" style={{ color: '#39FF14' }}>
+          <code className="text-lg font-mono font-bold" style={{ color: '#22c55e' }}>
             {success.orderNumber}
           </code>
           <p className="text-sm mt-4 leading-relaxed" style={{ color: '#888888' }}>
@@ -107,7 +107,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
           <Link
             href={`/store/${slug}`}
             className="inline-block mt-6 text-sm font-semibold px-6 py-2.5 rounded-lg"
-            style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
           >
             Back to Store
           </Link>
@@ -215,13 +215,13 @@ export default function CheckoutClient({ slug }: { slug: string }) {
                     onClick={() => setPaymentMethod(opt.v)}
                     className="p-3 rounded-lg border text-left transition-colors"
                     style={{
-                      borderColor: paymentMethod === opt.v ? '#39FF14' : '#2a2a2a',
-                      backgroundColor: paymentMethod === opt.v ? '#39FF1410' : '#1a1a1a',
+                      borderColor: paymentMethod === opt.v ? '#22c55e' : '#2a2a2a',
+                      backgroundColor: paymentMethod === opt.v ? '#22c55e10' : '#1a1a1a',
                     }}
                   >
                     <p
                       className="text-xs font-semibold"
-                      style={{ color: paymentMethod === opt.v ? '#39FF14' : '#f5f5f5' }}
+                      style={{ color: paymentMethod === opt.v ? '#22c55e' : '#f5f5f5' }}
                     >
                       {opt.l}
                     </p>
@@ -247,7 +247,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
             {cart.length === 0 ? (
               <p className="text-sm text-center" style={{ color: '#555555' }}>
                 Cart is empty.{' '}
-                <Link href={`/store/${slug}`} style={{ color: '#39FF14' }}>
+                <Link href={`/store/${slug}`} style={{ color: '#22c55e' }}>
                   Go back to store
                 </Link>
               </p>
@@ -289,7 +289,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
                 <div className="border-t pt-4" style={{ borderColor: '#2a2a2a' }}>
                   <div className="flex justify-between text-sm font-semibold">
                     <span style={{ color: '#f5f5f5' }}>Subtotal</span>
-                    <span style={{ color: '#39FF14' }}>₦{subtotal.toLocaleString()}</span>
+                    <span style={{ color: '#22c55e' }}>₦{subtotal.toLocaleString()}</span>
                   </div>
                   <p className="text-xs mt-1" style={{ color: '#555555' }}>
                     Delivery fee will be agreed with vendor
@@ -311,7 +311,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
             }}
             disabled={placing || !cart.length}
             className="w-full mt-5 py-3.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-            style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
           >
             {placing ? 'Placing Order…' : 'Place Order'}
           </button>

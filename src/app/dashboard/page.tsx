@@ -27,7 +27,7 @@ const STATUS_COLORS: Record<string, string> = {
   ready_for_pickup: '#f97316',
   logistics_assigned: '#06b6d4',
   picked_up: '#6366f1',
-  in_transit: '#39FF14',
+  in_transit: '#22c55e',
   delivered: '#22c55e',
   completed: '#22c55e',
 };
@@ -66,7 +66,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-center h-64">
         <div
           className="w-5 h-5 border-2 rounded-full animate-spin"
-          style={{ borderColor: '#39FF14', borderTopColor: 'transparent' }}
+          style={{ borderColor: '#22c55e', borderTopColor: 'transparent' }}
         />
       </div>
     );
@@ -189,7 +189,7 @@ export default function DashboardPage() {
           <h2 className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
             Recent Orders
           </h2>
-          <Link href="/dashboard/orders" className="text-xs" style={{ color: '#39FF14' }}>
+          <Link href="/dashboard/orders" className="text-xs" style={{ color: '#22c55e' }}>
             View all →
           </Link>
         </div>

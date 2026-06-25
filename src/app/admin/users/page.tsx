@@ -75,7 +75,7 @@ export default function AdminUsersPage() {
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#39FF14',
+                borderColor: '#22c55e',
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -100,7 +100,7 @@ export default function AdminUsersPage() {
               <div key={u.id} className="flex items-center gap-4 px-4 md:px-6 py-4">
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                  style={{ backgroundColor: '#39FF1420', color: '#39FF14' }}
+                  style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
                 >
                   {(u.name || u.email)[0]?.toUpperCase()}
                 </div>

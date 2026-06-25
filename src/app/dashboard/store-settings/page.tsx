@@ -108,7 +108,7 @@ export default function StoreSettingsPage() {
             href={`/store/${form.slug}`}
             target="_blank"
             className="text-xs font-mono truncate"
-            style={{ color: '#39FF14' }}
+            style={{ color: '#22c55e' }}
           >
             {storeUrl}
           </a>
@@ -267,7 +267,7 @@ export default function StoreSettingsPage() {
           }}
           disabled={saving}
           className="w-full py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-          style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+          style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
         >
           {saving ? 'Saving…' : 'Save Settings'}
         </button>

@@ -42,7 +42,7 @@ export default function AdminReferralsPage() {
         </h1>
         <p className="text-sm mt-1" style={{ color: '#888888' }}>
           Total commissions paid:{' '}
-          <span style={{ color: '#39FF14' }}>₦{totalCommissions.toLocaleString()}</span>
+          <span style={{ color: '#22c55e' }}>₦{totalCommissions.toLocaleString()}</span>
         </p>
       </div>
 
@@ -55,7 +55,7 @@ export default function AdminReferralsPage() {
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#39FF14',
+                borderColor: '#22c55e',
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -100,7 +100,7 @@ export default function AdminReferralsPage() {
                 <span className="text-xs capitalize" style={{ color: '#aaaaaa' }}>
                   {r.plan || '—'}
                 </span>
-                <span className="text-sm font-semibold" style={{ color: '#39FF14' }}>
+                <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>
                   ₦{Number(r.commission).toLocaleString()}
                 </span>
                 <span className="text-xs" style={{ color: '#555555' }}>

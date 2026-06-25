@@ -12,7 +12,7 @@ export default function HomePage() {
         style={{ borderColor: '#2a2a2a' }}
       >
         <div className="flex items-center gap-2">
-          <span className="text-2xl font-semibold tracking-tight" style={{ color: '#39FF14' }}>
+          <span className="text-2xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
             Vendly
           </span>
         </div>
@@ -27,7 +27,7 @@ export default function HomePage() {
           <Link
             href="/account/signup"
             className="text-sm font-semibold px-5 py-2 rounded-lg transition-colors"
-            style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
           >
             Get Started
           </Link>
@@ -39,12 +39,12 @@ export default function HomePage() {
         <div
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-8 border"
           style={{
-            backgroundColor: 'rgba(57,255,20,0.08)',
-            borderColor: 'rgba(57,255,20,0.25)',
-            color: '#39FF14',
+            backgroundColor: 'rgba(34,197,94,0.08)',
+            borderColor: 'rgba(34,197,94,0.25)',
+            color: '#22c55e',
           }}
         >
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#39FF14' }} />
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#22c55e' }} />
           Now accepting vendors — apply today
         </div>
         <h1
@@ -53,7 +53,7 @@ export default function HomePage() {
         >
           Your complete
           <br />
-          <span style={{ color: '#39FF14' }}>ecommerce operating system</span>
+          <span style={{ color: '#22c55e' }}>ecommerce operating system</span>
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
           Create your own storefront, manage products, receive orders, and coordinate logistics —
@@ -63,7 +63,7 @@ export default function HomePage() {
           <Link
             href="/account/signup"
             className="w-full sm:w-auto text-sm font-semibold px-8 py-3.5 rounded-lg transition-opacity hover:opacity-90"
-            style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
           >
             Open Your Store Free
           </Link>
@@ -85,7 +85,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <p
             className="text-xs font-medium uppercase tracking-widest mb-12 text-center"
-            style={{ color: '#39FF14' }}
+            style={{ color: '#22c55e' }}
           >
             Everything you need
           </p>
@@ -145,7 +145,7 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto text-center">
           <p
             className="text-xs font-medium uppercase tracking-widest mb-4"
-            style={{ color: '#39FF14' }}
+            style={{ color: '#22c55e' }}
           >
             Pricing
           </p>
@@ -191,14 +191,14 @@ export default function HomePage() {
                     className="flex items-center gap-2 text-sm"
                     style={{ color: '#aaaaaa' }}
                   >
-                    <span style={{ color: '#39FF14' }}>-</span> {f}
+                    <span style={{ color: '#22c55e' }}>-</span> {f}
                   </li>
                 ))}
               </ul>
               <Link
                 href="/account/signup"
                 className="block text-center text-sm font-semibold py-3 rounded-lg border transition-colors"
-                style={{ borderColor: '#39FF14', color: '#39FF14' }}
+                style={{ borderColor: '#22c55e', color: '#22c55e' }}
               >
                 Get Started
               </Link>
@@ -206,11 +206,11 @@ export default function HomePage() {
 
             <div
               className="p-8 rounded-xl border text-left relative"
-              style={{ backgroundColor: '#1a1a1a', borderColor: '#39FF14' }}
+              style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e' }}
             >
               <div
                 className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full"
-                style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
               >
                 Best Value
               </div>
@@ -228,7 +228,7 @@ export default function HomePage() {
                   /year
                 </span>
               </div>
-              <p className="text-xs mb-6" style={{ color: '#39FF14' }}>
+              <p className="text-xs mb-6" style={{ color: '#22c55e' }}>
                 Save ₦8,000 — 2 months free
               </p>
               <ul className="space-y-3 mb-8">
@@ -244,14 +244,14 @@ export default function HomePage() {
                     className="flex items-center gap-2 text-sm"
                     style={{ color: '#aaaaaa' }}
                   >
-                    <span style={{ color: '#39FF14' }}>-</span> {f}
+                    <span style={{ color: '#22c55e' }}>-</span> {f}
                   </li>
                 ))}
               </ul>
               <Link
                 href="/account/signup"
                 className="block text-center text-sm font-semibold py-3 rounded-lg transition-opacity hover:opacity-90"
-                style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
               >
                 Get Started
               </Link>
@@ -277,7 +277,7 @@ export default function HomePage() {
         <Link
           href="/account/signup"
           className="inline-flex items-center text-sm font-semibold px-8 py-3.5 rounded-lg transition-opacity hover:opacity-90"
-          style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+          style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
         >
           Start for free →
         </Link>
@@ -288,7 +288,7 @@ export default function HomePage() {
         className="px-6 md:px-12 py-8 border-t flex flex-col md:flex-row items-center justify-between gap-4"
         style={{ borderColor: '#2a2a2a' }}
       >
-        <span className="text-lg font-semibold" style={{ color: '#39FF14' }}>
+        <span className="text-lg font-semibold" style={{ color: '#22c55e' }}>
           Vendly
         </span>
         <p className="text-xs" style={{ color: '#555555' }}>

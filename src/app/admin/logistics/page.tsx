@@ -28,7 +28,7 @@ const STATUS_COLORS: Record<string, string> = {
   awaiting_assignment: '#f59e0b',
   rider_assigned: '#3b82f6',
   picked_up: '#8b5cf6',
-  in_transit: '#39FF14',
+  in_transit: '#22c55e',
   delivered: '#22c55e',
 };
 
@@ -99,9 +99,9 @@ export default function LogisticsPage() {
             onClick={() => setStatusFilter(f.v)}
             className="whitespace-nowrap text-xs px-3 py-1.5 rounded-full border shrink-0"
             style={{
-              borderColor: statusFilter === f.v ? '#39FF14' : '#2a2a2a',
-              color: statusFilter === f.v ? '#39FF14' : '#888888',
-              backgroundColor: statusFilter === f.v ? '#39FF1410' : 'transparent',
+              borderColor: statusFilter === f.v ? '#22c55e' : '#2a2a2a',
+              color: statusFilter === f.v ? '#22c55e' : '#888888',
+              backgroundColor: statusFilter === f.v ? '#22c55e10' : 'transparent',
             }}
           >
             {f.l}
@@ -118,7 +118,7 @@ export default function LogisticsPage() {
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#39FF14',
+                borderColor: '#22c55e',
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -281,9 +281,9 @@ export default function LogisticsPage() {
                       disabled={updating || selected.status === s.v}
                       className="text-xs py-2 px-3 rounded-lg border transition-colors disabled:opacity-40"
                       style={{
-                        borderColor: selected.status === s.v ? '#39FF14' : '#2a2a2a',
-                        color: selected.status === s.v ? '#39FF14' : '#888888',
-                        backgroundColor: selected.status === s.v ? '#39FF1410' : 'transparent',
+                        borderColor: selected.status === s.v ? '#22c55e' : '#2a2a2a',
+                        color: selected.status === s.v ? '#22c55e' : '#888888',
+                        backgroundColor: selected.status === s.v ? '#22c55e10' : 'transparent',
                       }}
                     >
                       {s.l}

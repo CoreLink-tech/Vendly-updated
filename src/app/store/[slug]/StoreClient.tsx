@@ -87,7 +87,7 @@ export default function StoreClient({ slug }: { slug: string }) {
         <div
           className="w-5 h-5 border-2 rounded-full"
           style={{
-            borderColor: '#39FF14',
+            borderColor: '#22c55e',
             borderTopColor: 'transparent',
             animation: 'spin 0.8s linear infinite',
           }}
@@ -116,7 +116,7 @@ export default function StoreClient({ slug }: { slug: string }) {
         <p className="text-sm" style={{ color: '#888888' }}>
           This store doesn&apos;t exist or isn&apos;t active yet.
         </p>
-        <Link href="/" className="text-sm" style={{ color: '#39FF14' }}>
+        <Link href="/" className="text-sm" style={{ color: '#22c55e' }}>
           ← Back to Vendly
         </Link>
       </div>
@@ -161,7 +161,7 @@ export default function StoreClient({ slug }: { slug: string }) {
             <button
               onClick={() => setShowCart(true)}
               className="relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold"
-              style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+              style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
             >
               🛒 Cart
               {cartCount > 0 && <span className="font-bold">{cartCount}</span>}
@@ -215,7 +215,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                       {p.category || 'General'}
                     </p>
                     <div className="flex items-center justify-between mt-3">
-                      <span className="text-sm font-semibold" style={{ color: '#39FF14' }}>
+                      <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>
                         ₦{Number(p.price).toLocaleString()}
                       </span>
                       <button
@@ -224,7 +224,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                           addToCart(p);
                         }}
                         className="text-xs px-3 py-1.5 rounded-lg font-semibold"
-                        style={{ backgroundColor: '#39FF1420', color: '#39FF14' }}
+                        style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
                       >
                         Add
                       </button>
@@ -276,7 +276,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                 {selectedProduct.description || 'No description available.'}
               </p>
               <div className="flex items-center justify-between mt-5">
-                <span className="text-2xl font-semibold" style={{ color: '#39FF14' }}>
+                <span className="text-2xl font-semibold" style={{ color: '#22c55e' }}>
                   ₦{Number(selectedProduct.price).toLocaleString()}
                 </span>
                 <span className="text-xs" style={{ color: '#555555' }}>
@@ -290,7 +290,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                   setShowCart(true);
                 }}
                 className="w-full mt-4 py-3 rounded-lg text-sm font-semibold"
-                style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
               >
                 Add to Cart
               </button>
@@ -351,7 +351,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                         <p className="text-xs font-semibold truncate" style={{ color: '#f5f5f5' }}>
                           {item.product.name}
                         </p>
-                        <p className="text-xs mt-0.5" style={{ color: '#39FF14' }}>
+                        <p className="text-xs mt-0.5" style={{ color: '#22c55e' }}>
                           ₦{Number(item.product.price).toLocaleString()} × {item.quantity}
                         </p>
                       </div>
@@ -368,7 +368,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                 <div className="p-4 border-t" style={{ borderColor: '#2a2a2a' }}>
                   <div className="flex justify-between text-sm font-semibold mb-4">
                     <span style={{ color: '#f5f5f5' }}>Total</span>
-                    <span style={{ color: '#39FF14' }}>₦{cartTotal.toLocaleString()}</span>
+                    <span style={{ color: '#22c55e' }}>₦{cartTotal.toLocaleString()}</span>
                   </div>
                   <Link
                     href={`/store/${slug}/checkout`}
@@ -378,7 +378,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                       }
                     }}
                     className="block w-full text-center py-3 rounded-lg text-sm font-semibold"
-                    style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                    style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
                   >
                     Checkout →
                   </Link>
@@ -393,7 +393,7 @@ export default function StoreClient({ slug }: { slug: string }) {
       <div className="border-t mt-12 py-6 text-center" style={{ borderColor: '#2a2a2a' }}>
         <p className="text-xs" style={{ color: '#555555' }}>
           Powered by{' '}
-          <a href="/" style={{ color: '#39FF14' }}>
+          <a href="/" style={{ color: '#22c55e' }}>
             Vendly
           </a>
         </p>

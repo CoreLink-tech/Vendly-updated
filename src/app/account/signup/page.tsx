@@ -52,7 +52,7 @@ function SignUpForm() {
           <a
             href="/"
             className="text-2xl font-semibold tracking-tight"
-            style={{ color: '#39FF14' }}
+            style={{ color: '#22c55e' }}
           >
             Vendly
           </a>
@@ -92,7 +92,7 @@ function SignUpForm() {
                 color: '#f5f5f5',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#39FF14';
+                e.target.style.borderColor = '#22c55e';
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#2a2a2a';
@@ -115,7 +115,7 @@ function SignUpForm() {
                 color: '#f5f5f5',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#39FF14';
+                e.target.style.borderColor = '#22c55e';
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#2a2a2a';
@@ -139,7 +139,7 @@ function SignUpForm() {
                 color: '#f5f5f5',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#39FF14';
+                e.target.style.borderColor = '#22c55e';
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#2a2a2a';
@@ -150,7 +150,7 @@ function SignUpForm() {
           {ref && (
             <div
               className="text-xs px-3 py-2 rounded-lg border"
-              style={{ borderColor: '#39FF1430', backgroundColor: '#39FF1408', color: '#39FF14' }}
+              style={{ borderColor: '#22c55e30', backgroundColor: '#22c55e08', color: '#22c55e' }}
             >
               ✓ Referral code applied
             </div>
@@ -169,7 +169,7 @@ function SignUpForm() {
             type="submit"
             disabled={loading}
             className="py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-            style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
           >
             {loading ? 'Creating account…' : 'Create Account'}
           </button>
@@ -179,7 +179,7 @@ function SignUpForm() {
             <a
               href={`/account/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`}
               className="font-medium"
-              style={{ color: '#39FF14' }}
+              style={{ color: '#22c55e' }}
             >
               Sign in
             </a>

@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           className="min-h-screen flex items-center justify-center"
           style={{ backgroundColor: '#0d0d0d' }}
         >
-          <div className="text-sm" style={{ color: '#39FF14' }}>
+          <div className="text-sm" style={{ color: '#22c55e' }}>
             Loading…
           </div>
         </div>

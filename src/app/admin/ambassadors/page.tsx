@@ -75,9 +75,9 @@ export default function AmbassadorsPage() {
             onClick={() => setStatusFilter(f.v)}
             className="text-xs px-3 py-1.5 rounded-full border"
             style={{
-              borderColor: statusFilter === f.v ? '#39FF14' : '#2a2a2a',
-              color: statusFilter === f.v ? '#39FF14' : '#888888',
-              backgroundColor: statusFilter === f.v ? '#39FF1410' : 'transparent',
+              borderColor: statusFilter === f.v ? '#22c55e' : '#2a2a2a',
+              color: statusFilter === f.v ? '#22c55e' : '#888888',
+              backgroundColor: statusFilter === f.v ? '#22c55e10' : 'transparent',
             }}
           >
             {f.l}
@@ -91,7 +91,7 @@ export default function AmbassadorsPage() {
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#39FF14',
+                borderColor: '#22c55e',
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -131,13 +131,13 @@ export default function AmbassadorsPage() {
                       style={{
                         borderColor:
                           a.status === 'approved'
-                            ? '#39FF1440'
+                            ? '#22c55e40'
                             : a.status === 'pending'
                               ? '#f59e0b40'
                               : '#ef444440',
                         color:
                           a.status === 'approved'
-                            ? '#39FF14'
+                            ? '#22c55e'
                             : a.status === 'pending'
                               ? '#f59e0b'
                               : '#ef4444',
@@ -167,7 +167,7 @@ export default function AmbassadorsPage() {
                   </div>
                   {a.ambassadorCode && (
                     <p className="text-xs mt-2" style={{ color: '#888888' }}>
-                      Code: <code style={{ color: '#39FF14' }}>{a.ambassadorCode}</code>
+                      Code: <code style={{ color: '#22c55e' }}>{a.ambassadorCode}</code>
                     </p>
                   )}
                 </div>
@@ -179,7 +179,7 @@ export default function AmbassadorsPage() {
                       }}
                       disabled={processing === a.id}
                       className="text-xs px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
-                      style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                      style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
                     >
                       Approve
                     </button>

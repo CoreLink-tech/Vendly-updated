@@ -44,7 +44,7 @@ function SignInForm() {
           <a
             href="/"
             className="text-2xl font-semibold tracking-tight"
-            style={{ color: '#39FF14' }}
+            style={{ color: '#22c55e' }}
           >
             Vendly
           </a>
@@ -84,7 +84,7 @@ function SignInForm() {
                 color: '#f5f5f5',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#39FF14';
+                e.target.style.borderColor = '#22c55e';
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#2a2a2a';
@@ -107,7 +107,7 @@ function SignInForm() {
                 color: '#f5f5f5',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#39FF14';
+                e.target.style.borderColor = '#22c55e';
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#2a2a2a';
@@ -128,7 +128,7 @@ function SignInForm() {
             type="submit"
             disabled={loading}
             className="py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-            style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
           >
             {loading ? 'Signing in…' : 'Sign In'}
           </button>
@@ -138,7 +138,7 @@ function SignInForm() {
             <a
               href={`/account/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`}
               className="font-medium"
-              style={{ color: '#39FF14' }}
+              style={{ color: '#22c55e' }}
             >
               Sign up free
             </a>

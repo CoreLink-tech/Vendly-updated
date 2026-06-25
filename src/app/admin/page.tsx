@@ -37,7 +37,7 @@ export default function AdminPage() {
         <div
           className="w-5 h-5 border-2 rounded-full"
           style={{
-            borderColor: '#39FF14',
+            borderColor: '#22c55e',
             borderTopColor: 'transparent',
             animation: 'spin 0.8s linear infinite',
           }}
@@ -132,7 +132,7 @@ export default function AdminPage() {
           <h2 className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
             Recent Vendors
           </h2>
-          <Link href="/admin/vendors" className="text-xs" style={{ color: '#39FF14' }}>
+          <Link href="/admin/vendors" className="text-xs" style={{ color: '#22c55e' }}>
             View all →
           </Link>
         </div>

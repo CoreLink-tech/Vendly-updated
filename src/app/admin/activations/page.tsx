@@ -94,9 +94,9 @@ export default function ActivationsPage() {
                   onClick={() => setPlan(p)}
                   className="px-4 py-2 rounded-lg border text-xs font-semibold"
                   style={{
-                    borderColor: plan === p ? '#39FF14' : '#2a2a2a',
-                    color: plan === p ? '#39FF14' : '#888888',
-                    backgroundColor: plan === p ? '#39FF1410' : 'transparent',
+                    borderColor: plan === p ? '#22c55e' : '#2a2a2a',
+                    color: plan === p ? '#22c55e' : '#888888',
+                    backgroundColor: plan === p ? '#22c55e10' : 'transparent',
                   }}
                 >
                   {p === 'monthly' ? 'Monthly' : 'Yearly'}
@@ -124,7 +124,7 @@ export default function ActivationsPage() {
             }}
             disabled={generating}
             className="px-6 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-            style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
           >
             {generating ? 'Generating…' : 'Generate'}
           </button>
@@ -133,13 +133,13 @@ export default function ActivationsPage() {
         {newCodes.length > 0 && (
           <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: '#0d0d0d' }}>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-semibold" style={{ color: '#39FF14' }}>
+              <p className="text-xs font-semibold" style={{ color: '#22c55e' }}>
                 {newCodes.length} code{newCodes.length > 1 ? 's' : ''} generated
               </p>
               <button
                 onClick={copyAll}
                 className="text-xs px-3 py-1 rounded border"
-                style={{ borderColor: '#39FF1440', color: '#39FF14' }}
+                style={{ borderColor: '#22c55e40', color: '#22c55e' }}
               >
                 {copiedAll ? 'Copied!' : 'Copy All'}
               </button>
@@ -167,9 +167,9 @@ export default function ActivationsPage() {
             onClick={() => setStatusFilter(f.v)}
             className="text-xs px-3 py-1.5 rounded-full border"
             style={{
-              borderColor: statusFilter === f.v ? '#39FF14' : '#2a2a2a',
-              color: statusFilter === f.v ? '#39FF14' : '#888888',
-              backgroundColor: statusFilter === f.v ? '#39FF1410' : 'transparent',
+              borderColor: statusFilter === f.v ? '#22c55e' : '#2a2a2a',
+              color: statusFilter === f.v ? '#22c55e' : '#888888',
+              backgroundColor: statusFilter === f.v ? '#22c55e10' : 'transparent',
             }}
           >
             {f.l}
@@ -187,7 +187,7 @@ export default function ActivationsPage() {
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#39FF14',
+                borderColor: '#22c55e',
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -232,7 +232,7 @@ export default function ActivationsPage() {
                 <div className="flex items-center gap-1.5">
                   <span
                     className="w-1.5 h-1.5 rounded-full"
-                    style={{ backgroundColor: c.status === 'unused' ? '#39FF14' : '#888888' }}
+                    style={{ backgroundColor: c.status === 'unused' ? '#22c55e' : '#888888' }}
                   />
                   <span className="text-xs capitalize" style={{ color: '#aaaaaa' }}>
                     {c.status}

@@ -86,7 +86,7 @@ export default function ReferralsPage() {
         <div
           className="w-5 h-5 border-2 rounded-full"
           style={{
-            borderColor: '#39FF14',
+            borderColor: '#22c55e',
             borderTopColor: 'transparent',
             animation: 'spin 0.8s linear infinite',
           }}
@@ -124,7 +124,7 @@ export default function ReferralsPage() {
         <div className="flex items-center gap-3">
           <code
             className="flex-1 text-xs font-mono truncate px-3 py-2 rounded-lg"
-            style={{ backgroundColor: '#0d0d0d', color: '#39FF14' }}
+            style={{ backgroundColor: '#0d0d0d', color: '#22c55e' }}
           >
             {referralLink || 'Activate your store to get a referral link'}
           </code>
@@ -133,8 +133,8 @@ export default function ReferralsPage() {
               onClick={copyLink}
               className="shrink-0 text-xs px-4 py-2 rounded-lg transition-colors"
               style={{
-                backgroundColor: copied ? '#39FF14' : '#39FF1420',
-                color: copied ? '#0d0d0d' : '#39FF14',
+                backgroundColor: copied ? '#22c55e' : '#22c55e20',
+                color: copied ? '#0d0d0d' : '#22c55e',
               }}
             >
               {copied ? 'Copied!' : 'Copy'}
@@ -175,7 +175,7 @@ export default function ReferralsPage() {
           <button
             onClick={() => setShowWithdraw(true)}
             className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-opacity hover:opacity-90"
-            style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
           >
             Request Withdrawal
           </button>
@@ -200,7 +200,7 @@ export default function ReferralsPage() {
             <p className="text-xs mb-1" style={{ color: '#888888' }}>
               Monthly plan
             </p>
-            <p className="text-lg font-semibold" style={{ color: '#39FF14' }}>
+            <p className="text-lg font-semibold" style={{ color: '#22c55e' }}>
               ₦1,000
             </p>
             <p className="text-[10px]" style={{ color: '#555555' }}>
@@ -211,7 +211,7 @@ export default function ReferralsPage() {
             <p className="text-xs mb-1" style={{ color: '#888888' }}>
               Yearly plan
             </p>
-            <p className="text-lg font-semibold" style={{ color: '#39FF14' }}>
+            <p className="text-lg font-semibold" style={{ color: '#22c55e' }}>
               ₦10,000
             </p>
             <p className="text-[10px]" style={{ color: '#555555' }}>
@@ -244,7 +244,7 @@ export default function ReferralsPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold" style={{ color: '#39FF14' }}>
+                  <span className="text-xs font-semibold" style={{ color: '#22c55e' }}>
                     ₦{Number(r.commission).toLocaleString()}
                   </span>
                   <span
@@ -335,7 +335,7 @@ export default function ReferralsPage() {
                 }}
                 disabled={wSaving}
                 className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50"
-                style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
               >
                 {wSaving ? 'Submitting…' : 'Submit Request'}
               </button>

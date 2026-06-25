@@ -29,7 +29,7 @@ export default function SupportPage() {
           </div>
           <span
             className="text-xs px-3 py-1.5 rounded-full font-semibold"
-            style={{ backgroundColor: '#39FF1420', color: '#39FF14' }}
+            style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
           >
             Open Chat →
           </span>

@@ -101,7 +101,7 @@ export default function AdminVendorsPage() {
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#39FF14',
+                borderColor: '#22c55e',
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -130,7 +130,7 @@ export default function AdminVendorsPage() {
               >
                 <div
                   className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs font-bold"
-                  style={{ backgroundColor: '#39FF1420', color: '#39FF14' }}
+                  style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
                 >
                   {(v.businessName || v.userName || 'V')[0]?.toUpperCase()}
                 </div>
@@ -234,9 +234,9 @@ export default function AdminVendorsPage() {
                         onClick={() => setPlan(p)}
                         className="flex-1 py-2 rounded-lg border text-xs font-semibold transition-colors"
                         style={{
-                          borderColor: plan === p ? '#39FF14' : '#2a2a2a',
-                          color: plan === p ? '#39FF14' : '#888888',
-                          backgroundColor: plan === p ? '#39FF1410' : 'transparent',
+                          borderColor: plan === p ? '#22c55e' : '#2a2a2a',
+                          color: plan === p ? '#22c55e' : '#888888',
+                          backgroundColor: plan === p ? '#22c55e10' : 'transparent',
                         }}
                       >
                         {p === 'monthly' ? 'Monthly ₦4,000' : 'Yearly ₦40,000'}
@@ -249,7 +249,7 @@ export default function AdminVendorsPage() {
                     }}
                     disabled={actionLoading}
                     className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50"
-                    style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                    style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
                   >
                     {actionLoading ? 'Activating…' : 'Activate Vendor'}
                   </button>
@@ -274,7 +274,7 @@ export default function AdminVendorsPage() {
                   href={`/store/${selected.slug}`}
                   target="_blank"
                   className="block text-center text-xs py-2 rounded-lg border"
-                  style={{ borderColor: '#2a2a2a', color: '#39FF14' }}
+                  style={{ borderColor: '#2a2a2a', color: '#22c55e' }}
                 >
                   View Store →
                 </a>

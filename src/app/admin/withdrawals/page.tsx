@@ -75,9 +75,9 @@ export default function WithdrawalsPage() {
             onClick={() => setStatusFilter(f.v)}
             className="text-xs px-3 py-1.5 rounded-full border"
             style={{
-              borderColor: statusFilter === f.v ? '#39FF14' : '#2a2a2a',
-              color: statusFilter === f.v ? '#39FF14' : '#888888',
-              backgroundColor: statusFilter === f.v ? '#39FF1410' : 'transparent',
+              borderColor: statusFilter === f.v ? '#22c55e' : '#2a2a2a',
+              color: statusFilter === f.v ? '#22c55e' : '#888888',
+              backgroundColor: statusFilter === f.v ? '#22c55e10' : 'transparent',
             }}
           >
             {f.l}
@@ -94,7 +94,7 @@ export default function WithdrawalsPage() {
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#39FF14',
+                borderColor: '#22c55e',
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -153,7 +153,7 @@ export default function WithdrawalsPage() {
                         }}
                         disabled={processing === w.id}
                         className="text-xs px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
-                        style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                        style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
                       >
                         Approve
                       </button>

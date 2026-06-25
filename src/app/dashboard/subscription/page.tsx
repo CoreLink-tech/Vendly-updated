@@ -71,7 +71,7 @@ export default function SubscriptionPage() {
       <div className="flex items-center justify-center h-64">
         <div
           className="w-5 h-5 border-2 rounded-full animate-spin"
-          style={{ borderColor: '#39FF14', borderTopColor: 'transparent' }}
+          style={{ borderColor: '#22c55e', borderTopColor: 'transparent' }}
         />
       </div>
     );
@@ -92,7 +92,7 @@ export default function SubscriptionPage() {
       {subscription ? (
         <div
           className="p-6 rounded-xl border mb-6"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#39FF1430' }}
+          style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e30' }}
         >
           <div className="flex items-center gap-2 mb-4">
             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#22c55e' }} />
@@ -167,14 +167,14 @@ export default function SubscriptionPage() {
                   'Referral system',
                 ].map((f) => (
                   <li key={f} className="text-xs flex gap-2" style={{ color: '#aaaaaa' }}>
-                    <span style={{ color: '#39FF14' }}>-</span> {f}
+                    <span style={{ color: '#22c55e' }}>-</span> {f}
                   </li>
                 ))}
               </ul>
               <button
                 onClick={() => handleWhatsApp('monthly')}
                 className="w-full py-2.5 rounded-lg text-sm font-semibold border transition-colors"
-                style={{ borderColor: '#39FF14', color: '#39FF14' }}
+                style={{ borderColor: '#22c55e', color: '#22c55e' }}
               >
                 Activate Now → WhatsApp
               </button>
@@ -182,11 +182,11 @@ export default function SubscriptionPage() {
 
             <div
               className="p-6 rounded-xl border relative"
-              style={{ backgroundColor: '#1a1a1a', borderColor: '#39FF14' }}
+              style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e' }}
             >
               <div
                 className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full"
-                style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
               >
                 Best Value
               </div>
@@ -204,7 +204,7 @@ export default function SubscriptionPage() {
                   /year
                 </span>
               </div>
-              <p className="text-xs mb-5" style={{ color: '#39FF14' }}>
+              <p className="text-xs mb-5" style={{ color: '#22c55e' }}>
                 Save ₦8,000
               </p>
               <ul className="space-y-2 mb-6">
@@ -215,14 +215,14 @@ export default function SubscriptionPage() {
                   'Referral system',
                 ].map((f) => (
                   <li key={f} className="text-xs flex gap-2" style={{ color: '#aaaaaa' }}>
-                    <span style={{ color: '#39FF14' }}>-</span> {f}
+                    <span style={{ color: '#22c55e' }}>-</span> {f}
                   </li>
                 ))}
               </ul>
               <button
                 onClick={() => handleWhatsApp('yearly')}
                 className="w-full py-2.5 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90"
-                style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
               >
                 Activate Now → WhatsApp
               </button>
@@ -255,7 +255,7 @@ export default function SubscriptionPage() {
                 }}
                 disabled={loading || !code.trim()}
                 className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-                style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
               >
                 {loading ? '…' : 'Activate'}
               </button>

@@ -158,7 +158,7 @@ export default function ProductsPage() {
         <button
           onClick={openAdd}
           className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-opacity hover:opacity-90"
-          style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+          style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
         >
           + Add Product
         </button>
@@ -170,7 +170,7 @@ export default function ProductsPage() {
           <div
             className="w-5 h-5 border-2 rounded-full"
             style={{
-              borderColor: '#39FF14',
+              borderColor: '#22c55e',
               borderTopColor: 'transparent',
               animation: 'spin 0.8s linear infinite',
             }}
@@ -198,7 +198,7 @@ export default function ProductsPage() {
           <button
             onClick={openAdd}
             className="text-sm font-semibold px-5 py-2.5 rounded-lg"
-            style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
           >
             Add Product
           </button>
@@ -224,9 +224,9 @@ export default function ProductsPage() {
                 <div
                   className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full border"
                   style={{
-                    borderColor: p.status === 'active' ? '#39FF1440' : '#ef444440',
-                    color: p.status === 'active' ? '#39FF14' : '#ef4444',
-                    backgroundColor: p.status === 'active' ? '#39FF1410' : '#ef444410',
+                    borderColor: p.status === 'active' ? '#22c55e40' : '#ef444440',
+                    color: p.status === 'active' ? '#22c55e' : '#ef4444',
+                    backgroundColor: p.status === 'active' ? '#22c55e10' : '#ef444410',
                   }}
                 >
                   {p.status}
@@ -240,7 +240,7 @@ export default function ProductsPage() {
                   {p.category || 'Uncategorized'}
                 </p>
                 <div className="flex items-center justify-between mt-3">
-                  <span className="text-base font-semibold" style={{ color: '#39FF14' }}>
+                  <span className="text-base font-semibold" style={{ color: '#22c55e' }}>
                     ₦{Number(p.price).toLocaleString()}
                   </span>
                   <span className="text-xs" style={{ color: '#888888' }}>
@@ -432,7 +432,7 @@ export default function ProductsPage() {
                   }}
                   disabled={saving}
                   className="flex-1 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: '#39FF14', color: '#0d0d0d' }}
+                  style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
                 >
                   {saving ? 'Saving…' : editProduct ? 'Update' : 'Add Product'}
                 </button>

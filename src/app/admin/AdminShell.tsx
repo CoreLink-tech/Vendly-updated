@@ -58,12 +58,12 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           style={{ borderColor: '#2a2a2a' }}
         >
           <div>
-            <span className="text-xl font-semibold tracking-tight" style={{ color: '#39FF14' }}>
+            <span className="text-xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
               Vendly
             </span>
             <span
               className="ml-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
-              style={{ backgroundColor: '#39FF1420', color: '#39FF14' }}
+              style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
             >
               ADMIN
             </span>
@@ -87,8 +87,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-sm transition-colors"
                 style={{
-                  backgroundColor: isActive ? '#39FF1415' : 'transparent',
-                  color: isActive ? '#39FF14' : '#888888',
+                  backgroundColor: isActive ? '#22c55e15' : 'transparent',
+                  color: isActive ? '#22c55e' : '#888888',
                   fontWeight: isActive ? 600 : 400,
                 }}
               >
@@ -141,7 +141,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           >
             ☰
           </button>
-          <span className="text-base font-semibold" style={{ color: '#39FF14' }}>
+          <span className="text-base font-semibold" style={{ color: '#22c55e' }}>
             Admin
           </span>
           <div className="w-6" />

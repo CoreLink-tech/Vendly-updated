@@ -82,7 +82,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           className="flex items-center justify-between px-6 py-5 border-b"
           style={{ borderColor: '#2a2a2a' }}
         >
-          <span className="text-xl font-semibold tracking-tight" style={{ color: '#39FF14' }}>
+          <span className="text-xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
             Vendly
           </span>
           <button
@@ -100,7 +100,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             <div className="flex items-center gap-3">
               <div
                 className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                style={{ backgroundColor: '#39FF1420', color: '#39FF14' }}
+                style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
               >
                 {(vendor.businessName || 'V')[0]?.toUpperCase()}
               </div>
@@ -133,8 +133,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-sm transition-colors"
                 style={{
-                  backgroundColor: isActive ? '#39FF1415' : 'transparent',
-                  color: isActive ? '#39FF14' : '#888888',
+                  backgroundColor: isActive ? '#22c55e15' : 'transparent',
+                  color: isActive ? '#22c55e' : '#888888',
                   fontWeight: isActive ? 600 : 400,
                 }}
               >
@@ -191,7 +191,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           >
             ☰
           </button>
-          <span className="text-base font-semibold" style={{ color: '#39FF14' }}>
+          <span className="text-base font-semibold" style={{ color: '#22c55e' }}>
             Vendly
           </span>
           <div className="w-6" />
@@ -201,13 +201,13 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         {vendor && vendor.status === 'pending' && (
           <div
             className="mx-4 mt-4 px-4 py-3 rounded-lg border flex items-center justify-between gap-3 text-sm"
-            style={{ backgroundColor: '#39FF1408', borderColor: '#39FF1430' }}
+            style={{ backgroundColor: '#22c55e08', borderColor: '#22c55e30' }}
           >
             <p style={{ color: '#aaaaaa' }}>Your store is pending activation.</p>
             <Link
               href="/dashboard/subscription"
               className="text-xs font-semibold shrink-0"
-              style={{ color: '#39FF14' }}
+              style={{ color: '#22c55e' }}
             >
               Activate Now →
             </Link>
