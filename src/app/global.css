@@ -112,23 +112,13 @@
     --radius-xl: calc(var(--radius) + 4px);
 }
 
-@font-face {
-    font-family: 'Blanka';
-    src: url('/fonts/Blanka-Regular.woff2') format('woff2'),
-         url('/fonts/Blanka-Regular.woff') format('woff'),
-         url('/fonts/Blanka-Regular.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
 @layer base {
     * {
         @apply border-border;
-        font-family: 'Blanka', sans-serif;
+        font-family: var(--font-exo2), sans-serif;
     }
     body {
         @apply bg-background text-foreground;
-        font-family: 'Blanka', sans-serif;
+        font-family: var(--font-exo2), sans-serif;
     }
 }

@@ -109,7 +109,7 @@ export default function StoreClient({ slug }: { slug: string }) {
         className="min-h-screen flex flex-col items-center justify-center gap-4"
         style={{ backgroundColor: '#0d0d0d' }}
       >
-        <p className="text-4xl">🏪</p>
+        <p className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></p>
         <h1 className="text-xl font-semibold" style={{ color: '#f5f5f5' }}>
           Store not found
         </h1>
@@ -143,7 +143,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                '🏪'
+                "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>"
               )}
             </div>
             <div className="flex-1 min-w-0">
@@ -154,8 +154,8 @@ export default function StoreClient({ slug }: { slug: string }) {
                 {vendor.description || 'Welcome to our store!'}
               </p>
               <div className="flex items-center gap-4 mt-2 text-xs" style={{ color: '#555555' }}>
-                {vendor.location && <span>📍 {vendor.location}</span>}
-                {vendor.phone && <span>📞 {vendor.phone}</span>}
+                {vendor.location && <span><span className="inline-flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>{vendor.location}</span></span>}
+                {vendor.phone && <span><span className="inline-flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>{vendor.phone}</span></span>}
               </div>
             </div>
             <button
@@ -163,7 +163,7 @@ export default function StoreClient({ slug }: { slug: string }) {
               className="relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold"
               style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
             >
-              🛒 Cart
+              <span className="inline-flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Cart</span>
               {cartCount > 0 && <span className="font-bold">{cartCount}</span>}
             </button>
           </div>
@@ -174,7 +174,7 @@ export default function StoreClient({ slug }: { slug: string }) {
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-8">
         {products.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-3xl mb-4">📦</p>
+            <p className="flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></p>
             <p className="text-sm" style={{ color: '#555555' }}>
               No products available yet.
             </p>
@@ -202,9 +202,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                     {p.images?.[0] ? (
                       <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-3xl">
-                        📦
-                      </div>
+                      <div className="w-full h-full flex items-center justify-center text-3xl"><span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span></div>
                     )}
                   </div>
                   <div className="p-3">
@@ -255,7 +253,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-4xl">📦</div>
+                <div className="w-full h-full flex items-center justify-center text-4xl"><span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span></div>
               )}
             </div>
             <div className="p-6">
@@ -269,7 +267,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                   </p>
                 </div>
                 <button onClick={() => setSelectedProduct(null)} style={{ color: '#888888' }}>
-                  ✕
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
               </div>
               <p className="text-sm mt-3 leading-relaxed" style={{ color: '#aaaaaa' }}>
@@ -314,7 +312,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                 Cart ({cartCount})
               </h2>
               <button onClick={() => setShowCart(false)} style={{ color: '#888888' }}>
-                ✕
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
 
@@ -344,7 +342,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center">📦</div>
+                          <div className="w-full h-full flex items-center justify-center"><span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span></div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -360,7 +358,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                         className="text-xs shrink-0"
                         style={{ color: '#ef4444' }}
                       >
-                        ✕
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                       </button>
                     </div>
                   ))}

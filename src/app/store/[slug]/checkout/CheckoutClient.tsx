@@ -88,9 +88,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
           <div
             className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl"
             style={{ backgroundColor: '#22c55e20' }}
-          >
-            ✅
-          </div>
+          ><span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span></div>
           <h1 className="text-2xl font-semibold mb-2" style={{ color: '#f5f5f5' }}>
             Order Placed!
           </h1>
@@ -267,9 +265,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-sm">
-                            📦
-                          </div>
+                          <div className="w-full h-full flex items-center justify-center text-sm"><span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span></div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">

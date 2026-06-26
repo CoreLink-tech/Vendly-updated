@@ -92,32 +92,32 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                icon: '🏪',
+                icon: 'store',
                 title: 'Your Own Storefront',
                 desc: 'Get a unique URL at vendly.com/store/your-name. Customise your logo, description, and product catalogue.',
               },
               {
-                icon: '📦',
+                icon: 'package',
                 title: 'Product Management',
                 desc: 'Add unlimited products with images, pricing, stock tracking, and categories. Optimised delivery automatically.',
               },
               {
-                icon: '🚚',
+                icon: 'truck',
                 title: 'Order & Logistics',
                 desc: 'Full order pipeline from new order to delivered. Built-in logistics coordination with route-based pricing.',
               },
               {
-                icon: '💳',
+                icon: 'card',
                 title: 'Flexible Payments',
                 desc: 'Customers pay upfront or on delivery. You keep 100% — Vendly only provides the infrastructure.',
               },
               {
-                icon: '📊',
+                icon: 'dashboard',
                 title: 'Business Dashboard',
                 desc: 'Real-time insights into your sales, orders, and customer data. All in one clean, fast dashboard.',
               },
               {
-                icon: '🤝',
+                icon: 'ambassador',
                 title: 'Referral & Ambassador',
                 desc: 'Earn commissions by referring other vendors. Become an ambassador for recurring monthly income.',
               },

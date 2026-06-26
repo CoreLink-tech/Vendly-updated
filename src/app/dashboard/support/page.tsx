@@ -18,7 +18,7 @@ export default function SupportPage() {
           className="flex items-center gap-5 p-5 rounded-xl border transition-colors"
           style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
         >
-          <span className="text-3xl">💬</span>
+          <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
           <div className="flex-1">
             <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
               WhatsApp Support

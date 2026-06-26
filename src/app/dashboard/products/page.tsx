@@ -188,7 +188,7 @@ export default function ProductsPage() {
           className="text-center py-20 rounded-xl border"
           style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
         >
-          <p className="text-3xl mb-4">📦</p>
+          <p className="flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></p>
           <p className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>
             No products yet
           </p>
@@ -219,7 +219,7 @@ export default function ProductsPage() {
                 {p.images?.[0] ? (
                   <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-3xl">📦</div>
+                  <div className="w-full h-full flex items-center justify-center text-3xl"><span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span></div>
                 )}
                 <div
                   className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full border"
@@ -286,7 +286,7 @@ export default function ProductsPage() {
                 {editProduct ? 'Edit Product' : 'Add Product'}
               </h2>
               <button onClick={() => setShowForm(false)} style={{ color: '#888888' }}>
-                ✕
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
 
@@ -385,7 +385,7 @@ export default function ProductsPage() {
                         className="absolute top-0 right-0 w-5 h-5 flex items-center justify-center text-xs rounded-bl-lg"
                         style={{ backgroundColor: '#0d0d0d', color: '#ef4444' }}
                       >
-                        ✕
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                       </button>
                     </div>
                   ))}

@@ -101,10 +101,10 @@ export default function AdminPage() {
       {/* Quick actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Generate Codes', href: '/admin/activations', icon: '🔑' },
-          { label: 'Activate Vendor', href: '/admin/vendors', icon: '✅' },
-          { label: 'Review Withdrawals', href: '/admin/withdrawals', icon: '💰' },
-          { label: 'View Ambassadors', href: '/admin/ambassadors', icon: '🤝' },
+          { label: 'Generate Codes', href: '/admin/activations', icon: 'key' as const },
+          { label: 'Activate Vendor', href: '/admin/vendors', icon: 'check' as const },
+          { label: 'Review Withdrawals', href: '/admin/withdrawals', icon: 'money' as const },
+          { label: 'View Ambassadors', href: '/admin/ambassadors', icon: 'ambassador' as const },
         ].map((a) => (
           <Link
             key={a.label}

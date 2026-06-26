@@ -1,7 +1,15 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
+import { Exo_2 } from "next/font/google";
 import "./global.css";
 import { Providers } from "./providers";
+
+const exo2 = Exo_2({
+	subsets: ["latin"],
+	variable: "--font-exo2",
+	display: "swap",
+	weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 export const metadata: Metadata = {
 	title: "Vendly",
@@ -13,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en">
+		<html lang="en" className={exo2.variable}>
 			<head>
 				<link
 					rel="stylesheet"

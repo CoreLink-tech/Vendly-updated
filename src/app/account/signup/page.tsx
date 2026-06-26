@@ -152,7 +152,7 @@ function SignUpForm() {
               className="text-xs px-3 py-2 rounded-lg border"
               style={{ borderColor: '#22c55e30', backgroundColor: '#22c55e08', color: '#22c55e' }}
             >
-              ✓ Referral code applied
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 inline mr-1"><polyline points="20 6 9 17 4 12"/></svg> Referral code applied
             </div>
           )}
 

@@ -6,16 +6,16 @@ import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 
 const NAV_ITEMS = [
-  { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/users', label: 'Users', icon: '👤' },
-  { href: '/admin/vendors', label: 'Vendors', icon: '🏪' },
-  { href: '/admin/activations', label: 'Activations', icon: '🔑' },
-  { href: '/admin/orders', label: 'Orders', icon: '🧾' },
-  { href: '/admin/logistics', label: 'Logistics', icon: '🚚' },
-  { href: '/admin/referrals', label: 'Referrals', icon: '🔗' },
-  { href: '/admin/ambassadors', label: 'Ambassadors', icon: '🤝' },
-  { href: '/admin/withdrawals', label: 'Withdrawals', icon: '💰' },
-  { href: '/admin/support', label: 'Support', icon: '💬' },
+  { href: '/admin', label: 'Dashboard', icon: 'dashboard' as IconName },
+  { href: '/admin/users', label: 'Users', icon: 'users' as IconName },
+  { href: '/admin/vendors', label: 'Vendors', icon: 'store' as IconName },
+  { href: '/admin/activations', label: 'Activations', icon: 'key' as IconName },
+  { href: '/admin/orders', label: 'Orders', icon: 'orders' as IconName },
+  { href: '/admin/logistics', label: 'Logistics', icon: 'truck' as IconName },
+  { href: '/admin/referrals', label: 'Referrals', icon: 'link' as IconName },
+  { href: '/admin/ambassadors', label: 'Ambassadors', icon: 'ambassador' as IconName },
+  { href: '/admin/withdrawals', label: 'Withdrawals', icon: 'money' as IconName },
+  { href: '/admin/support', label: 'Support', icon: 'chat' as IconName },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
@@ -73,7 +73,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             className="md:hidden"
             style={{ color: '#888888' }}
           >
-            ✕
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
 
@@ -92,7 +92,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                   fontWeight: isActive ? 600 : 400,
                 }}
               >
-                <span className="text-base">{item.icon}</span>
+                <span className="text-base"><NavIcon name=<NavIcon name={item.icon} /> /></span>
                 {item.label}
               </Link>
             );
@@ -139,7 +139,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             className="text-lg"
             style={{ color: '#f5f5f5' }}
           >
-            ☰
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
           <span className="text-base font-semibold" style={{ color: '#22c55e' }}>
             Admin

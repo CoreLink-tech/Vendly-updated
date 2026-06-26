@@ -154,7 +154,7 @@ export default function OrdersPage() {
           className="text-center py-20 rounded-xl border"
           style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
         >
-          <p className="text-3xl mb-4">🧾</p>
+          <p className="flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></p>
           <p className="text-sm" style={{ color: '#555555' }}>
             No orders yet.
           </p>
@@ -236,7 +236,7 @@ export default function OrdersPage() {
                 </div>
               </div>
               <button onClick={() => setSelected(null)} style={{ color: '#888888' }}>
-                ✕
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
 

@@ -7,13 +7,13 @@ import { authClient } from '@/lib/auth-client';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: '⬛' },
-  { href: '/dashboard/products', label: 'Products', icon: '📦' },
-  { href: '/dashboard/orders', label: 'Orders', icon: '🧾' },
-  { href: '/dashboard/store-settings', label: 'Store Settings', icon: '🏪' },
-  { href: '/dashboard/subscription', label: 'Subscription', icon: '💳' },
-  { href: '/dashboard/referrals', label: 'Referral Dashboard', icon: '🔗' },
-  { href: '/dashboard/ambassador', label: 'Ambassador', icon: '🤝' },
-  { href: '/dashboard/support', label: 'Support', icon: '💬' },
+  { href: '/dashboard/products', label: 'Products', icon: 'package' as IconName },
+  { href: '/dashboard/orders', label: 'Orders', icon: 'orders' as IconName },
+  { href: '/dashboard/store-settings', label: 'Store Settings', icon: 'store' as IconName },
+  { href: '/dashboard/subscription', label: 'Subscription', icon: 'card' as IconName },
+  { href: '/dashboard/referrals', label: 'Referral Dashboard', icon: 'link' as IconName },
+  { href: '/dashboard/ambassador', label: 'Ambassador', icon: 'ambassador' as IconName },
+  { href: '/dashboard/support', label: 'Support', icon: 'chat' as IconName },
 ];
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -90,7 +90,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             className="md:hidden text-gray-400"
             style={{ color: '#888888' }}
           >
-            ✕
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
 
@@ -138,7 +138,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   fontWeight: isActive ? 600 : 400,
                 }}
               >
-                <span className="text-base">{item.icon}</span>
+                <span className="text-base"><NavIcon name=<NavIcon name={item.icon} /> /></span>
                 {item.label}
               </Link>
             );
@@ -189,7 +189,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             className="text-lg"
             style={{ color: '#f5f5f5' }}
           >
-            ☰
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
           <span className="text-base font-semibold" style={{ color: '#22c55e' }}>
             Vendly
