@@ -1,11 +1,25 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
+import { Bebas_Neue, Inter } from "next/font/google";
 import "./global.css";
 import { Providers } from "./providers";
 
+const bebasNeue = Bebas_Neue({
+	weight: "400",
+	subsets: ["latin"],
+	variable: "--font-bebas",
+	display: "swap",
+});
+
+const inter = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+	display: "swap",
+});
+
 export const metadata: Metadata = {
-	title: "Anything App",
-	description: "Created with Anything",
+	title: "Vendly",
+	description: "Your storefront, simplified.",
 	icons: {
 		icon: "/favicon.png",
 	},
@@ -13,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en">
+		<html lang="en" className={`${bebasNeue.variable} ${inter.variable}`}>
 			<head>
 				<link
 					rel="stylesheet"

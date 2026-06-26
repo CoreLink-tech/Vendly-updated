@@ -118,5 +118,16 @@
     }
     body {
         @apply bg-background text-foreground;
+        font-family: var(--font-inter), sans-serif;
+    }
+    h1, h2, h3, h4, h5, h6,
+    .font-display,
+    nav a,
+    button,
+    [class*="font-bold"],
+    [class*="font-semibold"],
+    [class*="font-black"] {
+        font-family: var(--font-bebas), var(--font-inter), sans-serif;
+        letter-spacing: 0.04em;
     }
 }
