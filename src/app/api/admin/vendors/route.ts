@@ -1,109 +1,53 @@
 import { auth } from '@/lib/auth';
-import sql from '@/app/api/utils/sql';
+import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 
 async function requireAdmin(userId: string) {
-  const users = await sql`SELECT role FROM "user" WHERE id = ${userId}`;
-  if (!users.length || users[0].role !== 'admin') {
-    throw new Error('Forbidden');
-  }
+  const { data } = await supabase.from('user').select('role').eq('id', userId).single();
+  if (!data || data.role !== 'admin') throw new Error('Forbidden');
 }
 
 export async function GET(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-
-  try {
-    await requireAdmin(session.user.id);
-  } catch {
-    return Response.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  try { await requireAdmin(session.user.id); } catch { return Response.json({ error: 'Forbidden' }, { status: 403 }); }
 
   const { searchParams } = new URL(request.url);
   const search = searchParams.get('search') || '';
   const status = searchParams.get('status') || '';
 
-  // Build dynamic query safely
-  const conditions: string[] = [];
-  const values: unknown[] = [];
-  let paramIdx = 1;
+  let query = supabase.from('vendors').select(`*, user(email, name), products(count), orders(count), subscriptions(plan, status, endDate)`).order('createdAt', { ascending: false });
+  if (status) query = query.eq('status', status);
+  if (search) query = query.or(`businessName.ilike.%${search}%`);
 
-  if (search) {
-    conditions.push(
-      `(LOWER(v."businessName") LIKE LOWER($${paramIdx}) OR LOWER(u.email) LIKE LOWER($${paramIdx}))`
-    );
-    values.push(`%${search}%`);
-    paramIdx++;
-  }
-  if (status) {
-    conditions.push(`v.status = $${paramIdx}`);
-    values.push(status);
-    paramIdx++;
-  }
-
-  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-
-  const vendors = await sql(
-    `
-    SELECT v.*, u.email, u.name as "userName",
-      (SELECT row_to_json(s.*) FROM subscriptions s WHERE s."vendorId" = v.id AND s.status = 'active' ORDER BY s."createdAt" DESC LIMIT 1) as subscription,
-      (SELECT COUNT(*) FROM products p WHERE p."vendorId" = v.id)::int as "productCount",
-      (SELECT COUNT(*) FROM orders o WHERE o."vendorId" = v.id)::int as "orderCount"
-    FROM vendors v
-    JOIN "user" u ON u.id = v."userId"
-    ${whereClause}
-    ORDER BY v."createdAt" DESC
-  `,
-    values
-  );
-
+  const { data: vendors } = await query;
   return Response.json({ vendors });
 }
 
 export async function PUT(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  try { await requireAdmin(session.user.id); } catch { return Response.json({ error: 'Forbidden' }, { status: 403 }); }
 
-  try {
-    await requireAdmin(session.user.id);
-  } catch {
-    return Response.json({ error: 'Forbidden' }, { status: 403 });
-  }
-
-  const body = (await request.json()) as {
-    vendorId: string;
-    action: 'activate' | 'suspend' | 'deactivate';
-    plan?: 'monthly' | 'yearly';
-  };
+  const body = await request.json() as { vendorId: string; action: 'activate' | 'suspend' | 'deactivate'; plan?: 'monthly' | 'yearly' };
   const { vendorId, action, plan } = body;
 
   if (action === 'activate') {
     if (!plan) return Response.json({ error: 'Plan required' }, { status: 400 });
-
-    await sql`UPDATE vendors SET status = 'active', "updatedAt" = NOW() WHERE id = ${vendorId}`;
-
-    const existing =
-      await sql`SELECT id FROM subscriptions WHERE "vendorId" = ${vendorId} AND status = 'active' LIMIT 1`;
-    if (!existing.length) {
-      if (plan === 'yearly') {
-        await sql`
-          INSERT INTO subscriptions ("vendorId", plan, status, "startDate", "endDate", "activatedBy")
-          VALUES (${vendorId}, 'yearly', 'active', NOW(), NOW() + INTERVAL '1 year', ${session.user.id})
-        `;
-      } else {
-        await sql`
-          INSERT INTO subscriptions ("vendorId", plan, status, "startDate", "endDate", "activatedBy")
-          VALUES (${vendorId}, 'monthly', 'active', NOW(), NOW() + INTERVAL '1 month', ${session.user.id})
-        `;
-      }
+    await supabase.from('vendors').update({ status: 'active', updatedAt: new Date().toISOString() }).eq('id', vendorId);
+    const { data: existing } = await supabase.from('subscriptions').select('id').eq('vendorId', vendorId).eq('status', 'active').limit(1);
+    if (!existing?.length) {
+      const endDate = new Date();
+      plan === 'yearly' ? endDate.setFullYear(endDate.getFullYear() + 1) : endDate.setMonth(endDate.getMonth() + 1);
+      await supabase.from('subscriptions').insert({ vendorId, plan, status: 'active', startDate: new Date().toISOString(), endDate: endDate.toISOString(), activatedBy: session.user.id });
     }
   } else if (action === 'suspend') {
-    await sql`UPDATE vendors SET status = 'suspended', "updatedAt" = NOW() WHERE id = ${vendorId}`;
+    await supabase.from('vendors').update({ status: 'suspended', updatedAt: new Date().toISOString() }).eq('id', vendorId);
   } else if (action === 'deactivate') {
-    await sql`UPDATE vendors SET status = 'pending', "updatedAt" = NOW() WHERE id = ${vendorId}`;
-    await sql`UPDATE subscriptions SET status = 'cancelled' WHERE "vendorId" = ${vendorId}`;
+    await supabase.from('vendors').update({ status: 'pending', updatedAt: new Date().toISOString() }).eq('id', vendorId);
+    await supabase.from('subscriptions').update({ status: 'cancelled' }).eq('vendorId', vendorId);
   }
 
-  const updated = await sql`SELECT * FROM vendors WHERE id = ${vendorId}`;
-  return Response.json({ vendor: updated[0] });
+  const { data: vendor } = await supabase.from('vendors').select('*').eq('id', vendorId).single();
+  return Response.json({ vendor });
 }
