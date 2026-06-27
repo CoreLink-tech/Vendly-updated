@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
+import { withImagesList } from '@/lib/utils';
 
 async function getVendorId(userId: string) {
   const { data } = await supabase.from('vendors').select('id').eq('userId', userId).single();
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
   if (category) query = query.eq('category', category);
 
   const { data: products } = await query;
-  return Response.json({ products });
+  return Response.json({ products: withImagesList(products) });
 }
 
 export async function POST(request: Request) {
