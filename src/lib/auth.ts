@@ -4,15 +4,15 @@ import { bearer } from 'better-auth/plugins';
 import { Pool } from 'pg';
 
 const pool = new Pool({
-  host: 'aws-0-eu-west-1.pooler.supabase.com',
-  port: 6543,
-  database: 'postgres',
-  user: 'postgres.csejvtbylrncgsvmhpns',
-  password: process.env.SUPABASE_DB_PASSWORD,
+  connectionString: `postgresql://postgres.csejvtbylrncgsvmhpns:${encodeURIComponent(process.env.SUPABASE_DB_PASSWORD || '')}@aws-0-eu-west-1.pooler.supabase.com:6543/postgres`,
   ssl: { rejectUnauthorized: false },
   max: 1,
   idleTimeoutMillis: 0,
   connectionTimeoutMillis: 15000,
+  // Disable prepared statements for transaction pooler compatibility
+  query_timeout: 10000,
+  statement_timeout: 10000,
+  options: '-c default_transaction_isolation=read\ committed',
 });
 
 const trustedOrigins = [
