@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: '/admin/activations', label: 'Activations', icon: 'key' as IconName },
   { href: '/admin/orders', label: 'Orders', icon: 'orders' as IconName },
   { href: '/admin/logistics', label: 'Logistics', icon: 'truck' as IconName },
+  { href: '/admin/logistics-users', label: 'Logistics Users', icon: 'users' as IconName },
   { href: '/admin/referrals', label: 'Referrals', icon: 'link' as IconName },
   { href: '/admin/ambassadors', label: 'Ambassadors', icon: 'ambassador' as IconName },
   { href: '/admin/withdrawals', label: 'Withdrawals', icon: 'money' as IconName },
