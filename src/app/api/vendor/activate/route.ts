@@ -1,67 +1,35 @@
 import { auth } from '@/lib/auth';
-import sql from '@/app/api/utils/sql';
+import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 
 export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const body = (await request.json()) as { code: string };
-  const { code } = body;
+  const body = await request.json() as { code: string };
+  if (!body.code) return Response.json({ error: 'Activation code required' }, { status: 400 });
 
-  if (!code) {
-    return Response.json({ error: 'Activation code required' }, { status: 400 });
-  }
+  const { data: vendor } = await supabase.from('vendors').select('*').eq('userId', session.user.id).single();
+  if (!vendor) return Response.json({ error: 'Vendor profile not found' }, { status: 404 });
 
-  // Find vendor
-  const vendors = await sql`SELECT * FROM vendors WHERE "userId" = ${session.user.id} LIMIT 1`;
-  if (!vendors.length) {
-    return Response.json({ error: 'Vendor profile not found' }, { status: 404 });
-  }
-  const vendor = vendors[0];
+  const { data: activationCode } = await supabase.from('activation_codes').select('*').eq('code', body.code.toUpperCase()).eq('status', 'unused').single();
+  if (!activationCode) return Response.json({ error: 'Invalid or already used activation code' }, { status: 400 });
 
-  // Check code
-  const codes =
-    await sql`SELECT * FROM activation_codes WHERE code = ${code.toUpperCase()} AND status = 'unused' LIMIT 1`;
-  if (!codes.length) {
-    return Response.json({ error: 'Invalid or already used activation code' }, { status: 400 });
-  }
-  const activationCode = codes[0];
+  await supabase.from('vendors').update({ status: 'active', updatedAt: new Date().toISOString() }).eq('id', vendor.id);
+  await supabase.from('activation_codes').update({ status: 'used', usedBy: vendor.id, usedAt: new Date().toISOString() }).eq('id', activationCode.id);
 
-  // Activate vendor
-  await sql`UPDATE vendors SET status = 'active', "updatedAt" = NOW() WHERE id = ${vendor.id}`;
-  await sql`UPDATE activation_codes SET status = 'used', "usedBy" = ${vendor.id}, "usedAt" = NOW() WHERE id = ${activationCode.id}`;
+  const endDate = new Date();
+  activationCode.plan === 'yearly' ? endDate.setFullYear(endDate.getFullYear() + 1) : endDate.setMonth(endDate.getMonth() + 1);
+  await supabase.from('subscriptions').insert({ vendorId: vendor.id, plan: activationCode.plan, status: 'active', startDate: new Date().toISOString(), endDate: endDate.toISOString(), activationCode: body.code.toUpperCase() });
 
-  // Create subscription with correct end date
-  if (activationCode.plan === 'yearly') {
-    await sql`
-      INSERT INTO subscriptions ("vendorId", plan, status, "startDate", "endDate", "activationCode")
-      VALUES (${vendor.id}, 'yearly', 'active', NOW(), NOW() + INTERVAL '1 year', ${code.toUpperCase()})
-    `;
-  } else {
-    await sql`
-      INSERT INTO subscriptions ("vendorId", plan, status, "startDate", "endDate", "activationCode")
-      VALUES (${vendor.id}, 'monthly', 'active', NOW(), NOW() + INTERVAL '1 month', ${code.toUpperCase()})
-    `;
-  }
-
-  const updatedVendors = await sql`SELECT * FROM vendors WHERE id = ${vendor.id}`;
-
-  // Handle referral commission
   if (vendor.referredBy) {
-    const referrer =
-      await sql`SELECT id FROM vendors WHERE slug = ${vendor.referredBy} AND status = 'active' LIMIT 1`;
-    if (referrer.length) {
+    const { data: referrer } = await supabase.from('vendors').select('id').eq('slug', vendor.referredBy).eq('status', 'active').single();
+    if (referrer) {
       const commission = activationCode.plan === 'yearly' ? 10000 : 1000;
-      await sql`
-        INSERT INTO referrals ("referrerId", "referredVendorId", status, commission, plan, "paidAt")
-        VALUES (${referrer[0].id}, ${vendor.id}, 'completed', ${commission}, ${activationCode.plan}, NOW())
-        ON CONFLICT DO NOTHING
-      `;
+      await supabase.from('referrals').upsert({ referrerId: referrer.id, referredVendorId: vendor.id, status: 'completed', commission, plan: activationCode.plan, paidAt: new Date().toISOString() }, { onConflict: 'referrerId,referredVendorId' });
     }
   }
 
-  return Response.json({ success: true, vendor: updatedVendors[0] });
+  const { data: updatedVendor } = await supabase.from('vendors').select('*').eq('id', vendor.id).single();
+  return Response.json({ success: true, vendor: updatedVendor });
 }
