@@ -3,16 +3,13 @@ import { createAuthMiddleware } from 'better-auth/api';
 import { bearer } from 'better-auth/plugins';
 import { Pool } from 'pg';
 
+// Use SESSION pooler (port 5432) - supports prepared statements unlike transaction pooler
 const pool = new Pool({
-  connectionString: `postgresql://postgres.csejvtbylrncgsvmhpns:${encodeURIComponent(process.env.SUPABASE_DB_PASSWORD || '')}@aws-0-eu-west-1.pooler.supabase.com:6543/postgres`,
+  connectionString: `postgresql://postgres.csejvtbylrncgsvmhpns:${encodeURIComponent(process.env.SUPABASE_DB_PASSWORD || '')}@aws-0-eu-west-1.pooler.supabase.com:5432/postgres`,
   ssl: { rejectUnauthorized: false },
   max: 1,
   idleTimeoutMillis: 0,
   connectionTimeoutMillis: 15000,
-  // Disable prepared statements for transaction pooler compatibility
-  query_timeout: 10000,
-  statement_timeout: 10000,
-  options: '-c default_transaction_isolation=read\ committed',
 });
 
 const trustedOrigins = [
