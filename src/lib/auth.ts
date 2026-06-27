@@ -1,20 +1,26 @@
 import { betterAuth } from 'better-auth';
 import { createAuthMiddleware } from 'better-auth/api';
 import { bearer } from 'better-auth/plugins';
+import { Pool } from 'pg';
+
+const dbPassword = encodeURIComponent(process.env.SUPABASE_DB_PASSWORD || '');
+const connectionString = `postgresql://postgres:${dbPassword}@db.wzdnnccyvdbrbkqsxsiw.supabase.co:5432/postgres`;
+
+const pool = new Pool({
+  connectionString,
+  ssl: { rejectUnauthorized: false },
+  max: 3,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+});
 
 const trustedOrigins = [
   process.env.BETTER_AUTH_URL,
   'https://vendlyapp.vercel.app',
 ].filter((v): v is string => Boolean(v));
 
-const dbPassword = encodeURIComponent(process.env.SUPABASE_DB_PASSWORD || '');
-const databaseUrl = `postgresql://postgres:${dbPassword}@db.wzdnnccyvdbrbkqsxsiw.supabase.co:5432/postgres`;
-
 export const auth = betterAuth({
-  database: {
-    provider: 'pg',
-    url: databaseUrl,
-  },
+  database: pool,
   baseURL: process.env.BETTER_AUTH_URL || 'https://vendlyapp.vercel.app',
   secret: process.env.BETTER_AUTH_SECRET || 'vendly-secret-key-2026',
   trustedOrigins,
