@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { NavIcon } from '@/components/NavIcon';
 
 export default function HomePage() {
   return (
