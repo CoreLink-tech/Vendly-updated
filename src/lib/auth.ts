@@ -3,14 +3,15 @@ import { createAuthMiddleware } from 'better-auth/api';
 import { bearer } from 'better-auth/plugins';
 import { Pool } from 'pg';
 
-const dbPassword = encodeURIComponent(process.env.SUPABASE_DB_PASSWORD || '');
-const connectionString = `postgresql://postgres:${dbPassword}@db.wzdnnccyvdbrbkqsxsiw.supabase.co:5432/postgres`;
-
 const pool = new Pool({
-  connectionString,
+  host: 'aws-0-eu-central-1.pooler.supabase.com',
+  port: 6543,
+  database: 'postgres',
+  user: 'postgres.wzdnnccyvdbrbkqsxsiw',
+  password: process.env.SUPABASE_DB_PASSWORD,
   ssl: { rejectUnauthorized: false },
-  max: 3,
-  idleTimeoutMillis: 30000,
+  max: 1,
+  idleTimeoutMillis: 0,
   connectionTimeoutMillis: 10000,
 });
 
