@@ -1,34 +1,20 @@
 import { auth } from '@/lib/auth';
-import sql from '@/app/api/utils/sql';
+import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const userId = session.user.id;
+  const { data: user } = await supabase.from('user').select('*').eq('id', session.user.id).single();
+  if (!user) return Response.json({ error: 'User not found' }, { status: 404 });
 
-  // Get user with role
-  const users = await sql`SELECT * FROM "user" WHERE id = ${userId}`;
-  if (!users.length) {
-    return Response.json({ error: 'User not found' }, { status: 404 });
-  }
-  const user = users[0];
-
-  // Get vendor profile if exists
-  const vendors = await sql`SELECT * FROM vendors WHERE "userId" = ${userId} LIMIT 1`;
-  const vendor = vendors[0] || null;
-
-  // If vendor, get subscription
+  const { data: vendor } = await supabase.from('vendors').select('*').eq('userId', session.user.id).single();
   let subscription = null;
   if (vendor) {
-    const subs = await sql`
-      SELECT * FROM subscriptions WHERE "vendorId" = ${vendor.id} AND status = 'active' ORDER BY "createdAt" DESC LIMIT 1
-    `;
-    subscription = subs[0] || null;
+    const { data: sub } = await supabase.from('subscriptions').select('*').eq('vendorId', vendor.id).eq('status', 'active').order('createdAt', { ascending: false }).limit(1).single();
+    subscription = sub || null;
   }
 
-  return Response.json({ user, vendor, subscription });
+  return Response.json({ user, vendor: vendor || null, subscription });
 }
