@@ -1,49 +1,36 @@
 import { auth } from '@/lib/auth';
-import sql from '@/app/api/utils/sql';
+import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 
 async function requireAdmin(userId: string) {
-  const users = await sql`SELECT role FROM "user" WHERE id = ${userId}`;
-  if (!users.length || users[0].role !== 'admin') throw new Error('Forbidden');
+  const { data } = await supabase.from('user').select('role').eq('id', userId).single();
+  if (!data || data.role !== 'admin') throw new Error('Forbidden');
 }
 
 export async function GET(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  try {
-    await requireAdmin(session.user.id);
-  } catch {
-    return Response.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  try { await requireAdmin(session.user.id); } catch { return Response.json({ error: 'Forbidden' }, { status: 403 }); }
 
   const { searchParams } = new URL(request.url);
   const search = searchParams.get('search') || '';
 
-  const users = search
-    ? await sql(
-        `SELECT * FROM "user" WHERE LOWER(name) LIKE LOWER($1) OR LOWER(email) LIKE LOWER($1) ORDER BY "createdAt" DESC LIMIT 100`,
-        [`%${search}%`]
-      )
-    : await sql`SELECT * FROM "user" ORDER BY "createdAt" DESC LIMIT 100`;
+  let query = supabase.from('user').select('*').order('createdAt', { ascending: false }).limit(100);
+  if (search) query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%`);
 
+  const { data: users } = await query;
   return Response.json({ users });
 }
 
 export async function PUT(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  try {
-    await requireAdmin(session.user.id);
-  } catch {
-    return Response.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  try { await requireAdmin(session.user.id); } catch { return Response.json({ error: 'Forbidden' }, { status: 403 }); }
 
-  const body = (await request.json()) as { userId: string; role: string };
-  const { userId, role } = body;
-
+  const body = await request.json() as { userId: string; role: string };
   const validRoles = ['vendor', 'admin', 'logistics', 'customer'];
-  if (!validRoles.includes(role)) return Response.json({ error: 'Invalid role' }, { status: 400 });
+  if (!validRoles.includes(body.role)) return Response.json({ error: 'Invalid role' }, { status: 400 });
 
-  await sql`UPDATE "user" SET role = ${role}, "updatedAt" = NOW() WHERE id = ${userId}`;
+  await supabase.from('user').update({ role: body.role, updatedAt: new Date().toISOString() }).eq('id', body.userId);
   return Response.json({ success: true });
 }
