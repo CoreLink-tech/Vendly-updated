@@ -7,12 +7,8 @@ const trustedOrigins = [
   'https://vendlyapp.vercel.app',
 ].filter((v): v is string => Boolean(v));
 
-// Build Supabase postgres connection string from env vars
-// Format: postgresql://postgres.{ref}:{password}@{region}.pooler.supabase.com:6543/postgres
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const ref = supabaseUrl.replace('https://', '').replace('.supabase.co', '');
-const dbPassword = process.env.SUPABASE_DB_PASSWORD || '';
-const databaseUrl = `postgresql://postgres.${ref}:${encodeURIComponent(dbPassword)}@aws-0-eu-central-1.pooler.supabase.com:6543/postgres`;
+const dbPassword = encodeURIComponent(process.env.SUPABASE_DB_PASSWORD || '');
+const databaseUrl = `postgresql://postgres:${dbPassword}@db.wzdnnccyvdbrbkqsxsiw.supabase.co:5432/postgres`;
 
 export const auth = betterAuth({
   database: {
