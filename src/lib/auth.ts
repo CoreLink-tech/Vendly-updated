@@ -1,43 +1,30 @@
 import { betterAuth } from 'better-auth';
 import { createAuthMiddleware } from 'better-auth/api';
-import { verifyPassword } from 'better-auth/crypto';
 import { bearer } from 'better-auth/plugins';
-import { Pool } from 'pg';
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  max: 3,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
-});
 
 const trustedOrigins = [
   process.env.BETTER_AUTH_URL,
   'https://vendlyapp.vercel.app',
 ].filter((v): v is string => Boolean(v));
 
-const socialProviders = {
-  ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
-    ? {
-        google: {
-          clientId: process.env.GOOGLE_CLIENT_ID,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        },
-      }
-    : {}),
-};
+// Build Supabase postgres connection string from env vars
+// Format: postgresql://postgres.{ref}:{password}@{region}.pooler.supabase.com:6543/postgres
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const ref = supabaseUrl.replace('https://', '').replace('.supabase.co', '');
+const dbPassword = process.env.SUPABASE_DB_PASSWORD || '';
+const databaseUrl = `postgresql://postgres.${ref}:${encodeURIComponent(dbPassword)}@aws-0-eu-central-1.pooler.supabase.com:6543/postgres`;
 
 export const auth = betterAuth({
-  database: pool,
+  database: {
+    provider: 'pg',
+    url: databaseUrl,
+  },
+  baseURL: process.env.BETTER_AUTH_URL || 'https://vendlyapp.vercel.app',
+  secret: process.env.BETTER_AUTH_SECRET || 'vendly-secret-key-2026',
   trustedOrigins,
-  socialProviders,
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
-    password: {
-      verify: verifyPassword,
-    },
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
@@ -57,14 +44,6 @@ export const auth = betterAuth({
       httpOnly: true,
       path: '/',
     },
-    cookies: {
-      sessionToken: {
-        attributes: {
-          sameSite: 'lax',
-          secure: true,
-        },
-      },
-    },
   },
   session: {
     cookieCache: {
@@ -74,10 +53,6 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
-      image: {
-        type: 'string',
-        required: false,
-      },
       role: {
         type: 'string',
         required: false,
