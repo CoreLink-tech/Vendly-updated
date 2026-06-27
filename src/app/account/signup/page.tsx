@@ -26,7 +26,7 @@ function SignUpForm() {
     });
 
     if (signUpError) {
-      setError(signUpError.message ?? 'Sign up failed');
+      setError(signUpError.message || signUpError.statusText || JSON.stringify(signUpError));
       setLoading(false);
       return;
     }
