@@ -63,6 +63,7 @@ function useUpload(): [(input: UploadInput) => Promise<UploadResult>, UploadHook
 			} else if ('file' in input && input.file) {
 				const formData = new FormData();
 				formData.append('file', input.file);
+				if ((input as any).bucket) formData.append('bucket', (input as any).bucket);
 				response = await fetch('/api/upload', {
 					method: 'POST',
 					body: formData,
