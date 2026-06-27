@@ -6,7 +6,7 @@ import { authClient } from '@/lib/auth-client';
 
 function SignInForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const callbackUrl = searchParams.get('callbackUrl') || '';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -17,56 +17,55 @@ function SignInForm() {
     setLoading(true);
     setError(null);
 
-    const { error: signInError } = await authClient.signIn.email({
-      email,
-      password,
-    });
+    const { error: signInError } = await authClient.signIn.email({ email, password });
 
     if (signInError) {
-      setError(signInError.message ?? 'Sign in failed');
+      setError(signInError.message || signInError.statusText || JSON.stringify(signInError));
       setLoading(false);
       return;
     }
 
-    if (typeof window !== 'undefined') {
-      window.location.href = callbackUrl;
+    // Fetch user role and redirect accordingly
+    try {
+      const res = await fetch('/api/user/me');
+      const data = await res.json() as { user: { role: string } };
+      const role = data.user?.role;
+
+      if (callbackUrl) {
+        window.location.href = callbackUrl;
+      } else if (role === 'admin') {
+        window.location.href = '/admin';
+      } else if (role === 'logistics') {
+        window.location.href = '/logistics';
+      } else {
+        window.location.href = '/dashboard';
+      }
+    } catch {
+      window.location.href = '/dashboard';
     }
   };
 
   return (
     <main
-      className="flex min-h-screen w-full items-center justify-center p-4 font-inter"
+      className="flex min-h-screen w-full items-center justify-center p-4"
       style={{ backgroundColor: '#0d0d0d' }}
     >
       <div className="w-full max-w-[420px]">
-        {/* Logo */}
         <div className="text-center mb-8">
-          <a
-            href="/"
-            className="text-2xl font-semibold tracking-tight"
-            style={{ color: '#22c55e' }}
-          >
+          <a href="/" className="text-2xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
             Vendly
           </a>
-          <p className="text-sm mt-2" style={{ color: '#888888' }}>
-            Sign in to your account
-          </p>
+          <p className="text-sm mt-2" style={{ color: '#888888' }}>Sign in to your account</p>
         </div>
 
         <form
-          onSubmit={(e) => {
-            void onSubmit(e);
-          }}
+          onSubmit={(e) => { void onSubmit(e); }}
           className="rounded-xl border p-8 flex flex-col gap-5"
           style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
         >
           <div>
-            <h1 className="text-xl font-semibold" style={{ color: '#f5f5f5' }}>
-              Welcome back
-            </h1>
-            <p className="text-sm mt-1" style={{ color: '#888888' }}>
-              Sign in to your Vendly account
-            </p>
+            <h1 className="text-xl font-semibold" style={{ color: '#f5f5f5' }}>Welcome back</h1>
+            <p className="text-sm mt-1" style={{ color: '#888888' }}>Sign in to your Vendly account</p>
           </div>
 
           <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
@@ -78,17 +77,9 @@ function SignInForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               className="rounded-lg border p-3 text-sm outline-none transition-colors"
-              style={{
-                backgroundColor: '#0d0d0d',
-                borderColor: '#2a2a2a',
-                color: '#f5f5f5',
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#22c55e';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#2a2a2a';
-              }}
+              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              onFocus={(e) => { e.target.style.borderColor = '#22c55e'; }}
+              onBlur={(e) => { e.target.style.borderColor = '#2a2a2a'; }}
             />
           </label>
 
@@ -101,17 +92,9 @@ function SignInForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Your password"
               className="rounded-lg border p-3 text-sm outline-none transition-colors"
-              style={{
-                backgroundColor: '#0d0d0d',
-                borderColor: '#2a2a2a',
-                color: '#f5f5f5',
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#22c55e';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#2a2a2a';
-              }}
+              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              onFocus={(e) => { e.target.style.borderColor = '#22c55e'; }}
+              onBlur={(e) => { e.target.style.borderColor = '#2a2a2a'; }}
             />
           </label>
 
@@ -135,11 +118,7 @@ function SignInForm() {
 
           <p className="text-center text-xs" style={{ color: '#555555' }}>
             No account?{' '}
-            <a
-              href={`/account/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`}
-              className="font-medium"
-              style={{ color: '#22c55e' }}
-            >
+            <a href="/account/signup" className="font-medium" style={{ color: '#22c55e' }}>
               Sign up free
             </a>
           </p>
