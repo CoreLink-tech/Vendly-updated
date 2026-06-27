@@ -128,7 +128,7 @@ export default function HomePage() {
                 className="p-6 rounded-xl border transition-colors"
                 style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
               >
-                <div className="text-2xl mb-4">{f.icon}</div>
+                <div className="flex items-center justify-center w-10 h-10 mb-4" style={{ color: '#22c55e' }}><NavIcon name={f.icon as any} /></div>
                 <h3 className="text-base font-semibold mb-2" style={{ color: '#f5f5f5' }}>
                   {f.title}
                 </h3>
