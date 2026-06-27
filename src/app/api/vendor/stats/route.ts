@@ -1,27 +1,27 @@
 import { auth } from '@/lib/auth';
-import sql from '@/app/api/utils/sql';
+import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const vendors = await sql`SELECT * FROM vendors WHERE "userId" = ${session.user.id} LIMIT 1`;
-  if (!vendors.length) return Response.json({ error: 'Not found' }, { status: 404 });
-  const vendor = vendors[0];
+  const { data: vendor } = await supabase.from('vendors').select('*').eq('userId', session.user.id).single();
+  if (!vendor) return Response.json({ error: 'Not found' }, { status: 404 });
 
-  const [totalProducts, totalOrders, recentOrders, pendingOrders] = await sql.transaction([
-    sql`SELECT COUNT(*)::int as count FROM products WHERE "vendorId" = ${vendor.id}`,
-    sql`SELECT COUNT(*)::int as count, COALESCE(SUM(total), 0)::numeric as revenue FROM orders WHERE "vendorId" = ${vendor.id} AND status = 'completed'`,
-    sql`SELECT * FROM orders WHERE "vendorId" = ${vendor.id} ORDER BY "createdAt" DESC LIMIT 5`,
-    sql`SELECT COUNT(*)::int as count FROM orders WHERE "vendorId" = ${vendor.id} AND status = 'new'`,
+  const [
+    { count: totalProducts },
+    { data: completedOrders },
+    { data: recentOrders },
+    { count: pendingOrders },
+  ] = await Promise.all([
+    supabase.from('products').select('*', { count: 'exact', head: true }).eq('vendorId', vendor.id),
+    supabase.from('orders').select('total').eq('vendorId', vendor.id).eq('status', 'delivered'),
+    supabase.from('orders').select('*').eq('vendorId', vendor.id).order('createdAt', { ascending: false }).limit(5),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).eq('vendorId', vendor.id).eq('status', 'new'),
   ]);
 
-  return Response.json({
-    totalProducts: totalProducts[0].count,
-    totalOrders: totalOrders[0].count,
-    revenue: totalOrders[0].revenue,
-    recentOrders,
-    pendingOrders: pendingOrders[0].count,
-  });
+  const revenue = (completedOrders || []).reduce((sum: number, o: { total: number }) => sum + Number(o.total), 0);
+
+  return Response.json({ totalProducts, totalOrders: completedOrders?.length || 0, revenue, recentOrders, pendingOrders });
 }
