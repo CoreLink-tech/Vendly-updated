@@ -1,50 +1,41 @@
 import { auth } from '@/lib/auth';
-import sql from '@/app/api/utils/sql';
+import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 
 async function requireAdmin(userId: string) {
-  const users = await sql`SELECT role FROM "user" WHERE id = ${userId}`;
-  if (!users.length || users[0].role !== 'admin') throw new Error('Forbidden');
+  const { data } = await supabase.from('user').select('role').eq('id', userId).single();
+  if (!data || data.role !== 'admin') throw new Error('Forbidden');
 }
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  try {
-    await requireAdmin(session.user.id);
-  } catch {
-    return Response.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  try { await requireAdmin(session.user.id); } catch { return Response.json({ error: 'Forbidden' }, { status: 403 }); }
 
   const [
-    totalVendors,
-    activeVendors,
-    pendingVendors,
-    totalOrders,
-    totalProducts,
-    pendingWithdrawals,
-    recentVendors,
-  ] = await sql.transaction([
-    sql`SELECT COUNT(*)::int as count FROM vendors`,
-    sql`SELECT COUNT(*)::int as count FROM vendors WHERE status = 'active'`,
-    sql`SELECT COUNT(*)::int as count FROM vendors WHERE status = 'pending'`,
-    sql`SELECT COUNT(*)::int as count FROM orders`,
-    sql`SELECT COUNT(*)::int as count FROM products`,
-    sql`SELECT COUNT(*)::int as count, COALESCE(SUM(amount), 0)::numeric as total FROM withdrawals WHERE status = 'pending'`,
-    sql`
-      SELECT v."businessName", v.status, v."createdAt", u.email
-      FROM vendors v JOIN "user" u ON u.id = v."userId"
-      ORDER BY v."createdAt" DESC LIMIT 5
-    `,
+    { count: totalVendors },
+    { count: activeVendors },
+    { count: pendingVendors },
+    { count: totalOrders },
+    { count: totalProducts },
+    { data: pendingWithdrawals },
+    { data: recentVendors },
+  ] = await Promise.all([
+    supabase.from('vendors').select('*', { count: 'exact', head: true }),
+    supabase.from('vendors').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+    supabase.from('vendors').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+    supabase.from('orders').select('*', { count: 'exact', head: true }),
+    supabase.from('products').select('*', { count: 'exact', head: true }),
+    supabase.from('withdrawals').select('amount').eq('status', 'pending'),
+    supabase.from('vendors').select('businessName, status, createdAt, user(email)').order('createdAt', { ascending: false }).limit(5),
   ]);
 
+  const pendingTotal = (pendingWithdrawals || []).reduce((sum: number, w: { amount: number }) => sum + Number(w.amount), 0);
+
   return Response.json({
-    totalVendors: totalVendors[0].count,
-    activeVendors: activeVendors[0].count,
-    pendingVendors: pendingVendors[0].count,
-    totalOrders: totalOrders[0].count,
-    totalProducts: totalProducts[0].count,
-    pendingWithdrawals: pendingWithdrawals[0],
+    totalVendors, activeVendors, pendingVendors,
+    totalOrders, totalProducts,
+    pendingWithdrawals: { count: (pendingWithdrawals || []).length, total: pendingTotal },
     recentVendors,
   });
 }
