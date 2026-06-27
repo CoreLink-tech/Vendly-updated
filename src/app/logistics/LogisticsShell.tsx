@@ -6,8 +6,11 @@ import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 
 const NAV_ITEMS = [
-  { href: '/logistics', label: 'Active Deliveries', icon: 'truck' as const },
-  { href: '/logistics/history', label: 'History', icon: 'orders' as const },
+  { href: '/logistics', label: 'Overview', icon: 'dashboard' as const },
+  { href: '/logistics/orders', label: 'All Orders', icon: 'orders' as const },
+  { href: '/logistics/pending', label: 'Pending Pickup', icon: 'truck' as const },
+  { href: '/logistics/in-transit', label: 'In Transit', icon: 'link' as const },
+  { href: '/logistics/delivered', label: 'Delivered', icon: 'check' as const },
 ];
 
 export default function LogisticsShell({ children }: { children: React.ReactNode }) {
@@ -37,7 +40,6 @@ export default function LogisticsShell({ children }: { children: React.ReactNode
 
   return (
     <div className="min-h-screen flex" style={{ backgroundColor: '#0d0d0d' }}>
-      {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ width: 240, backgroundColor: '#111111', borderColor: '#2a2a2a' }}
