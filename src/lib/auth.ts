@@ -4,15 +4,15 @@ import { bearer } from 'better-auth/plugins';
 import { Pool } from 'pg';
 
 const pool = new Pool({
-  host: 'aws-0-eu-central-1.pooler.supabase.com',
+  host: 'aws-0-eu-west-1.pooler.supabase.com',
   port: 6543,
   database: 'postgres',
-  user: 'postgres.wzdnnccyvdbrbkqsxsiw',
+  user: 'postgres.csejvtbylrncgsvmhpns',
   password: process.env.SUPABASE_DB_PASSWORD,
   ssl: { rejectUnauthorized: false },
   max: 1,
   idleTimeoutMillis: 0,
-  connectionTimeoutMillis: 10000,
+  connectionTimeoutMillis: 15000,
 });
 
 const trustedOrigins = [
