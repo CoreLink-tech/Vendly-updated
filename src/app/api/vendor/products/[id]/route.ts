@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
+import { withImages } from '@/lib/utils';
 
 async function getVendorId(userId: string) {
   const { data } = await supabase.from('vendors').select('id').eq('userId', userId).single();
@@ -17,7 +18,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   const { data: product } = await supabase.from('products').select('*, product_images(url, sortOrder)').eq('id', id).eq('vendorId', vendorId).single();
   if (!product) return Response.json({ error: 'Not found' }, { status: 404 });
-  return Response.json({ product });
+  return Response.json({ product: withImages(product) });
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -45,7 +46,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   }
 
   const { data: product } = await supabase.from('products').select('*, product_images(url, sortOrder)').eq('id', id).single();
-  return Response.json({ product });
+  return Response.json({ product: product ? withImages(product) : null });
 }
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {

@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { withImagesList } from '@/lib/utils';
 
 export async function GET(_request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -8,5 +9,5 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
 
   const { data: products } = await supabase.from('products').select('*, product_images(url, sortOrder)').eq('vendorId', vendor.id).eq('status', 'active').gt('stock', 0).order('createdAt', { ascending: false });
 
-  return Response.json({ vendor, products });
+  return Response.json({ vendor, products: withImagesList(products) });
 }
