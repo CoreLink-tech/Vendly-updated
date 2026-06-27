@@ -93,7 +93,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                   fontWeight: isActive ? 600 : 400,
                 }}
               >
-                <span className="text-base"><NavIcon name=<NavIcon name={item.icon} /> /></span>
+                <NavIcon name={item.icon} />
                 {item.label}
               </Link>
             );
