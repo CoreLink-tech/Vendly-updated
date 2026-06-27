@@ -1,30 +1,12 @@
-import sql from '@/app/api/utils/sql';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(_request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  const vendors = await sql`
-    SELECT v.*, u.email FROM vendors v
-    JOIN "user" u ON u.id = v."userId"
-    WHERE v.slug = ${slug} AND v.status = 'active'
-    LIMIT 1
-  `;
+  const { data: vendor } = await supabase.from('vendors').select('*, user(email)').eq('slug', slug).eq('status', 'active').single();
+  if (!vendor) return Response.json({ error: 'Store not found' }, { status: 404 });
 
-  if (!vendors.length) {
-    return Response.json({ error: 'Store not found' }, { status: 404 });
-  }
-
-  const vendor = vendors[0];
-
-  const products = await sql`
-    SELECT p.*, COALESCE(
-      (SELECT json_agg(pi.url ORDER BY pi."sortOrder") FROM product_images pi WHERE pi."productId" = p.id),
-      '[]'::json
-    ) as images
-    FROM products p
-    WHERE p."vendorId" = ${vendor.id} AND p.status = 'active' AND p.stock > 0
-    ORDER BY p."createdAt" DESC
-  `;
+  const { data: products } = await supabase.from('products').select('*, product_images(url, sortOrder)').eq('vendorId', vendor.id).eq('status', 'active').gt('stock', 0).order('createdAt', { ascending: false });
 
   return Response.json({ vendor, products });
 }
