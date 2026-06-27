@@ -32,7 +32,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       .then((data) => {
         const d = data as { user: { name: string; email: string; role: string } };
         if (!d.user || d.user.role !== 'admin') {
-          router.push('/dashboard');
+          router.push('/account/signin');
           return;
         }
         setUser(d.user);
