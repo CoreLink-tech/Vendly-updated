@@ -1,4 +1,5 @@
 'use client';
+import { NavIcon, IconName } from '@/components/NavIcon';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -112,7 +113,7 @@ export default function AdminPage() {
             className="flex flex-col items-center gap-2 p-4 rounded-xl border text-center transition-colors"
             style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
           >
-            <span className="text-2xl">{a.icon}</span>
+            <NavIcon name={a.icon} />
             <p className="text-xs font-medium" style={{ color: '#aaaaaa' }}>
               {a.label}
             </p>
