@@ -52,7 +52,7 @@ export default function StoreSettingsPage() {
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const result = await upload({ file });
+    const result = await upload({ file, bucket: 'vendor-logos' } as any);
     if ('error' in result) {
       setMessage({ type: 'error', text: result.error ?? 'Upload failed' });
       return;
