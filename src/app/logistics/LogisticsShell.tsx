@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/logistics/pending', label: 'Pending Pickup', icon: 'truck' as const },
   { href: '/logistics/in-transit', label: 'In Transit', icon: 'link' as const },
   { href: '/logistics/delivered', label: 'Delivered', icon: 'check' as const },
+  { href: '/admin/logistics-routes', label: 'Route Pricing', icon: 'card' as const },
 ];
 
 export default function LogisticsShell({ children }: { children: React.ReactNode }) {
