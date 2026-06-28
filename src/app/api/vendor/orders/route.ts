@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
+import { settleOrderDelivery } from '@/lib/orders';
 
 async function getVendorId(userId: string) {
   const { data } = await supabase.from('vendors').select('id').eq('userId', userId).single();
@@ -37,7 +38,11 @@ export async function PUT(request: Request) {
   const { data: orderCheck } = await supabase.from('orders').select('id').eq('id', orderId).eq('vendorId', vendorId).single();
   if (!orderCheck) return Response.json({ error: 'Order not found' }, { status: 404 });
 
-  await supabase.from('orders').update({ status, updatedAt: new Date().toISOString() }).eq('id', orderId);
+  if (status === 'delivered') {
+    await settleOrderDelivery(orderId);
+  } else {
+    await supabase.from('orders').update({ status, updatedAt: new Date().toISOString() }).eq('id', orderId);
+  }
 
   const { data: order } = await supabase.from('orders').select('*').eq('id', orderId).single();
   return Response.json({ order });

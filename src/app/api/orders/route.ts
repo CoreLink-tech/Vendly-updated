@@ -29,7 +29,10 @@ export async function POST(request: Request) {
   if (!order) return Response.json({ error: 'Failed to create order' }, { status: 500 });
 
   await supabase.from('order_items').insert(orderItems.map(i => ({ ...i, orderId: order.id })));
-  for (const item of items) await supabase.from('products').update({ stock: supabase.rpc('greatest', { a: 0 }) }).eq('id', item.productId);
+  // Note: stock is intentionally NOT decremented here. Per the agreed model, stock
+  // is only deducted once a sale is final — i.e. on delivery confirmation, handled
+  // by settleOrderDelivery() in src/lib/orders.ts. This avoids holding stock hostage
+  // to abandoned or unconfirmed orders.
 
   return Response.json({ order, orderNumber: order.orderNumber }, { status: 201 });
 }
