@@ -44,6 +44,48 @@ const STATUS_LABELS: Record<string, string> = {
   completed: 'Completed',
 };
 
+
+function StoreLinkBanner() {
+  const [storeUrl, setStoreUrl] = useState('');
+
+  useEffect(() => {
+    fetch('/api/vendor/profile')
+      .then((r) => r.json())
+      .then((d) => {
+        const data = d as { vendor: { slug?: string } | null };
+        if (data.vendor?.slug) {
+          setStoreUrl(`${window.location.origin}/store/${data.vendor.slug}`);
+        }
+      });
+  }, []);
+
+  if (!storeUrl) return null;
+
+  return (
+    <div
+      className="flex items-center gap-3 p-3 rounded-lg border mb-6"
+      style={{ backgroundColor: '#111', borderColor: '#2a2a2a' }}
+    >
+      <span className="text-xs shrink-0" style={{ color: '#888888' }}>Your store:</span>
+      <a
+        href={storeUrl}
+        target="_blank"
+        className="text-xs font-mono truncate flex-1"
+        style={{ color: '#22c55e' }}
+      >
+        {storeUrl}
+      </a>
+      <button
+        onClick={() => { void navigator.clipboard.writeText(storeUrl); }}
+        className="shrink-0 text-xs px-2 py-1 rounded border"
+        style={{ borderColor: '#2a2a2a', color: '#888888' }}
+      >
+        Copy
+      </button>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -83,6 +125,9 @@ export default function DashboardPage() {
           Welcome back — here&apos;s an overview of your store.
         </p>
       </div>
+
+      {/* Store link */}
+      <StoreLinkBanner />
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
