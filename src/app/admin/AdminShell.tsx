@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { href: '/admin/logistics-users', label: 'Logistics Users', icon: 'users' as IconName },
   { href: '/admin/referrals', label: 'Referrals', icon: 'link' as IconName },
   { href: '/admin/ambassadors', label: 'Ambassadors', icon: 'ambassador' as IconName },
+  { href: '/admin/logistics-routes', label: 'Route Pricing', icon: 'truck' as IconName },
   { href: '/admin/withdrawals', label: 'Withdrawals', icon: 'money' as IconName },
   { href: '/admin/support', label: 'Support', icon: 'chat' as IconName },
 ];
