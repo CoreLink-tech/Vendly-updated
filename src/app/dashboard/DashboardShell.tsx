@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: '⬛' },
   { href: '/dashboard/products', label: 'Products', icon: 'package' as IconName },
   { href: '/dashboard/orders', label: 'Orders', icon: 'orders' as IconName },
+  { href: '/dashboard/analytics', label: 'Analytics', icon: 'chart' as IconName },
   { href: '/dashboard/store-settings', label: 'Store Settings', icon: 'store' as IconName },
   { href: '/dashboard/subscription', label: 'Subscription', icon: 'card' as IconName },
   { href: '/dashboard/referrals', label: 'Referral Dashboard', icon: 'link' as IconName },
