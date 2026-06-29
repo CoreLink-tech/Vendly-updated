@@ -16,5 +16,17 @@ export async function GET() {
     subscription = sub || null;
   }
 
-  return Response.json({ user, vendor: vendor || null, subscription });
+  let ambassadorStatus: string | null = null;
+  if (vendor) {
+    const { data: amb } = await supabase
+      .from('ambassadors')
+      .select('status')
+      .eq('vendorId', vendor.id)
+      .order('createdAt', { ascending: false })
+      .limit(1)
+      .single();
+    ambassadorStatus = amb?.status || null;
+  }
+
+  return Response.json({ user, vendor: vendor || null, subscription, ambassadorStatus });
 }
