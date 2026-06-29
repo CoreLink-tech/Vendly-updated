@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Settings {
   logisticsEnabled: boolean;
@@ -19,6 +19,9 @@ export default function VendorSettingsPage() {
     accountName: '',
   });
   const [saving, setSaving] = useState(false);
+  const [logo, setLogo] = useState('');
+  const [logoUploading, setLogoUploading] = useState(false);
+  const logoRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
@@ -28,11 +31,38 @@ export default function VendorSettingsPage() {
         const data = d as { settings: Settings | null };
         if (data.settings) setSettings(data.settings);
       });
+    fetch('/api/vendor/profile')
+      .then((r) => r.json())
+      .then((d) => {
+        const data = d as { vendor: { logo?: string } | null };
+        if (data.vendor?.logo) setLogo(data.vendor.logo);
+      });
   }, []);
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setLogoUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('bucket', 'vendor-logos');
+    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+    const data = (await res.json()) as { url?: string; error?: string };
+    if (data.url) setLogo(data.url);
+    setLogoUploading(false);
+  };
 
   const handleSave = async () => {
     setSaving(true);
     setMessage(null);
+    // Save logo if changed
+    if (logo) {
+      await fetch('/api/vendor/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logo }),
+      });
+    }
     const res = await fetch('/api/vendor/settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -71,6 +101,36 @@ export default function VendorSettingsPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>Store Settings</h1>
         <p className="text-sm mt-1" style={{ color: '#888888' }}>Manage delivery, payment, and bank details.</p>
+      </div>
+
+      {/* Store Logo */}
+      <div className="rounded-xl border p-6 mb-5" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
+        <h2 className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>Store Logo</h2>
+        <p className="text-xs mb-5" style={{ color: '#888' }}>Shown on your storefront. Saved as WebP automatically.</p>
+        <div className="flex items-center gap-5">
+          <div
+            className="w-20 h-20 rounded-xl border overflow-hidden flex items-center justify-center shrink-0"
+            style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a' }}
+          >
+            {logo ? (
+              <img src={logo} alt="Store logo" className="w-full h-full object-cover" />
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7" style={{ color: '#333' }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            )}
+          </div>
+          <div>
+            <button
+              onClick={() => logoRef.current?.click()}
+              disabled={logoUploading}
+              className="text-sm px-4 py-2 rounded-lg border font-medium disabled:opacity-50"
+              style={{ borderColor: '#2a2a2a', color: '#f5f5f5', backgroundColor: '#0d0d0d' }}
+            >
+              {logoUploading ? 'Uploading…' : logo ? 'Change Logo' : 'Upload Logo'}
+            </button>
+            <p className="text-xs mt-1.5" style={{ color: '#555' }}>PNG, JPG, or WebP. Auto-converted to WebP.</p>
+            <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={(e) => { void handleLogoUpload(e); }} />
+          </div>
+        </div>
       </div>
 
       {/* Delivery Settings */}
