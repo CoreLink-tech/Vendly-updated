@@ -29,7 +29,9 @@
     "vanilla-colorful": "^0.7.2",
     "vaul": "^1.1.2",
     "@supabase/supabase-js": "^2.49.4",
-    "pg": "^8.13.3"
+    "pg": "^8.13.3",
+    "sharp": "^0.33.4",
+    "@types/sharp": "^0.31.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.16",
