@@ -13,6 +13,7 @@ interface Subscription {
   status: string;
   startDate: string;
   endDate: string;
+  trialEnd?: string;
 }
 
 function fmtDate(dateStr: string) {
@@ -90,6 +91,38 @@ export default function SubscriptionPage() {
 
       {/* Current status */}
       {subscription ? (
+        subscription.plan === 'trial' ? (
+          // Trial banner
+          <div className="p-6 rounded-xl border mb-6" style={{ backgroundColor: '#1a1a1a', borderColor: '#f59e0b40' }}>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#f59e0b' }} />
+              <span className="text-sm font-semibold" style={{ color: '#f59e0b' }}>Free Trial Active</span>
+            </div>
+            <p className="text-sm mb-1" style={{ color: '#f5f5f5' }}>
+              Your 3-day free trial expires on{' '}
+              <span className="font-semibold">{fmtDate(subscription.trialEnd || subscription.endDate)}</span>.
+            </p>
+            <p className="text-xs mb-5" style={{ color: '#888888' }}>
+              Activate a paid plan before it expires to keep your store live.
+            </p>
+            <div className="flex gap-3 flex-wrap">
+              <button
+                onClick={() => handleWhatsApp('monthly')}
+                className="text-sm px-4 py-2 rounded-lg border font-semibold"
+                style={{ borderColor: '#22c55e', color: '#22c55e' }}
+              >
+                Activate Monthly — ₦4,000
+              </button>
+              <button
+                onClick={() => handleWhatsApp('yearly')}
+                className="text-sm px-4 py-2 rounded-lg font-semibold"
+                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+              >
+                Activate Yearly — ₦40,000
+              </button>
+            </div>
+          </div>
+        ) : (
         <div
           className="p-6 rounded-xl border mb-6"
           style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e30' }}
@@ -102,41 +135,26 @@ export default function SubscriptionPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs" style={{ color: '#888888' }}>
-                Plan
-              </p>
-              <p className="text-sm font-semibold capitalize mt-1" style={{ color: '#f5f5f5' }}>
-                {subscription.plan}
-              </p>
+              <p className="text-xs" style={{ color: '#888888' }}>Plan</p>
+              <p className="text-sm font-semibold capitalize mt-1" style={{ color: '#f5f5f5' }}>{subscription.plan}</p>
             </div>
             <div>
-              <p className="text-xs" style={{ color: '#888888' }}>
-                Status
-              </p>
-              <p className="text-sm font-semibold capitalize mt-1" style={{ color: '#f5f5f5' }}>
-                {subscription.status}
-              </p>
+              <p className="text-xs" style={{ color: '#888888' }}>Status</p>
+              <p className="text-sm font-semibold capitalize mt-1" style={{ color: '#f5f5f5' }}>{subscription.status}</p>
             </div>
             <div>
-              <p className="text-xs" style={{ color: '#888888' }}>
-                Started
-              </p>
-              <p className="text-sm font-semibold mt-1" style={{ color: '#f5f5f5' }}>
-                {fmtDate(subscription.startDate)}
-              </p>
+              <p className="text-xs" style={{ color: '#888888' }}>Started</p>
+              <p className="text-sm font-semibold mt-1" style={{ color: '#f5f5f5' }}>{fmtDate(subscription.startDate)}</p>
             </div>
             {subscription.endDate && (
               <div>
-                <p className="text-xs" style={{ color: '#888888' }}>
-                  Renews
-                </p>
-                <p className="text-sm font-semibold mt-1" style={{ color: '#f5f5f5' }}>
-                  {fmtDate(subscription.endDate)}
-                </p>
+                <p className="text-xs" style={{ color: '#888888' }}>Renews</p>
+                <p className="text-sm font-semibold mt-1" style={{ color: '#f5f5f5' }}>{fmtDate(subscription.endDate)}</p>
               </div>
             )}
           </div>
         </div>
+        )
       ) : (
         <>
           {/* Plans */}
@@ -271,6 +289,7 @@ export default function SubscriptionPage() {
           </div>
         </>
       )}
+      {subscription?.plan === 'trial' && </>}
     </div>
   );
 }
