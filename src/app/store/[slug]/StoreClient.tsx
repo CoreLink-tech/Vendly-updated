@@ -45,6 +45,25 @@ export default function StoreClient({ slug }: { slug: string }) {
   const [trackError, setTrackError] = useState('');
   const [tracking, setTracking] = useState(false);
 
+  // Session ID for deduplicating views
+  const [sessionId] = useState(() => {
+    if (typeof sessionStorage === 'undefined') return Math.random().toString(36).slice(2);
+    const existing = sessionStorage.getItem('vendly_sid');
+    if (existing) return existing;
+    const id = Math.random().toString(36).slice(2);
+    sessionStorage.setItem('vendly_sid', id);
+    return id;
+  });
+
+  const trackView = (productId: string, vendorId: string) => {
+    void fetch('/api/products/view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productId, vendorId, sessionId }),
+    });
+  };
+
+
   useEffect(() => {
     fetch(`/api/store/${slug}`)
       .then((r) => {
@@ -187,7 +206,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                   key={p.id}
                   className="rounded-xl border overflow-hidden cursor-pointer"
                   style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
-                  onClick={() => { setSelectedProduct(p); setSelectedQty(1); }}
+                  onClick={() => { setSelectedProduct(p); setSelectedQty(1); if (vendor) trackView(p.id, vendor.id); }}
                 >
                   <div className="aspect-square overflow-hidden" style={{ backgroundColor: '#0d0d0d' }}>
                     {p.images?.[0] ? (
