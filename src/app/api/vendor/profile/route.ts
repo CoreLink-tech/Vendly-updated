@@ -44,9 +44,23 @@ export async function POST(request: Request) {
       userId, businessName: body.businessName || session.user.name || '',
       description: body.description || '', logo: body.logo || null,
       location: body.location || '', phone: body.phone || '',
-      address: body.address || '', slug, status: 'pending',
+      address: body.address || '', slug, status: 'active',
       referredBy: body.referredBy || null,
     }).select().single();
+
+    if (vendor) {
+      // Auto-create 3-day free trial
+      const trialEnd = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+      await supabase.from('subscriptions').insert({
+        vendorId: vendor.id,
+        plan: 'trial',
+        status: 'active',
+        startDate: new Date().toISOString(),
+        endDate: trialEnd,
+        trialEnd,
+      });
+    }
+
     return Response.json({ vendor }, { status: 201 });
   }
 }
