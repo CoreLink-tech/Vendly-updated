@@ -6,15 +6,16 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 
-const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', icon: '⬛' },
-  { href: '/dashboard/products', label: 'Products', icon: 'package' as IconName },
-  { href: '/dashboard/orders', label: 'Orders', icon: 'orders' as IconName },
-  { href: '/dashboard/analytics', label: 'Analytics', icon: 'chart' as IconName },
+const BASE_NAV = [
+  { href: '/dashboard',                label: 'Dashboard',    icon: '⬛' },
+  { href: '/dashboard/products',       label: 'Products',     icon: 'package' as IconName },
+  { href: '/dashboard/orders',         label: 'Orders',       icon: 'orders' as IconName },
+  { href: '/dashboard/analytics',      label: 'Analytics',    icon: 'chart' as IconName },
   { href: '/dashboard/store-settings', label: 'Store Settings', icon: 'store' as IconName },
-  { href: '/dashboard/subscription', label: 'Subscription', icon: 'card' as IconName },
-  { href: '/dashboard/referrals', label: 'Referral Dashboard', icon: 'link' as IconName },
-  { href: '/dashboard/ambassador', label: 'Ambassador', icon: 'ambassador' as IconName },
+  { href: '/dashboard/subscription',   label: 'Subscription', icon: 'card' as IconName },
+];
+
+const SUPPORT_NAV = [
   { href: '/dashboard/support', label: 'Support', icon: 'chat' as IconName },
 ];
 
@@ -28,6 +29,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     status: string;
     slug: string;
   } | null>(null);
+  const [ambassadorStatus, setAmbassadorStatus] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -39,9 +41,11 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       const data = (await res.json()) as {
         user: { name: string; email: string };
         vendor: { businessName: string; status: string; slug: string } | null;
+        ambassadorStatus: string | null;
       };
       setUser(data.user);
       setVendor(data.vendor);
+      setAmbassadorStatus(data.ambassadorStatus);
 
       // If vendor doesn't have a profile yet, create one
       if (!data.vendor) {
@@ -57,8 +61,10 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         const res2 = await fetch('/api/user/me');
         const data2 = (await res2.json()) as {
           vendor: { businessName: string; status: string; slug: string } | null;
+          ambassadorStatus: string | null;
         };
         setVendor(data2.vendor);
+        setAmbassadorStatus(data2.ambassadorStatus);
       }
     }
     void load();
@@ -126,7 +132,18 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
         {/* Nav items */}
         <nav className="flex-1 overflow-y-auto py-4 px-3">
-          {NAV_ITEMS.map((item) => {
+          {[
+            ...BASE_NAV,
+            // If approved ambassador: show Ambassador only (no Referrals)
+            // If not approved: show Referrals + Ambassador application link
+            ...(ambassadorStatus === 'approved'
+              ? [{ href: '/dashboard/ambassador', label: 'Ambassador', icon: 'ambassador' as IconName }]
+              : [
+                  { href: '/dashboard/referrals', label: 'Referral Dashboard', icon: 'link' as IconName },
+                  { href: '/dashboard/ambassador', label: 'Ambassador', icon: 'ambassador' as IconName },
+                ]),
+            ...SUPPORT_NAV,
+          ].map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
@@ -140,7 +157,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   fontWeight: isActive ? 600 : 400,
                 }}
               >
-                <span className="text-base"><NavIcon name=<NavIcon name={item.icon} /> /></span>
+                <span className="text-base"><NavIcon name={item.icon} /></span>
                 {item.label}
               </Link>
             );
