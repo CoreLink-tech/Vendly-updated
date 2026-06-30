@@ -18,8 +18,7 @@ export async function POST(request: Request) {
 
   await supabase.from('orders').update({
     payerBankName: payerBankName.trim(),
-    paymentConfirmedAt: new Date().toISOString(),
-    paymentStatus: 'paid',
+    paymentStatus: 'awaiting_confirmation',
     updatedAt: new Date().toISOString(),
   }).eq('id', orderId);
 

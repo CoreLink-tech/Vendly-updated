@@ -12,20 +12,16 @@ interface Vendor {
   id: string;
   businessName: string;
   location: string;
-  logisticsEnabled: boolean;
-  payLaterEnabled: boolean;
+  useLogistics: boolean;
+  allowPayOnDelivery: boolean;
   bankName: string;
   accountNumber: string;
   accountName: string;
 }
 
-interface LogisticsRoute {
-  price: number;
-}
-
 const NIGERIAN_STATES = [
   'Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno',
-  'Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT - Abuja','Gombe',
+  'Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT (Abuja)','Gombe',
   'Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos',
   'Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto',
   'Taraba','Yobe','Zamfara',
@@ -65,7 +61,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
         const data = d as { vendor: Vendor };
         setVendor(data.vendor);
         // default payment method based on vendor settings
-        if (data.vendor.payLaterEnabled) {
+        if (data.vendor.allowPayOnDelivery) {
           setPaymentMethod('payment_on_delivery');
         } else {
           setPaymentMethod('full_payment');
@@ -78,16 +74,17 @@ export default function CheckoutClient({ slug }: { slug: string }) {
 
   // Fetch logistics fee when state changes and vendor has logistics enabled
   useEffect(() => {
-    if (!vendor?.logisticsEnabled || !form.customerLocation) {
+    if (!vendor?.useLogistics || !form.customerLocation) {
       setDeliveryFee(0);
       return;
     }
     setLoadingFee(true);
-    fetch(`/api/logistics/routes?from=${encodeURIComponent(vendor.location)}&to=${encodeURIComponent(form.customerLocation)}`)
+    fetch('/api/logistics/rates')
       .then((r) => r.json())
       .then((d) => {
-        const data = d as { route?: LogisticsRoute };
-        setDeliveryFee(data.route ? Number(data.route.price) : 0);
+        const data = d as { rates?: { state: string; price: number }[] };
+        const match = (data.rates || []).find((r) => r.state === form.customerLocation);
+        setDeliveryFee(match ? Number(match.price) : 0);
         setLoadingFee(false);
       })
       .catch(() => { setDeliveryFee(0); setLoadingFee(false); });
@@ -241,7 +238,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
               <div>
                 <p className="text-xs font-medium mb-2" style={{ color: '#aaaaaa' }}>Payment Method</p>
                 <div className="grid grid-cols-2 gap-3">
-                  {vendor.payLaterEnabled && (
+                  {vendor.allowPayOnDelivery && (
                     <button
                       onClick={() => setPaymentMethod('payment_on_delivery')}
                       className="p-3 rounded-lg border text-left transition-colors"
@@ -311,15 +308,15 @@ export default function CheckoutClient({ slug }: { slug: string }) {
                     <span style={{ color: '#aaaaaa' }}>Subtotal</span>
                     <span style={{ color: '#f5f5f5' }}>₦{subtotal.toLocaleString()}</span>
                   </div>
-                  {vendor?.logisticsEnabled && (
+                  {vendor?.useLogistics && (
                     <div className="flex justify-between text-sm">
                       <span style={{ color: '#aaaaaa' }}>Delivery Fee</span>
                       <span style={{ color: loadingFee ? '#555' : '#f5f5f5' }}>
-                        {loadingFee ? 'Calculating…' : deliveryFee > 0 ? `₦${deliveryFee.toLocaleString()}` : form.customerLocation ? 'No route set' : '—'}
+                        {loadingFee ? 'Calculating…' : deliveryFee > 0 ? `₦${deliveryFee.toLocaleString()}` : form.customerLocation ? 'Free / Not set' : '—'}
                       </span>
                     </div>
                   )}
-                  {!vendor?.logisticsEnabled && (
+                  {!vendor?.useLogistics && (
                     <p className="text-xs" style={{ color: '#555' }}>Delivery arranged directly with vendor</p>
                   )}
                   <div className="flex justify-between text-sm font-semibold pt-1 border-t" style={{ borderColor: '#2a2a2a' }}>
