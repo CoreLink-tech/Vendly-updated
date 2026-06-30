@@ -8,10 +8,36 @@ function generateOrderNumber(): string {
 }
 
 export async function POST(request: Request) {
-  const body = await request.json() as { vendorId: string; customerName: string; customerPhone: string; customerAddress: string; customerLocation: string; paymentMethod: 'full_payment' | 'payment_on_delivery'; items: Array<{ productId: string; quantity: number }>; deliveryFee?: number };
-  const { vendorId, customerName, customerPhone, customerAddress, customerLocation, paymentMethod, items, deliveryFee = 0 } = body;
+  const body = await request.json() as {
+    vendorId: string;
+    customerName: string;
+    customerPhone: string;
+    customerAddress: string;
+    customerLocation: string; // state — used to look up the logistics rate
+    paymentMethod: 'full_payment' | 'payment_on_delivery';
+    payerBankName?: string; // required for full_payment — the bank the buyer says they paid from
+    items: Array<{ productId: string; quantity: number }>;
+  };
+  const { vendorId, customerName, customerPhone, customerAddress, customerLocation, paymentMethod, payerBankName, items } = body;
 
-  if (!vendorId || !customerName || !customerPhone || !customerAddress || !items?.length) return Response.json({ error: 'Missing required fields' }, { status: 400 });
+  if (!vendorId || !customerName || !customerPhone || !customerAddress || !customerLocation || !items?.length) {
+    return Response.json({ error: 'Missing required fields' }, { status: 400 });
+  }
+
+  const { data: vendor } = await supabase.from('vendors').select('useLogistics, allowPayOnDelivery, bankName, accountNumber, accountName').eq('id', vendorId).single();
+  if (!vendor) return Response.json({ error: 'Store not found' }, { status: 404 });
+
+  if (paymentMethod === 'payment_on_delivery' && !vendor.allowPayOnDelivery) {
+    return Response.json({ error: 'This store does not accept Pay on Delivery' }, { status: 400 });
+  }
+  if (paymentMethod === 'full_payment') {
+    if (!vendor.bankName || !vendor.accountNumber || !vendor.accountName) {
+      return Response.json({ error: 'This store has not set up Pay Now yet' }, { status: 400 });
+    }
+    if (!payerBankName) {
+      return Response.json({ error: 'Please confirm which bank you paid from' }, { status: 400 });
+    }
+  }
 
   const { data: products } = await supabase.from('products').select('*').in('id', items.map(i => i.productId));
   if (!products?.length) return Response.json({ error: 'Products not found' }, { status: 404 });
@@ -25,7 +51,29 @@ export async function POST(request: Request) {
     return { productId: item.productId, name: product.name, price: Number(product.price), quantity: item.quantity, total };
   }).filter(Boolean);
 
-  const { data: order } = await supabase.from('orders').insert({ vendorId, orderNumber: generateOrderNumber(), customerName, customerPhone, customerAddress, customerLocation, paymentMethod, paymentStatus: 'pending', status: 'new', subtotal, deliveryFee, total: subtotal + deliveryFee }).select().single();
+  // Delivery fee is computed server-side — never trust a client-supplied amount.
+  // Vendors who opted out of Vendly Logistics handle their own delivery, so no fee here.
+  let deliveryFee = 0;
+  if (vendor.useLogistics) {
+    const { data: rate } = await supabase.from('logistics_rates').select('price').eq('state', customerLocation).single();
+    deliveryFee = rate ? Number(rate.price) : 0;
+  }
+
+  const { data: order } = await supabase.from('orders').insert({
+    vendorId,
+    orderNumber: generateOrderNumber(),
+    customerName,
+    customerPhone,
+    customerAddress,
+    customerLocation,
+    paymentMethod,
+    paymentStatus: paymentMethod === 'full_payment' ? 'awaiting_confirmation' : 'pending',
+    payerBankName: paymentMethod === 'full_payment' ? payerBankName : null,
+    status: 'new',
+    subtotal,
+    deliveryFee,
+    total: subtotal + deliveryFee,
+  }).select().single();
   if (!order) return Response.json({ error: 'Failed to create order' }, { status: 500 });
 
   await supabase.from('order_items').insert(orderItems.map(i => ({ ...i, orderId: order.id })));

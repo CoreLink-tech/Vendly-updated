@@ -6,16 +6,14 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 
-const BASE_NAV = [
-  { href: '/dashboard',                label: 'Dashboard',    icon: '⬛' },
-  { href: '/dashboard/products',       label: 'Products',     icon: 'package' as IconName },
-  { href: '/dashboard/orders',         label: 'Orders',       icon: 'orders' as IconName },
-  { href: '/dashboard/analytics',      label: 'Analytics',    icon: 'chart' as IconName },
+const NAV_ITEMS = [
+  { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' as IconName },
+  { href: '/dashboard/products', label: 'Products', icon: 'package' as IconName },
+  { href: '/dashboard/orders', label: 'Orders', icon: 'orders' as IconName },
   { href: '/dashboard/store-settings', label: 'Store Settings', icon: 'store' as IconName },
-  { href: '/dashboard/subscription',   label: 'Subscription', icon: 'card' as IconName },
-];
-
-const SUPPORT_NAV = [
+  { href: '/dashboard/subscription', label: 'Subscription', icon: 'card' as IconName },
+  { href: '/dashboard/referrals', label: 'Referral Dashboard', icon: 'link' as IconName },
+  { href: '/dashboard/ambassador', label: 'Ambassador', icon: 'ambassador' as IconName },
   { href: '/dashboard/support', label: 'Support', icon: 'chat' as IconName },
 ];
 
@@ -23,14 +21,13 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   const [vendor, setVendor] = useState<{
     businessName: string;
     status: string;
     slug: string;
   } | null>(null);
-  const [ambassadorStatus, setAmbassadorStatus] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
@@ -42,11 +39,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       const data = (await res.json()) as {
         user: { name: string; email: string };
         vendor: { businessName: string; status: string; slug: string } | null;
-        ambassadorStatus: string | null;
       };
       setUser(data.user);
       setVendor(data.vendor);
-      setAmbassadorStatus(data.ambassadorStatus);
 
       // If vendor doesn't have a profile yet, create one
       if (!data.vendor) {
@@ -62,12 +57,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         const res2 = await fetch('/api/user/me');
         const data2 = (await res2.json()) as {
           vendor: { businessName: string; status: string; slug: string } | null;
-          ambassadorStatus: string | null;
         };
         setVendor(data2.vendor);
-        setAmbassadorStatus(data2.ambassadorStatus);
       }
-      setLoading(false);
     }
     void load();
   }, [router]);
@@ -76,73 +68,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     await authClient.signOut();
     window.location.href = '/';
   };
-
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex" style={{ backgroundColor: '#0d0d0d' }}>
-        {/* Skeleton sidebar */}
-        <div className="hidden md:flex flex-col border-r shrink-0" style={{ width: 240, backgroundColor: '#111111', borderColor: '#2a2a2a' }}>
-          {/* Logo */}
-          <div className="px-6 py-5 border-b" style={{ borderColor: '#2a2a2a' }}>
-            <div className="h-8 w-36 rounded-lg animate-pulse" style={{ backgroundColor: '#2a2a2a' }} />
-          </div>
-          {/* User */}
-          <div className="px-4 py-4 border-b flex items-center gap-3" style={{ borderColor: '#2a2a2a' }}>
-            <div className="w-9 h-9 rounded-full animate-pulse shrink-0" style={{ backgroundColor: '#2a2a2a' }} />
-            <div className="flex-1 space-y-1.5">
-              <div className="h-3 w-24 rounded animate-pulse" style={{ backgroundColor: '#2a2a2a' }} />
-              <div className="h-2.5 w-16 rounded animate-pulse" style={{ backgroundColor: '#222' }} />
-            </div>
-          </div>
-          {/* Nav items */}
-          <div className="flex-1 py-4 px-3 space-y-1">
-            {[...Array(7)].map((_, i) => (
-              <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-lg">
-                <div className="w-5 h-5 rounded animate-pulse shrink-0" style={{ backgroundColor: '#2a2a2a' }} />
-                <div className="h-3 rounded animate-pulse" style={{ backgroundColor: '#2a2a2a', width: `${60 + (i % 3) * 20}px` }} />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Skeleton main */}
-        <div className="flex-1 flex flex-col min-w-0">
-          {/* Mobile header skeleton */}
-          <div className="flex items-center justify-between px-4 py-4 border-b md:hidden" style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}>
-            <div className="w-6 h-5 rounded animate-pulse" style={{ backgroundColor: '#2a2a2a' }} />
-            <div className="h-7 w-28 rounded-lg animate-pulse" style={{ backgroundColor: '#2a2a2a' }} />
-          </div>
-
-          {/* Content skeleton */}
-          <div className="flex-1 overflow-y-auto px-4 md:px-8 py-8 max-w-6xl w-full mx-auto">
-            {/* Page title */}
-            <div className="mb-8">
-              <div className="h-7 w-48 rounded-lg animate-pulse mb-2" style={{ backgroundColor: '#2a2a2a' }} />
-              <div className="h-4 w-64 rounded animate-pulse" style={{ backgroundColor: '#1e1e1e' }} />
-            </div>
-            {/* Store link bar */}
-            <div className="h-12 w-full rounded-lg animate-pulse mb-6" style={{ backgroundColor: '#1a1a1a' }} />
-            {/* Stat cards */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="rounded-xl p-5 animate-pulse" style={{ backgroundColor: '#1a1a1a', height: 96 }}>
-                  <div className="h-3 w-20 rounded mb-3" style={{ backgroundColor: '#2a2a2a' }} />
-                  <div className="h-7 w-14 rounded" style={{ backgroundColor: '#2a2a2a' }} />
-                </div>
-              ))}
-            </div>
-            {/* Quick action cards */}
-            <div className="space-y-3">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-16 rounded-xl animate-pulse" style={{ backgroundColor: '#1a1a1a' }} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -156,10 +81,15 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       >
         {/* Logo */}
         <div
-          className="flex items-center justify-between px-6 py-5 border-b"
+          className="flex items-center justify-between px-5 py-3 border-b"
           style={{ borderColor: '#2a2a2a' }}
         >
-          <img src="/logo.webp" alt="Vendly" style={{ width: 160, height: 'auto', objectFit: 'contain' }} />
+          <div className="flex items-center gap-2">
+            <img src="/favicon.png" alt="Vendly" className="w-6 h-6" />
+            <span className="text-lg font-semibold tracking-tight" style={{ color: '#22c55e' }}>
+              Vendly
+            </span>
+          </div>
           <button
             onClick={() => setSidebarOpen(false)}
             className="md:hidden text-gray-400"
@@ -194,23 +124,31 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 </div>
               </div>
             </div>
+            {vendor.slug && (
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/store/${vendor.slug}`;
+                  void navigator.clipboard.writeText(url);
+                  setLinkCopied(true);
+                  setTimeout(() => setLinkCopied(false), 1500);
+                }}
+                className="mt-3 w-full flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg border text-left transition-colors"
+                style={{ borderColor: '#2a2a2a', backgroundColor: '#1a1a1a' }}
+              >
+                <span className="text-[11px] truncate" style={{ color: '#888888' }}>
+                  /store/{vendor.slug}
+                </span>
+                <span className="text-[10px] font-semibold shrink-0" style={{ color: '#22c55e' }}>
+                  {linkCopied ? 'Copied!' : 'Copy link'}
+                </span>
+              </button>
+            )}
           </div>
         )}
 
         {/* Nav items */}
         <nav className="flex-1 overflow-y-auto py-4 px-3">
-          {[
-            ...BASE_NAV,
-            // If approved ambassador: show Ambassador only (no Referrals)
-            // If not approved: show Referrals + Ambassador application link
-            ...(ambassadorStatus === 'approved'
-              ? [{ href: '/dashboard/ambassador', label: 'Ambassador', icon: 'ambassador' as IconName }]
-              : [
-                  { href: '/dashboard/referrals', label: 'Referral Dashboard', icon: 'link' as IconName },
-                  { href: '/dashboard/ambassador', label: 'Ambassador', icon: 'ambassador' as IconName },
-                ]),
-            ...SUPPORT_NAV,
-          ].map((item) => {
+          {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
@@ -224,7 +162,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   fontWeight: isActive ? 600 : 400,
                 }}
               >
-                <span className="text-base"><NavIcon name={item.icon} /></span>
+                <NavIcon name={item.icon} />
                 {item.label}
               </Link>
             );
@@ -277,7 +215,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <img src="/logo.webp" alt="Vendly" style={{ width: 110, height: 'auto', objectFit: 'contain' }} />
+          <span className="text-base font-semibold" style={{ color: '#22c55e' }}>
+            Vendly
+          </span>
           <div className="w-6" />
         </header>
 

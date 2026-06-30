@@ -11,6 +11,13 @@ export async function GET() {
     return Response.json({ error: 'Forbidden' }, { status: 403 });
   }
 
+  const { data: logisticsVendors } = await supabase.from('vendors').select('id').eq('useLogistics', true);
+  const vendorIds = (logisticsVendors || []).map((v) => v.id);
+
+  if (!vendorIds.length) {
+    return Response.json({ total: 0, pending: 0, inTransit: 0, delivered: 0, cancelled: 0, recentOrders: [] });
+  }
+
   const [
     { count: total },
     { count: pending },
@@ -19,12 +26,12 @@ export async function GET() {
     { count: cancelled },
     { data: recentOrders },
   ] = await Promise.all([
-    supabase.from('orders').select('*', { count: 'exact', head: true }),
-    supabase.from('orders').select('*', { count: 'exact', head: true }).in('status', ['new', 'confirmed']),
-    supabase.from('orders').select('*', { count: 'exact', head: true }).in('status', ['processing', 'shipped']),
-    supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'delivered'),
-    supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'cancelled'),
-    supabase.from('orders').select('id, orderNumber, customerName, customerAddress, total, status, createdAt, vendors(businessName)').order('createdAt', { ascending: false }).limit(10),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).in('vendorId', vendorIds),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).in('vendorId', vendorIds).in('status', ['new', 'confirmed']),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).in('vendorId', vendorIds).in('status', ['processing', 'shipped']),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).in('vendorId', vendorIds).eq('status', 'delivered'),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).in('vendorId', vendorIds).eq('status', 'cancelled'),
+    supabase.from('orders').select('id, orderNumber, customerName, customerAddress, total, status, createdAt, vendors(businessName)').in('vendorId', vendorIds).order('createdAt', { ascending: false }).limit(10),
   ]);
 
   return Response.json({

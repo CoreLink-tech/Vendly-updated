@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const body = await request.json() as { businessName?: string; description?: string; logo?: string; location?: string; phone?: string; address?: string; slug?: string; referredBy?: string };
+  const body = await request.json() as { businessName?: string; description?: string; logo?: string; location?: string; phone?: string; address?: string; slug?: string; referredBy?: string; useLogistics?: boolean; allowPayOnDelivery?: boolean; bankName?: string; accountNumber?: string; accountName?: string };
   const userId = session.user.id;
 
   const { data: existing } = await supabase.from('vendors').select('id').eq('userId', userId).single();
@@ -30,6 +30,11 @@ export async function POST(request: Request) {
     if (body.location !== undefined) updates.location = body.location;
     if (body.phone !== undefined) updates.phone = body.phone;
     if (body.address !== undefined) updates.address = body.address;
+    if (body.useLogistics !== undefined) updates.useLogistics = body.useLogistics;
+    if (body.allowPayOnDelivery !== undefined) updates.allowPayOnDelivery = body.allowPayOnDelivery;
+    if (body.bankName !== undefined) updates.bankName = body.bankName;
+    if (body.accountNumber !== undefined) updates.accountNumber = body.accountNumber;
+    if (body.accountName !== undefined) updates.accountName = body.accountName;
     if (body.slug !== undefined) {
       const { data: taken } = await supabase.from('vendors').select('id').eq('slug', body.slug).neq('userId', userId).limit(1);
       if (taken?.length) return Response.json({ error: 'This store URL is already taken' }, { status: 400 });
