@@ -90,7 +90,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           className="flex items-center justify-between px-6 py-5 border-b"
           style={{ borderColor: '#2a2a2a' }}
         >
-          <img src="/logo.webp" alt="Vendly" style={{ width: 180, height: 'auto', objectFit: 'contain' }} />
+          <img src="/logo.webp" alt="Vendly" style={{ width: 220, height: 'auto', objectFit: 'contain' }} />
           <button
             onClick={() => setSidebarOpen(false)}
             className="md:hidden text-gray-400"
@@ -208,7 +208,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <img src="/logo.webp" alt="Vendly" style={{ width: 140, height: 'auto', objectFit: 'contain' }} />
+          <img src="/logo.webp" alt="Vendly" style={{ width: 180, height: 'auto', objectFit: 'contain' }} />
           <div className="w-6" />
         </header>
 
