@@ -49,14 +49,10 @@ function SignUpForm() {
       <div className="w-full max-w-[420px]">
         {/* Logo */}
         <div className="text-center mb-8">
-          <a
-            href="/"
-            className="text-2xl font-semibold tracking-tight"
-            style={{ color: '#22c55e' }}
-          >
-            Vendly
+          <a href="/" className="inline-block">
+            <img src="/logo-icon.webp" alt="Vendly" style={{ height: 80, width: 'auto', objectFit: 'contain', margin: '0 auto' }} />
           </a>
-          <p className="text-sm mt-2" style={{ color: '#888888' }}>
+          <p className="text-sm mt-3" style={{ color: '#888888' }}>
             Create your vendor account
           </p>
         </div>
