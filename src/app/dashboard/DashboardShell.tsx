@@ -90,10 +90,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           className="flex items-center justify-between px-6 py-5 border-b"
           style={{ borderColor: '#2a2a2a' }}
         >
-          <div className="flex items-center gap-2">
-            <img src="/logo.webp" alt="Vendly" width={28} height={28} style={{ objectFit: 'contain' }} />
-            <span className="text-xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>Vendly</span>
-          </div>
+          <img src="/logo.webp" alt="Vendly" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
           <button
             onClick={() => setSidebarOpen(false)}
             className="md:hidden text-gray-400"
@@ -211,10 +208,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <div className="flex items-center gap-2">
-            <img src="/logo.webp" alt="Vendly" width={24} height={24} style={{ objectFit: 'contain' }} />
-            <span className="text-base font-semibold" style={{ color: '#22c55e' }}>Vendly</span>
-          </div>
+          <img src="/logo.webp" alt="Vendly" style={{ height: 28, width: 'auto', objectFit: 'contain' }} />
           <div className="w-6" />
         </header>
 
