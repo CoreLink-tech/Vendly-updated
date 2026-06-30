@@ -9,14 +9,15 @@ export default function HomePage() {
     >
       {/* Nav */}
       <nav
-        className="flex items-center justify-between px-6 md:px-12 py-5 border-b"
+        className="flex items-center justify-between px-6 md:px-12 py-4 border-b"
         style={{ borderColor: '#2a2a2a' }}
       >
-        <div className="flex items-center gap-2">
-          <span className="text-2xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
+        <Link href="/" className="flex items-center gap-2">
+          <img src="/favicon.png" alt="Vendly" className="w-8 h-8" />
+          <span className="text-xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
             Vendly
           </span>
-        </div>
+        </Link>
         <div className="flex items-center gap-3">
           <Link
             href="/account/signin"

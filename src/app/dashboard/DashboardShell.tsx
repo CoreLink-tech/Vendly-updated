@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', icon: '⬛' },
+  { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' as IconName },
   { href: '/dashboard/products', label: 'Products', icon: 'package' as IconName },
   { href: '/dashboard/orders', label: 'Orders', icon: 'orders' as IconName },
   { href: '/dashboard/store-settings', label: 'Store Settings', icon: 'store' as IconName },
@@ -21,6 +21,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   const [vendor, setVendor] = useState<{
     businessName: string;
@@ -80,12 +81,15 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       >
         {/* Logo */}
         <div
-          className="flex items-center justify-between px-6 py-5 border-b"
+          className="flex items-center justify-between px-5 py-3 border-b"
           style={{ borderColor: '#2a2a2a' }}
         >
-          <span className="text-xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
-            Vendly
-          </span>
+          <div className="flex items-center gap-2">
+            <img src="/favicon.png" alt="Vendly" className="w-6 h-6" />
+            <span className="text-lg font-semibold tracking-tight" style={{ color: '#22c55e' }}>
+              Vendly
+            </span>
+          </div>
           <button
             onClick={() => setSidebarOpen(false)}
             className="md:hidden text-gray-400"
@@ -120,6 +124,25 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 </div>
               </div>
             </div>
+            {vendor.slug && (
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/store/${vendor.slug}`;
+                  void navigator.clipboard.writeText(url);
+                  setLinkCopied(true);
+                  setTimeout(() => setLinkCopied(false), 1500);
+                }}
+                className="mt-3 w-full flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg border text-left transition-colors"
+                style={{ borderColor: '#2a2a2a', backgroundColor: '#1a1a1a' }}
+              >
+                <span className="text-[11px] truncate" style={{ color: '#888888' }}>
+                  /store/{vendor.slug}
+                </span>
+                <span className="text-[10px] font-semibold shrink-0" style={{ color: '#22c55e' }}>
+                  {linkCopied ? 'Copied!' : 'Copy link'}
+                </span>
+              </button>
+            )}
           </div>
         )}
 
@@ -139,7 +162,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   fontWeight: isActive ? 600 : 400,
                 }}
               >
-                <span className="text-base"><NavIcon name=<NavIcon name={item.icon} /> /></span>
+                <NavIcon name={item.icon} />
                 {item.label}
               </Link>
             );

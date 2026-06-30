@@ -13,6 +13,11 @@ interface Vendor {
   phone: string;
   address: string;
   status: string;
+  useLogistics: boolean;
+  allowPayOnDelivery: boolean;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
 }
 
 export default function StoreSettingsPage() {
@@ -24,6 +29,11 @@ export default function StoreSettingsPage() {
     location: '',
     phone: '',
     address: '',
+    useLogistics: true,
+    allowPayOnDelivery: true,
+    bankName: '',
+    accountNumber: '',
+    accountName: '',
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -44,6 +54,11 @@ export default function StoreSettingsPage() {
             location: data.vendor.location || '',
             phone: data.vendor.phone || '',
             address: data.vendor.address || '',
+            useLogistics: data.vendor.useLogistics ?? true,
+            allowPayOnDelivery: data.vendor.allowPayOnDelivery ?? true,
+            bankName: data.vendor.bankName || '',
+            accountNumber: data.vendor.accountNumber || '',
+            accountName: data.vendor.accountName || '',
           });
         }
       });
@@ -251,6 +266,90 @@ export default function StoreSettingsPage() {
             placeholder="Street address for pickup"
           />
         </label>
+
+        <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
+          <p className="text-xs font-semibold mb-3" style={{ color: '#f5f5f5' }}>Delivery &amp; Payment</p>
+
+          <div className="flex items-center justify-between gap-4 py-2.5">
+            <div>
+              <p className="text-xs font-medium" style={{ color: '#f5f5f5' }}>Use Vendly Logistics</p>
+              <p className="text-[11px] mt-0.5" style={{ color: '#888888' }}>
+                Off if you handle your own pickup/delivery — your orders won&apos;t go to the logistics dashboard.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setForm((f) => ({ ...f, useLogistics: !f.useLogistics }))}
+              className="shrink-0 w-11 h-6 rounded-full relative transition-colors"
+              style={{ backgroundColor: form.useLogistics ? '#22c55e' : '#2a2a2a' }}
+            >
+              <span
+                className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"
+                style={{ transform: form.useLogistics ? 'translateX(20px)' : 'translateX(0)' }}
+              />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between gap-4 py-2.5">
+            <div>
+              <p className="text-xs font-medium" style={{ color: '#f5f5f5' }}>Allow Pay on Delivery</p>
+              <p className="text-[11px] mt-0.5" style={{ color: '#888888' }}>
+                Off to require payment upfront only — buyers will only see &quot;Pay Now&quot;.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setForm((f) => ({ ...f, allowPayOnDelivery: !f.allowPayOnDelivery }))}
+              className="shrink-0 w-11 h-6 rounded-full relative transition-colors"
+              style={{ backgroundColor: form.allowPayOnDelivery ? '#22c55e' : '#2a2a2a' }}
+            >
+              <span
+                className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"
+                style={{ transform: form.allowPayOnDelivery ? 'translateX(20px)' : 'translateX(0)' }}
+              />
+            </button>
+          </div>
+        </div>
+
+        <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: '#f5f5f5' }}>Bank Account (for Pay Now)</p>
+          <p className="text-[11px] mb-3" style={{ color: '#888888' }}>
+            Shown to buyers who choose &quot;Pay Now&quot; so they can transfer directly to you. Required for Pay Now to appear at checkout.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+              Bank Name
+              <input
+                value={form.bankName}
+                onChange={(e) => setForm((f) => ({ ...f, bankName: e.target.value }))}
+                className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                placeholder="e.g. GTBank"
+              />
+            </label>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+              Account Number
+              <input
+                value={form.accountNumber}
+                onChange={(e) => setForm((f) => ({ ...f, accountNumber: e.target.value.replace(/[^0-9]/g, '') }))}
+                className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                placeholder="0123456789"
+                maxLength={10}
+              />
+            </label>
+          </div>
+          <label className="flex flex-col gap-1.5 text-xs font-medium mt-4" style={{ color: '#aaaaaa' }}>
+            Account Name
+            <input
+              value={form.accountName}
+              onChange={(e) => setForm((f) => ({ ...f, accountName: e.target.value }))}
+              className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              placeholder="Name on the account"
+            />
+          </label>
+        </div>
 
         {message && (
           <p

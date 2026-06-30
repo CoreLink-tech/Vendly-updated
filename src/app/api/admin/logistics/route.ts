@@ -16,9 +16,14 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const status = searchParams.get('status') || '';
 
+  const { data: logisticsVendors } = await supabase.from('vendors').select('id').eq('useLogistics', true);
+  const vendorIds = (logisticsVendors || []).map((v) => v.id);
+  if (!vendorIds.length) return Response.json({ requests: [] });
+
   let query = supabase
     .from('orders')
     .select('*, vendors(businessName, phone, address)')
+    .in('vendorId', vendorIds)
     .order('createdAt', { ascending: false })
     .limit(200);
 
