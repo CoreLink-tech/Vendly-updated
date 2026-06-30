@@ -45,10 +45,10 @@ export default function LogisticsShell({ children }: { children: React.ReactNode
         className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ width: 240, backgroundColor: '#111111', borderColor: '#2a2a2a' }}
       >
-        <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: '#2a2a2a' }}>
-          <div>
-            <span className="text-xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>Vendly</span>
-            <span className="ml-2 text-[10px] font-semibold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}>
+        <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: '#2a2a2a' }}>
+          <div className="flex items-center gap-2">
+            <img src="/logo-icon.png" alt="Vendly" className="h-8 w-auto" />
+            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}>
               LOGISTICS
             </span>
           </div>
