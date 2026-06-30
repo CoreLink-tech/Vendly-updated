@@ -446,7 +446,7 @@ export default function StoreClient({ slug }: { slug: string }) {
 
       <div className="border-t mt-12 py-6 text-center" style={{ borderColor: '#2a2a2a' }}>
         <p className="text-xs" style={{ color: '#555555' }}>
-          Powered by <a href="/" style={{ color: '#22c55e' }}>Vendly</a>
+          Powered by <a href="/"><img src="/logo.webp" alt="Vendly" style={{ height: 20, width: 'auto', objectFit: 'contain', display: 'inline-block', verticalAlign: 'middle' }} /></a>
         </p>
       </div>
     </div>
