@@ -12,7 +12,7 @@ export default function HomePage() {
         className="flex items-center justify-between px-6 md:px-12 py-5 border-b"
         style={{ borderColor: '#2a2a2a' }}
       >
-        <img src="/logo.webp" alt="Vendly" style={{ width: 160, height: 'auto', objectFit: 'contain' }} />
+        <img src="/logo.webp" alt="Vendly" style={{ width: 120, maxWidth: '35vw', height: 'auto', objectFit: 'contain' }} />
         <div className="flex items-center gap-3">
           <Link
             href="/account/signin"
