@@ -30,6 +30,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     slug: string;
   } | null>(null);
   const [ambassadorStatus, setAmbassadorStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
@@ -66,6 +67,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         setVendor(data2.vendor);
         setAmbassadorStatus(data2.ambassadorStatus);
       }
+      setLoading(false);
     }
     void load();
   }, [router]);
@@ -74,6 +76,73 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     await authClient.signOut();
     window.location.href = '/';
   };
+
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex" style={{ backgroundColor: '#0d0d0d' }}>
+        {/* Skeleton sidebar */}
+        <div className="hidden md:flex flex-col border-r shrink-0" style={{ width: 240, backgroundColor: '#111111', borderColor: '#2a2a2a' }}>
+          {/* Logo */}
+          <div className="px-6 py-5 border-b" style={{ borderColor: '#2a2a2a' }}>
+            <div className="h-8 w-36 rounded-lg animate-pulse" style={{ backgroundColor: '#2a2a2a' }} />
+          </div>
+          {/* User */}
+          <div className="px-4 py-4 border-b flex items-center gap-3" style={{ borderColor: '#2a2a2a' }}>
+            <div className="w-9 h-9 rounded-full animate-pulse shrink-0" style={{ backgroundColor: '#2a2a2a' }} />
+            <div className="flex-1 space-y-1.5">
+              <div className="h-3 w-24 rounded animate-pulse" style={{ backgroundColor: '#2a2a2a' }} />
+              <div className="h-2.5 w-16 rounded animate-pulse" style={{ backgroundColor: '#222' }} />
+            </div>
+          </div>
+          {/* Nav items */}
+          <div className="flex-1 py-4 px-3 space-y-1">
+            {[...Array(7)].map((_, i) => (
+              <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-lg">
+                <div className="w-5 h-5 rounded animate-pulse shrink-0" style={{ backgroundColor: '#2a2a2a' }} />
+                <div className="h-3 rounded animate-pulse" style={{ backgroundColor: '#2a2a2a', width: `${60 + (i % 3) * 20}px` }} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Skeleton main */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Mobile header skeleton */}
+          <div className="flex items-center justify-between px-4 py-4 border-b md:hidden" style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}>
+            <div className="w-6 h-5 rounded animate-pulse" style={{ backgroundColor: '#2a2a2a' }} />
+            <div className="h-7 w-28 rounded-lg animate-pulse" style={{ backgroundColor: '#2a2a2a' }} />
+          </div>
+
+          {/* Content skeleton */}
+          <div className="flex-1 overflow-y-auto px-4 md:px-8 py-8 max-w-6xl w-full mx-auto">
+            {/* Page title */}
+            <div className="mb-8">
+              <div className="h-7 w-48 rounded-lg animate-pulse mb-2" style={{ backgroundColor: '#2a2a2a' }} />
+              <div className="h-4 w-64 rounded animate-pulse" style={{ backgroundColor: '#1e1e1e' }} />
+            </div>
+            {/* Store link bar */}
+            <div className="h-12 w-full rounded-lg animate-pulse mb-6" style={{ backgroundColor: '#1a1a1a' }} />
+            {/* Stat cards */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="rounded-xl p-5 animate-pulse" style={{ backgroundColor: '#1a1a1a', height: 96 }}>
+                  <div className="h-3 w-20 rounded mb-3" style={{ backgroundColor: '#2a2a2a' }} />
+                  <div className="h-7 w-14 rounded" style={{ backgroundColor: '#2a2a2a' }} />
+                </div>
+              ))}
+            </div>
+            {/* Quick action cards */}
+            <div className="space-y-3">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-16 rounded-xl animate-pulse" style={{ backgroundColor: '#1a1a1a' }} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
