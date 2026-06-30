@@ -12,11 +12,8 @@ export default function HomePage() {
         className="flex items-center justify-between px-6 md:px-12 py-4 border-b"
         style={{ borderColor: '#2a2a2a' }}
       >
-        <Link href="/" className="flex items-center gap-2">
-          <img src="/favicon.png" alt="Vendly" className="w-8 h-8" />
-          <span className="text-xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
-            Vendly
-          </span>
+        <Link href="/" className="flex items-center">
+          <img src="/logo-full.png" alt="Vendly" className="h-10 w-auto" />
         </Link>
         <div className="flex items-center gap-3">
           <Link
@@ -290,9 +287,9 @@ export default function HomePage() {
         className="px-6 md:px-12 py-8 border-t flex flex-col md:flex-row items-center justify-between gap-4"
         style={{ borderColor: '#2a2a2a' }}
       >
-        <span className="text-lg font-semibold" style={{ color: '#22c55e' }}>
-          Vendly
-        </span>
+        <a href="/">
+          <img src="/logo-full.png" alt="Vendly" className="h-8 w-auto" />
+        </a>
         <p className="text-xs" style={{ color: '#555555' }}>
           © 2026 Vendly. All rights reserved.
         </p>
