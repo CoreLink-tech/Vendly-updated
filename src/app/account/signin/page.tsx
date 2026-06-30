@@ -52,10 +52,10 @@ function SignInForm() {
     >
       <div className="w-full max-w-[420px]">
         <div className="text-center mb-8">
-          <a href="/" className="text-2xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
-            Vendly
+          <a href="/" className="inline-block">
+            <img src="/logo-icon.webp" alt="Vendly" style={{ height: 80, width: 'auto', objectFit: 'contain', margin: '0 auto' }} />
           </a>
-          <p className="text-sm mt-2" style={{ color: '#888888' }}>Sign in to your account</p>
+          <p className="text-sm mt-3" style={{ color: '#888888' }}>Sign in to your account</p>
         </div>
 
         <form
@@ -65,7 +65,7 @@ function SignInForm() {
         >
           <div>
             <h1 className="text-xl font-semibold" style={{ color: '#f5f5f5' }}>Welcome back</h1>
-            <p className="text-sm mt-1" style={{ color: '#888888' }}>Sign in to your Vendly account</p>
+            <p className="text-sm mt-1" style={{ color: '#888888' }}>Sign in to your account</p>
           </div>
 
           <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
