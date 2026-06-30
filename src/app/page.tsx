@@ -12,10 +12,7 @@ export default function HomePage() {
         className="flex items-center justify-between px-6 md:px-12 py-5 border-b"
         style={{ borderColor: '#2a2a2a' }}
       >
-        <div className="flex items-center gap-2">
-          <img src="/logo.webp" alt="Vendly" width={32} height={32} style={{ objectFit: 'contain' }} />
-          <span className="text-2xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>Vendly</span>
-        </div>
+        <img src="/logo.webp" alt="Vendly" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
         <div className="flex items-center gap-3">
           <Link
             href="/account/signin"
@@ -288,10 +285,7 @@ export default function HomePage() {
         className="px-6 md:px-12 py-8 border-t flex flex-col md:flex-row items-center justify-between gap-4"
         style={{ borderColor: '#2a2a2a' }}
       >
-        <div className="flex items-center gap-2">
-          <img src="/logo.webp" alt="Vendly" width={24} height={24} style={{ objectFit: 'contain' }} />
-          <span className="text-lg font-semibold" style={{ color: '#22c55e' }}>Vendly</span>
-        </div>
+        <img src="/logo.webp" alt="Vendly" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
         <p className="text-xs" style={{ color: '#555555' }}>
           © 2026 Vendly. All rights reserved.
         </p>
