@@ -15,7 +15,14 @@ export const metadata: Metadata = {
 	title: "Vendly",
 	description: "Your storefront, simplified.",
 	icons: {
-		icon: "/favicon.png",
+		icon: "/favicon.ico",
+		shortcut: "/favicon.ico",
+		apple: "/logo.png",
+	},
+	openGraph: {
+		title: "Vendly",
+		description: "Your storefront, simplified.",
+		images: [{ url: "/logo.png", width: 512, height: 512 }],
 	},
 };
 
