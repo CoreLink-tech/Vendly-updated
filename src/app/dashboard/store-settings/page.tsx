@@ -1,232 +1,376 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import useUpload from '@/utils/useUpload';
 
-interface Settings {
-  logisticsEnabled: boolean;
-  payLaterEnabled: boolean;
+interface Vendor {
+  id: string;
+  businessName: string;
+  slug: string;
+  description: string;
+  logo: string;
+  location: string;
+  phone: string;
+  address: string;
+  status: string;
+  useLogistics: boolean;
+  allowPayOnDelivery: boolean;
   bankName: string;
   accountNumber: string;
   accountName: string;
 }
 
-export default function VendorSettingsPage() {
-  const [settings, setSettings] = useState<Settings>({
-    logisticsEnabled: false,
-    payLaterEnabled: true,
+export default function StoreSettingsPage() {
+  const [form, setForm] = useState({
+    businessName: '',
+    slug: '',
+    description: '',
+    logo: '',
+    location: '',
+    phone: '',
+    address: '',
+    useLogistics: true,
+    allowPayOnDelivery: true,
     bankName: '',
     accountNumber: '',
     accountName: '',
   });
   const [saving, setSaving] = useState(false);
-  const [logo, setLogo] = useState('');
-  const [logoUploading, setLogoUploading] = useState(false);
-  const logoRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [upload, { loading: uploading }] = useUpload();
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetch('/api/vendor/settings')
-      .then((r) => r.json())
-      .then((d) => {
-        const data = d as { settings: Settings | null };
-        if (data.settings) setSettings(data.settings);
-      });
     fetch('/api/vendor/profile')
       .then((r) => r.json())
       .then((d) => {
-        const data = d as { vendor: { logo?: string } | null };
-        if (data.vendor?.logo) setLogo(data.vendor.logo);
+        const data = d as { vendor: Vendor | null };
+        if (data.vendor) {
+          setForm({
+            businessName: data.vendor.businessName || '',
+            slug: data.vendor.slug || '',
+            description: data.vendor.description || '',
+            logo: data.vendor.logo || '',
+            location: data.vendor.location || '',
+            phone: data.vendor.phone || '',
+            address: data.vendor.address || '',
+            useLogistics: data.vendor.useLogistics ?? true,
+            allowPayOnDelivery: data.vendor.allowPayOnDelivery ?? true,
+            bankName: data.vendor.bankName || '',
+            accountNumber: data.vendor.accountNumber || '',
+            accountName: data.vendor.accountName || '',
+          });
+        }
       });
   }, []);
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setLogoUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('bucket', 'vendor-logos');
-    const res = await fetch('/api/upload', { method: 'POST', body: formData });
-    const data = (await res.json()) as { url?: string; error?: string };
-    if (data.url) setLogo(data.url);
-    setLogoUploading(false);
+    const result = await upload({ file, bucket: 'vendor-logos' } as any);
+    if ('error' in result) {
+      setMessage({ type: 'error', text: result.error ?? 'Upload failed' });
+      return;
+    }
+    if (!result.url) {
+      setMessage({ type: 'error', text: 'Upload failed' });
+      return;
+    }
+    setForm((f) => ({ ...f, logo: result.url }));
   };
 
   const handleSave = async () => {
     setSaving(true);
     setMessage(null);
-    // Save logo if changed
-    if (logo) {
-      await fetch('/api/vendor/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ logo }),
-      });
-    }
-    const res = await fetch('/api/vendor/settings', {
+    const res = await fetch('/api/vendor/profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(settings),
+      body: JSON.stringify(form),
     });
     const data = (await res.json()) as { error?: string };
     if (!res.ok) {
       setMessage({ type: 'error', text: data.error || 'Failed to save' });
     } else {
-      setMessage({ type: 'success', text: 'Settings saved!' });
+      setMessage({ type: 'success', text: 'Store settings saved!' });
     }
     setSaving(false);
   };
 
-  const Toggle = ({ label, sublabel, value, onChange }: { label: string; sublabel: string; value: boolean; onChange: (v: boolean) => void }) => (
-    <div className="flex items-center justify-between py-4 border-b" style={{ borderColor: '#2a2a2a' }}>
-      <div>
-        <p className="text-sm font-medium" style={{ color: '#f5f5f5' }}>{label}</p>
-        <p className="text-xs mt-0.5" style={{ color: '#888' }}>{sublabel}</p>
-      </div>
-      <button
-        onClick={() => onChange(!value)}
-        className="relative w-11 h-6 rounded-full transition-colors shrink-0"
-        style={{ backgroundColor: value ? '#22c55e' : '#2a2a2a' }}
-      >
-        <span
-          className="absolute top-1 w-4 h-4 rounded-full transition-transform"
-          style={{ backgroundColor: '#fff', left: value ? '1.25rem' : '0.25rem' }}
-        />
-      </button>
-    </div>
-  );
+  const storeUrl = form.slug
+    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/store/${form.slug}`
+    : '';
 
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>Store Settings</h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>Manage delivery, payment, and bank details.</p>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+          Store Settings
+        </h1>
+        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+          Customize your public storefront.
+        </p>
       </div>
 
-      {/* Store Logo */}
-      <div className="rounded-xl border p-6 mb-5" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
-        <h2 className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>Store Logo</h2>
-        <p className="text-xs mb-5" style={{ color: '#888' }}>Shown on your storefront. Saved as WebP automatically.</p>
-        <div className="flex items-center gap-5">
-          <div
-            className="w-20 h-20 rounded-xl border overflow-hidden flex items-center justify-center shrink-0"
-            style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a' }}
+      {storeUrl && (
+        <div
+          className="flex items-center gap-3 p-3 rounded-lg border mb-6"
+          style={{ backgroundColor: '#111', borderColor: '#2a2a2a' }}
+        >
+          <span className="text-xs" style={{ color: '#888888' }}>
+            Your store:
+          </span>
+          <a
+            href={`/store/${form.slug}`}
+            target="_blank"
+            className="text-xs font-mono truncate"
+            style={{ color: '#22c55e' }}
           >
-            {logo ? (
-              <img src={logo} alt="Store logo" className="w-full h-full object-cover" />
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7" style={{ color: '#333' }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            )}
-          </div>
-          <div>
-            <button
-              onClick={() => logoRef.current?.click()}
-              disabled={logoUploading}
-              className="text-sm px-4 py-2 rounded-lg border font-medium disabled:opacity-50"
-              style={{ borderColor: '#2a2a2a', color: '#f5f5f5', backgroundColor: '#0d0d0d' }}
-            >
-              {logoUploading ? 'Uploading…' : logo ? 'Change Logo' : 'Upload Logo'}
-            </button>
-            <p className="text-xs mt-1.5" style={{ color: '#555' }}>PNG, JPG, or WebP. Auto-converted to WebP.</p>
-            <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={(e) => { void handleLogoUpload(e); }} />
-          </div>
+            {storeUrl}
+          </a>
+          <button
+            onClick={() => {
+              if (typeof navigator !== 'undefined') navigator.clipboard.writeText(storeUrl);
+            }}
+            className="shrink-0 text-xs px-2 py-1 rounded border"
+            style={{ borderColor: '#2a2a2a', color: '#888888' }}
+          >
+            Copy
+          </button>
         </div>
-      </div>
-
-      {/* Delivery Settings */}
-      <div className="rounded-xl border p-6 mb-5" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
-        <h2 className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>Delivery</h2>
-        <p className="text-xs mb-4" style={{ color: '#888' }}>Control how orders are delivered to customers.</p>
-
-        <Toggle
-          label="Vendly Logistics"
-          sublabel="Use Vendly's logistics network for deliveries. Pricing set per state route."
-          value={settings.logisticsEnabled}
-          onChange={(v) => setSettings((s) => ({ ...s, logisticsEnabled: v }))}
-        />
-        <div className="pt-2 pb-1">
-          <p className="text-xs" style={{ color: '#555' }}>
-            {settings.logisticsEnabled
-              ? 'Logistics is on. Delivery fees will be shown to buyers based on their state.'
-              : 'Logistics is off. You handle delivery directly with your customers.'}
-          </p>
-        </div>
-      </div>
-
-      {/* Payment Settings */}
-      <div className="rounded-xl border p-6 mb-5" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
-        <h2 className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>Payment Options</h2>
-        <p className="text-xs mb-4" style={{ color: '#888' }}>Choose what payment methods buyers can use.</p>
-
-        <Toggle
-          label="Pay on Delivery"
-          sublabel="Allow buyers to pay when they receive their order."
-          value={settings.payLaterEnabled}
-          onChange={(v) => setSettings((s) => ({ ...s, payLaterEnabled: v }))}
-        />
-        <div className="pt-3">
-          <p className="text-xs mb-3" style={{ color: '#888' }}>
-            Pay Now is always available when you have bank details set below.
-          </p>
-        </div>
-      </div>
-
-      {/* Bank Details */}
-      <div className="rounded-xl border p-6 mb-5" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
-        <h2 className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>Bank Details</h2>
-        <p className="text-xs mb-5" style={{ color: '#888' }}>
-          Required for Pay Now. Buyers will see this when they choose to pay by transfer.
-        </p>
-
-        <div className="space-y-4">
-          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
-            Bank Name
-            <input
-              value={settings.bankName}
-              onChange={(e) => setSettings((s) => ({ ...s, bankName: e.target.value }))}
-              placeholder="e.g. GTBank, Access Bank, Opay"
-              className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
-            />
-          </label>
-          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
-            Account Number
-            <input
-              value={settings.accountNumber}
-              onChange={(e) => setSettings((s) => ({ ...s, accountNumber: e.target.value }))}
-              placeholder="0123456789"
-              maxLength={10}
-              className="rounded-lg border px-3 py-2.5 text-sm outline-none font-mono"
-              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
-            />
-          </label>
-          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
-            Account Name
-            <input
-              value={settings.accountName}
-              onChange={(e) => setSettings((s) => ({ ...s, accountName: e.target.value }))}
-              placeholder="Full name on account"
-              className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
-            />
-          </label>
-        </div>
-      </div>
-
-      {message && (
-        <p className="text-xs mb-4" style={{ color: message.type === 'success' ? '#22c55e' : '#ef4444' }}>
-          {message.text}
-        </p>
       )}
 
-      <button
-        onClick={() => void handleSave()}
-        disabled={saving}
-        className="w-full py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-        style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+      <div
+        className="rounded-xl border p-6 space-y-5"
+        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
       >
-        {saving ? 'Saving…' : 'Save Settings'}
-      </button>
+        {/* Logo */}
+        <div>
+          <p className="text-xs font-medium mb-3" style={{ color: '#aaaaaa' }}>
+            Store Logo
+          </p>
+          <div className="flex items-center gap-4">
+            <div
+              className="w-16 h-16 rounded-xl overflow-hidden border flex items-center justify-center"
+              style={{ borderColor: '#2a2a2a', backgroundColor: '#0d0d0d' }}
+            >
+              {form.logo ? (
+                <img src={form.logo} alt="Logo" className="w-full h-full object-cover" />
+              ) : (
+                <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+              )}
+            </div>
+            <div>
+              <button
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+                className="text-xs px-4 py-2 rounded-lg border transition-colors"
+                style={{ borderColor: '#2a2a2a', color: '#aaaaaa' }}
+              >
+                {uploading ? 'Uploading…' : 'Upload Logo'}
+              </button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  void handleLogoUpload(e);
+                }}
+              />
+              <p className="text-[10px] mt-1" style={{ color: '#555555' }}>
+                Automatically compressed and optimised
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+          Business Name
+          <input
+            value={form.businessName}
+            onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))}
+            className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+            style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+          />
+        </label>
+
+        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+          Store URL Slug
+          <div
+            className="flex items-center gap-0 rounded-lg border overflow-hidden"
+            style={{ borderColor: '#2a2a2a' }}
+          >
+            <span
+              className="px-3 py-2.5 text-xs"
+              style={{ backgroundColor: '#0d0d0d', color: '#555555' }}
+            >
+              vendly.com/store/
+            </span>
+            <input
+              value={form.slug}
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''),
+                }))
+              }
+              className="flex-1 px-3 py-2.5 text-sm outline-none"
+              style={{ backgroundColor: '#0d0d0d', color: '#f5f5f5' }}
+              placeholder="your-store-name"
+            />
+          </div>
+        </label>
+
+        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+          Description
+          <textarea
+            value={form.description}
+            onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+            rows={3}
+            className="rounded-lg border px-3 py-2.5 text-sm outline-none resize-none"
+            style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+            placeholder="Tell customers about your business…"
+          />
+        </label>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            Location / City
+            <input
+              value={form.location}
+              onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
+              className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              placeholder="e.g. Lagos"
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            Phone Number
+            <input
+              value={form.phone}
+              onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+              className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              placeholder="e.g. 08012345678"
+            />
+          </label>
+        </div>
+
+        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+          Full Address
+          <input
+            value={form.address}
+            onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+            className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+            style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+            placeholder="Street address for pickup"
+          />
+        </label>
+
+        <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
+          <p className="text-xs font-semibold mb-3" style={{ color: '#f5f5f5' }}>Delivery &amp; Payment</p>
+
+          <div className="flex items-center justify-between gap-4 py-2.5">
+            <div>
+              <p className="text-xs font-medium" style={{ color: '#f5f5f5' }}>Use Vendly Logistics</p>
+              <p className="text-[11px] mt-0.5" style={{ color: '#888888' }}>
+                Off if you handle your own pickup/delivery — your orders won&apos;t go to the logistics dashboard.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setForm((f) => ({ ...f, useLogistics: !f.useLogistics }))}
+              className="shrink-0 w-11 h-6 rounded-full relative transition-colors"
+              style={{ backgroundColor: form.useLogistics ? '#22c55e' : '#2a2a2a' }}
+            >
+              <span
+                className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"
+                style={{ transform: form.useLogistics ? 'translateX(20px)' : 'translateX(0)' }}
+              />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between gap-4 py-2.5">
+            <div>
+              <p className="text-xs font-medium" style={{ color: '#f5f5f5' }}>Allow Pay on Delivery</p>
+              <p className="text-[11px] mt-0.5" style={{ color: '#888888' }}>
+                Off to require payment upfront only — buyers will only see &quot;Pay Now&quot;.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setForm((f) => ({ ...f, allowPayOnDelivery: !f.allowPayOnDelivery }))}
+              className="shrink-0 w-11 h-6 rounded-full relative transition-colors"
+              style={{ backgroundColor: form.allowPayOnDelivery ? '#22c55e' : '#2a2a2a' }}
+            >
+              <span
+                className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"
+                style={{ transform: form.allowPayOnDelivery ? 'translateX(20px)' : 'translateX(0)' }}
+              />
+            </button>
+          </div>
+        </div>
+
+        <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: '#f5f5f5' }}>Bank Account (for Pay Now)</p>
+          <p className="text-[11px] mb-3" style={{ color: '#888888' }}>
+            Shown to buyers who choose &quot;Pay Now&quot; so they can transfer directly to you. Required for Pay Now to appear at checkout.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+              Bank Name
+              <input
+                value={form.bankName}
+                onChange={(e) => setForm((f) => ({ ...f, bankName: e.target.value }))}
+                className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                placeholder="e.g. GTBank"
+              />
+            </label>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+              Account Number
+              <input
+                value={form.accountNumber}
+                onChange={(e) => setForm((f) => ({ ...f, accountNumber: e.target.value.replace(/[^0-9]/g, '') }))}
+                className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                placeholder="0123456789"
+                maxLength={10}
+              />
+            </label>
+          </div>
+          <label className="flex flex-col gap-1.5 text-xs font-medium mt-4" style={{ color: '#aaaaaa' }}>
+            Account Name
+            <input
+              value={form.accountName}
+              onChange={(e) => setForm((f) => ({ ...f, accountName: e.target.value }))}
+              className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              placeholder="Name on the account"
+            />
+          </label>
+        </div>
+
+        {message && (
+          <p
+            className="text-xs"
+            style={{ color: message.type === 'success' ? '#22c55e' : '#ef4444' }}
+          >
+            {message.text}
+          </p>
+        )}
+
+        <button
+          onClick={() => {
+            void handleSave();
+          }}
+          disabled={saving}
+          className="w-full py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
+          style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+        >
+          {saving ? 'Saving…' : 'Save Settings'}
+        </button>
+      </div>
     </div>
   );
 }
