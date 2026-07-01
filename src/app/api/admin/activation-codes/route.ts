@@ -59,6 +59,7 @@ export async function POST(request: Request) {
   }
 
   const generatedCodes: string[] = [];
+  const failures: string[] = [];
   for (let i = 0; i < Math.min(count, 50); i++) {
     let code = generateCode();
     let attempts = 0;
@@ -68,8 +69,28 @@ export async function POST(request: Request) {
       code = generateCode();
       attempts++;
     }
-    await supabase.from('activation_codes').insert({ code, plan, createdBy: session.user.id, isFounding });
+    const { error: insertError } = await supabase
+      .from('activation_codes')
+      .insert({ code, plan, createdBy: session.user.id, isFounding });
+    if (insertError) {
+      console.error('[activation-codes] insert failed:', insertError.message);
+      failures.push(code);
+      continue;
+    }
     generatedCodes.push(code);
+  }
+
+  if (failures.length > 0 && generatedCodes.length === 0) {
+    return Response.json(
+      { error: `Failed to save any codes to the database: ${failures.length} attempt(s) failed. Nothing was generated.` },
+      { status: 500 }
+    );
+  }
+  if (failures.length > 0) {
+    return Response.json(
+      { codes: generatedCodes, warning: `${failures.length} code(s) failed to save and were not generated.` },
+      { status: 201 }
+    );
   }
 
   return Response.json({ codes: generatedCodes }, { status: 201 });

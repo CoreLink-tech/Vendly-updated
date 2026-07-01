@@ -53,12 +53,13 @@ export default function ActivationsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ plan, count: parseInt(count) || 1, isFounding }),
     });
-    const data = (await res.json()) as { codes: string[]; error?: string };
+    const data = (await res.json()) as { codes: string[]; error?: string; warning?: string };
     if (!res.ok) {
       setGenError(data.error || 'Failed to generate codes');
       setGenerating(false);
       return;
     }
+    if (data.warning) setGenError(data.warning);
     setNewCodes(data.codes || []);
     load();
     setGenerating(false);
