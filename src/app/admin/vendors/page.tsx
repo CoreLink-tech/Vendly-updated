@@ -12,8 +12,25 @@ interface Vendor {
   createdAt: string;
   productCount: number;
   orderCount: number;
-  subscription: { plan: string; status: string } | null;
+  subscription: { plan: string; status: string; endDate?: string; trialEnd?: string } | null;
+  accountType: 'paid' | 'trial' | 'trial_expired' | 'pending' | 'suspended';
 }
+
+const ACCOUNT_TYPE_LABELS: Record<Vendor['accountType'], string> = {
+  paid: 'Paid',
+  trial: 'Trial',
+  trial_expired: 'Trial expired',
+  pending: 'Pending',
+  suspended: 'Suspended',
+};
+
+const ACCOUNT_TYPE_COLORS: Record<Vendor['accountType'], string> = {
+  paid: '#22c55e',
+  trial: '#3b82f6',
+  trial_expired: '#f59e0b',
+  pending: '#888888',
+  suspended: '#ef4444',
+};
 
 function fmtDate(str: string) {
   return str ? str.slice(0, 10) : '';
@@ -24,14 +41,27 @@ export default function AdminVendorsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
   const [selected, setSelected] = useState<Vendor | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('monthly');
+  const [foundingOpen, setFoundingOpen] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/public/founding-status')
+      .then((r) => r.json())
+      .then((d) => setFoundingOpen((d as { isOpen: boolean }).isOpen))
+      .catch(() => setFoundingOpen(false));
+  }, []);
+
+  const monthlyPrice = foundingOpen ? 3000 : 4000;
+  const yearlyPrice = foundingOpen ? 30000 : 40000;
 
   const load = () => {
     const qs = new URLSearchParams();
     if (search) qs.set('search', search);
     if (statusFilter) qs.set('status', statusFilter);
+    if (typeFilter) qs.set('type', typeFilter);
     fetch(`/api/admin/vendors?${qs}`)
       .then((r) => r.json())
       .then((d) => {
@@ -43,7 +73,7 @@ export default function AdminVendorsPage() {
 
   useEffect(() => {
     load();
-  }, [search, statusFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [search, statusFilter, typeFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const doAction = async (vendorId: string, action: 'activate' | 'suspend' | 'deactivate') => {
     setActionLoading(true);
@@ -87,6 +117,19 @@ export default function AdminVendorsPage() {
           <option value="">All statuses</option>
           <option value="pending">Pending</option>
           <option value="active">Active</option>
+          <option value="suspended">Suspended</option>
+        </select>
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="rounded-lg border px-4 py-2.5 text-sm outline-none"
+          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+        >
+          <option value="">All account types</option>
+          <option value="paid">Paid</option>
+          <option value="trial">Trial (active)</option>
+          <option value="trial_expired">Trial expired</option>
+          <option value="pending">Pending</option>
           <option value="suspended">Suspended</option>
         </select>
       </div>
@@ -156,17 +199,10 @@ export default function AdminVendorsPage() {
                 >
                   <span
                     className="w-1.5 h-1.5 rounded-full"
-                    style={{
-                      backgroundColor:
-                        v.status === 'active'
-                          ? '#22c55e'
-                          : v.status === 'pending'
-                            ? '#f59e0b'
-                            : '#ef4444',
-                    }}
+                    style={{ backgroundColor: ACCOUNT_TYPE_COLORS[v.accountType] }}
                   />
-                  <span className="capitalize" style={{ color: '#aaaaaa' }}>
-                    {v.status}
+                  <span style={{ color: ACCOUNT_TYPE_COLORS[v.accountType] }}>
+                    {ACCOUNT_TYPE_LABELS[v.accountType]}
                   </span>
                 </div>
                 {v.slug && (
@@ -213,12 +249,17 @@ export default function AdminVendorsPage() {
                 {[
                   ['Email', selected.email],
                   ['Slug', selected.slug || '—'],
-                  ['Status', selected.status],
+                  ['Account type', ACCOUNT_TYPE_LABELS[selected.accountType]],
+                  ['Vendor status', selected.status],
                   ['Products', String(selected.productCount)],
                   ['Orders', String(selected.orderCount)],
                   ['Joined', fmtDate(selected.createdAt)],
                   ['Plan', selected.subscription?.plan || 'None'],
                   ['Sub status', selected.subscription?.status || '—'],
+                  [
+                    selected.accountType === 'trial' || selected.accountType === 'trial_expired' ? 'Trial ends' : 'Renews',
+                    fmtDate(selected.subscription?.trialEnd || selected.subscription?.endDate || '') || '—',
+                  ],
                 ].map(([k, v]) => (
                   <div key={k}>
                     <p className="text-xs" style={{ color: '#888888' }}>
@@ -251,7 +292,7 @@ export default function AdminVendorsPage() {
                           backgroundColor: plan === p ? '#22c55e10' : 'transparent',
                         }}
                       >
-                        {p === 'monthly' ? 'Monthly ₦4,000' : 'Yearly ₦40,000'}
+                        {p === 'monthly' ? `Monthly ₦${monthlyPrice.toLocaleString()}` : `Yearly ₦${yearlyPrice.toLocaleString()}`}
                       </button>
                     ))}
                   </div>
