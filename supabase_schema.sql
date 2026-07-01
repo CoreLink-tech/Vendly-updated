@@ -4,6 +4,7 @@
 -- ============================================
 
 -- Drop all existing tables (cascade handles foreign keys)
+DROP TABLE IF EXISTS reports CASCADE;
 DROP TABLE IF EXISTS ambassador_referrals CASCADE;
 DROP TABLE IF EXISTS ambassadors CASCADE;
 DROP TABLE IF EXISTS withdrawals CASCADE;
@@ -87,6 +88,8 @@ CREATE TABLE vendors (
   slug TEXT NOT NULL UNIQUE,
   status TEXT NOT NULL DEFAULT 'pending', -- pending | active | suspended
   "referredBy" TEXT, -- slug of referring vendor
+  "primaryColor" TEXT NOT NULL DEFAULT '#22c55e',
+  "backgroundColor" TEXT NOT NULL DEFAULT '#0d0d0d',
   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -274,4 +277,20 @@ CREATE TABLE withdrawals (
 
 CREATE INDEX idx_withdrawals_vendor ON withdrawals("vendorId");
 CREATE INDEX idx_withdrawals_status ON withdrawals(status);
+
+-- ============================================
+-- REPORTS (buyer complaints, auto-purged after 3 days)
+-- ============================================
+
+CREATE TABLE reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  "vendorId" UUID NOT NULL REFERENCES vendors(id) ON DELETE CASCADE,
+  "customerName" TEXT NOT NULL,
+  "customerPhone" TEXT NOT NULL,
+  message TEXT NOT NULL,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_reports_vendor ON reports("vendorId");
+CREATE INDEX idx_reports_created ON reports("createdAt");
 

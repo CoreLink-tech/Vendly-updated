@@ -23,3 +23,25 @@ CREATE TABLE IF NOT EXISTS logistics_routes (
 );
 
 CREATE INDEX IF NOT EXISTS idx_logistics_routes_from ON logistics_routes("fromState");
+
+-- ============================================
+-- MIGRATION 2: storefront colors, customer reports
+-- ============================================
+
+ALTER TABLE vendors
+  ADD COLUMN IF NOT EXISTS "primaryColor"    TEXT NOT NULL DEFAULT '#22c55e',
+  ADD COLUMN IF NOT EXISTS "backgroundColor" TEXT NOT NULL DEFAULT '#0d0d0d';
+
+-- Buyer-submitted reports/complaints for a vendor's store.
+-- Rows are auto-purged 3 days after creation (see /api/vendor/reports).
+CREATE TABLE IF NOT EXISTS reports (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  "vendorId"     UUID NOT NULL REFERENCES vendors(id) ON DELETE CASCADE,
+  "customerName" TEXT NOT NULL,
+  "customerPhone" TEXT NOT NULL,
+  message        TEXT NOT NULL,
+  "createdAt"    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_reports_vendor ON reports("vendorId");
+CREATE INDEX IF NOT EXISTS idx_reports_created ON reports("createdAt");

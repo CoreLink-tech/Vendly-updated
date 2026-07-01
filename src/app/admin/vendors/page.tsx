@@ -169,6 +169,18 @@ export default function AdminVendorsPage() {
                     {v.status}
                   </span>
                 </div>
+                {v.slug && (
+                  <a
+                    href={`/store/${v.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="hidden md:flex shrink-0 text-xs px-2.5 py-1 rounded-lg border font-semibold"
+                    style={{ borderColor: '#22c55e30', backgroundColor: '#22c55e10', color: '#22c55e' }}
+                  >
+                    View Store ↗
+                  </a>
+                )}
               </div>
             ))}
           </div>

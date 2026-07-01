@@ -18,6 +18,8 @@ interface Vendor {
   bankName: string;
   accountNumber: string;
   accountName: string;
+  primaryColor: string;
+  backgroundColor: string;
 }
 
 export default function StoreSettingsPage() {
@@ -34,6 +36,8 @@ export default function StoreSettingsPage() {
     bankName: '',
     accountNumber: '',
     accountName: '',
+    primaryColor: '#22c55e',
+    backgroundColor: '#0d0d0d',
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -59,6 +63,8 @@ export default function StoreSettingsPage() {
             bankName: data.vendor.bankName || '',
             accountNumber: data.vendor.accountNumber || '',
             accountName: data.vendor.accountName || '',
+            primaryColor: data.vendor.primaryColor || '#22c55e',
+            backgroundColor: data.vendor.backgroundColor || '#0d0d0d',
           });
         }
       });
@@ -122,10 +128,19 @@ export default function StoreSettingsPage() {
           <a
             href={`/store/${form.slug}`}
             target="_blank"
-            className="text-xs font-mono truncate"
+            className="text-xs font-mono truncate flex-1"
             style={{ color: '#22c55e' }}
           >
             {storeUrl}
+          </a>
+          <a
+            href={`/store/${form.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 text-xs px-2.5 py-1 rounded border font-semibold"
+            style={{ borderColor: '#22c55e30', backgroundColor: '#22c55e10', color: '#22c55e' }}
+          >
+            View Storefront ↗
           </a>
           <button
             onClick={() => {
@@ -266,6 +281,72 @@ export default function StoreSettingsPage() {
             placeholder="Street address for pickup"
           />
         </label>
+
+        <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: '#f5f5f5' }}>Store Colors</p>
+          <p className="text-[11px] mb-3" style={{ color: '#888888' }}>
+            Customize the accent color and background of your public storefront.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+              Accent Color
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={form.primaryColor}
+                  onChange={(e) => setForm((f) => ({ ...f, primaryColor: e.target.value }))}
+                  className="w-10 h-10 rounded-lg border cursor-pointer"
+                  style={{ borderColor: '#2a2a2a', backgroundColor: '#0d0d0d', padding: 2 }}
+                />
+                <input
+                  value={form.primaryColor}
+                  onChange={(e) => setForm((f) => ({ ...f, primaryColor: e.target.value }))}
+                  className="flex-1 rounded-lg border px-3 py-2.5 text-sm outline-none font-mono"
+                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  placeholder="#22c55e"
+                />
+              </div>
+            </label>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+              Background Color
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={form.backgroundColor}
+                  onChange={(e) => setForm((f) => ({ ...f, backgroundColor: e.target.value }))}
+                  className="w-10 h-10 rounded-lg border cursor-pointer"
+                  style={{ borderColor: '#2a2a2a', backgroundColor: '#0d0d0d', padding: 2 }}
+                />
+                <input
+                  value={form.backgroundColor}
+                  onChange={(e) => setForm((f) => ({ ...f, backgroundColor: e.target.value }))}
+                  className="flex-1 rounded-lg border px-3 py-2.5 text-sm outline-none font-mono"
+                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  placeholder="#0d0d0d"
+                />
+              </div>
+            </label>
+          </div>
+
+          {/* Live preview */}
+          <div
+            className="mt-4 rounded-lg border p-4 flex items-center justify-between"
+            style={{ backgroundColor: form.backgroundColor, borderColor: '#2a2a2a' }}
+          >
+            <div>
+              <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+                {form.businessName || 'Your Store'}
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: '#888888' }}>Storefront preview</p>
+            </div>
+            <span
+              className="text-xs px-4 py-2 rounded-lg font-semibold"
+              style={{ backgroundColor: form.primaryColor, color: '#0d0d0d' }}
+            >
+              Add to Cart
+            </span>
+          </div>
+        </div>
 
         <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
           <p className="text-xs font-semibold mb-3" style={{ color: '#f5f5f5' }}>Delivery &amp; Payment</p>

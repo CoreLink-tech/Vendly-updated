@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' as IconName },
   { href: '/dashboard/products', label: 'Products', icon: 'package' as IconName },
   { href: '/dashboard/orders', label: 'Orders', icon: 'orders' as IconName },
+  { href: '/dashboard/reports', label: 'Reports', icon: 'flag' as IconName },
   { href: '/dashboard/store-settings', label: 'Store Settings', icon: 'store' as IconName },
   { href: '/dashboard/subscription', label: 'Subscription', icon: 'card' as IconName },
   { href: '/dashboard/referrals', label: 'Referral Dashboard', icon: 'link' as IconName },
@@ -139,6 +140,18 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   {linkCopied ? 'Copied!' : 'Copy link'}
                 </span>
               </button>
+            )}
+            {vendor.slug && (
+              <a
+                href={`/store/${vendor.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 w-full flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-lg border text-xs font-semibold transition-colors"
+                style={{ borderColor: '#22c55e30', backgroundColor: '#22c55e10', color: '#22c55e' }}
+              >
+                View My Storefront
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
             )}
           </div>
         )}
