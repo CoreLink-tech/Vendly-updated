@@ -22,13 +22,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
     return Response.json({ error: 'Message is too long (max 2000 characters)' }, { status: 400 });
   }
 
-  const { data: vendor } = await supabase
+  const { data: vendor, error: vendorError } = await supabase
     .from('vendors')
     .select('id')
     .eq('slug', slug.toLowerCase())
     .eq('status', 'active')
     .single();
 
+  if (vendorError) console.error('[store/[slug]/report] vendor lookup failed:', vendorError.message);
   if (!vendor) return Response.json({ error: 'Store not found' }, { status: 404 });
 
   const { error } = await supabase.from('reports').insert({
