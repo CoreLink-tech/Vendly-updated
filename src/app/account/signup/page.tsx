@@ -49,7 +49,7 @@ function SignUpForm() {
       <div className="w-full max-w-[420px]">
         <div className="flex justify-center mb-3">
           <a href="/">
-            <img src="/logo-full.png" alt="Vendly" className="h-14 w-auto" />
+            <img src="/logo-full.png" alt="Vendly" className="h-20 w-auto" />
           </a>
         </div>
 

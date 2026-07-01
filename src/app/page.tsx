@@ -14,7 +14,7 @@ export default function HomePage() {
         style={{ borderColor: '#2a2a2a' }}
       >
         <Link href="/" className="flex items-center">
-          <img src="/logo-full.png" alt="Vendly" className="h-12 w-auto" />
+          <img src="/logo-full.png" alt="Vendly" className="h-16 w-auto" />
         </Link>
         <div className="flex items-center gap-3">
           <Link
@@ -308,7 +308,7 @@ export default function HomePage() {
         style={{ borderColor: '#2a2a2a' }}
       >
         <a href="/">
-          <img src="/logo-full.png" alt="Vendly" className="h-10 w-auto" />
+          <img src="/logo-full.png" alt="Vendly" className="h-12 w-auto" />
         </a>
         <p className="text-xs" style={{ color: '#555555' }}>
           © 2026 Vendly. All rights reserved.
