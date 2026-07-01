@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { NavIcon } from '@/components/NavIcon';
+import { FoundingCounter } from '@/components/FoundingCounter';
 
 export default function HomePage() {
   return (
@@ -160,9 +161,13 @@ export default function HomePage() {
             <br />
             powering the future of online selling
           </h2>
-          <p className="text-gray-400 mb-14 text-sm">
+          <p className="text-gray-400 mb-6 text-sm">
             Founding pricing is limited to the first 100 vendors — lock it in for life.
           </p>
+
+          <div className="mb-8">
+            <FoundingCounter />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             <div
