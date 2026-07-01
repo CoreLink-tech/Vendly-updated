@@ -10,6 +10,7 @@ interface ActivationCode {
   usedByName: string | null;
   usedAt: string | null;
   createdAt: string;
+  isFounding: boolean;
 }
 
 function fmtDate(str: string | null) {
@@ -22,6 +23,8 @@ export default function ActivationsPage() {
   const [generating, setGenerating] = useState(false);
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('monthly');
   const [count, setCount] = useState('1');
+  const [isFounding, setIsFounding] = useState(true);
+  const [genError, setGenError] = useState('');
   const [newCodes, setNewCodes] = useState<string[]>([]);
   const [copiedAll, setCopiedAll] = useState(false);
   const [statusFilter, setStatusFilter] = useState('');
@@ -44,12 +47,18 @@ export default function ActivationsPage() {
   const generate = async () => {
     setGenerating(true);
     setNewCodes([]);
+    setGenError('');
     const res = await fetch('/api/admin/activation-codes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan, count: parseInt(count) || 1 }),
+      body: JSON.stringify({ plan, count: parseInt(count) || 1, isFounding }),
     });
-    const data = (await res.json()) as { codes: string[] };
+    const data = (await res.json()) as { codes: string[]; error?: string };
+    if (!res.ok) {
+      setGenError(data.error || 'Failed to generate codes');
+      setGenerating(false);
+      return;
+    }
     setNewCodes(data.codes || []);
     load();
     setGenerating(false);
@@ -118,6 +127,30 @@ export default function ActivationsPage() {
               style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
             />
           </div>
+          <div>
+            <p className="text-xs font-medium mb-1.5" style={{ color: '#aaaaaa' }}>
+              Batch
+            </p>
+            <button
+              onClick={() => setIsFounding(!isFounding)}
+              className="px-4 py-2 rounded-lg border text-xs font-semibold flex items-center gap-2"
+              style={{
+                borderColor: isFounding ? '#22c55e' : '#2a2a2a',
+                color: isFounding ? '#22c55e' : '#888888',
+                backgroundColor: isFounding ? '#22c55e10' : 'transparent',
+              }}
+            >
+              <span
+                className="w-3 h-3 rounded-sm border flex items-center justify-center"
+                style={{ borderColor: isFounding ? '#22c55e' : '#555555' }}
+              >
+                {isFounding && (
+                  <span className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: '#22c55e' }} />
+                )}
+              </span>
+              Founding 100
+            </button>
+          </div>
           <button
             onClick={() => {
               void generate();
@@ -129,6 +162,12 @@ export default function ActivationsPage() {
             {generating ? 'Generating…' : 'Generate'}
           </button>
         </div>
+
+        {genError && (
+          <p className="text-xs mt-3" style={{ color: '#ef4444' }}>
+            {genError}
+          </p>
+        )}
 
         {newCodes.length > 0 && (
           <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: '#0d0d0d' }}>
@@ -223,9 +262,19 @@ export default function ActivationsPage() {
                 key={c.id}
                 className="grid grid-cols-2 md:grid-cols-5 px-4 md:px-6 py-3 items-center gap-2"
               >
-                <code className="text-sm font-mono" style={{ color: '#f5f5f5' }}>
-                  {c.code}
-                </code>
+                <div className="flex items-center gap-2">
+                  <code className="text-sm font-mono" style={{ color: '#f5f5f5' }}>
+                    {c.code}
+                  </code>
+                  {c.isFounding && (
+                    <span
+                      className="text-[10px] font-semibold px-1.5 py-0.5 rounded"
+                      style={{ backgroundColor: '#22c55e15', color: '#22c55e' }}
+                    >
+                      F100
+                    </span>
+                  )}
+                </div>
                 <span className="text-xs capitalize" style={{ color: '#aaaaaa' }}>
                   {c.plan}
                 </span>
