@@ -25,7 +25,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
   const { data: vendor } = await supabase
     .from('vendors')
     .select('id')
-    .eq('slug', slug)
+    .eq('slug', slug.toLowerCase())
     .eq('status', 'active')
     .single();
 

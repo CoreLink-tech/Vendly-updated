@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   await supabase.from('subscriptions').insert({ vendorId: vendor.id, plan: activationCode.plan, status: 'active', startDate: new Date().toISOString(), endDate: endDate.toISOString(), activationCode: body.code.toUpperCase() });
 
   if (vendor.referredBy) {
-    const { data: referrer } = await supabase.from('vendors').select('id').eq('slug', vendor.referredBy).eq('status', 'active').single();
+    const { data: referrer } = await supabase.from('vendors').select('id').eq('slug', vendor.referredBy.toLowerCase()).eq('status', 'active').single();
     if (referrer) {
       const commission = activationCode.plan === 'yearly' ? 10000 : 1000;
       await supabase.from('referrals').upsert({ referrerId: referrer.id, referredVendorId: vendor.id, status: 'completed', commission, plan: activationCode.plan, paidAt: new Date().toISOString() }, { onConflict: 'referrerId,referredVendorId' });

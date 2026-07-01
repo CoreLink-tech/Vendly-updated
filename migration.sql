@@ -45,3 +45,29 @@ CREATE TABLE IF NOT EXISTS reports (
 
 CREATE INDEX IF NOT EXISTS idx_reports_vendor ON reports("vendorId");
 CREATE INDEX IF NOT EXISTS idx_reports_created ON reports("createdAt");
+
+-- ============================================
+-- MIGRATION 3: fix mixed-case vendor slugs
+-- ============================================
+-- Slug lookups are case-sensitive, but some vendors ended up with a
+-- mixed-case slug (e.g. "Onomefeyoungsarah") from before the app enforced
+-- lowercase on save. Any buyer typing/sharing the link in normal lowercase
+-- got "Store not found" even though the vendor was active. Lowercase
+-- everything now; app code enforces lowercase on all future writes.
+DO $$
+DECLARE
+  r RECORD;
+  new_slug TEXT;
+  suffix INT;
+BEGIN
+  FOR r IN SELECT id, slug FROM vendors WHERE slug <> lower(slug) LOOP
+    new_slug := lower(r.slug);
+    suffix := 1;
+    -- Guard against collisions if a lowercase version is already taken
+    WHILE EXISTS (SELECT 1 FROM vendors WHERE slug = new_slug AND id <> r.id) LOOP
+      suffix := suffix + 1;
+      new_slug := lower(r.slug) || suffix::text;
+    END LOOP;
+    UPDATE vendors SET slug = new_slug WHERE id = r.id;
+  END LOOP;
+END $$;

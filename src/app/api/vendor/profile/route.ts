@@ -46,15 +46,16 @@ export async function POST(request: Request) {
       updates.backgroundColor = body.backgroundColor;
     }
     if (body.slug !== undefined) {
-      const { data: taken } = await supabase.from('vendors').select('id').eq('slug', body.slug).neq('userId', userId).limit(1);
+      const normalizedSlug = body.slug.toLowerCase().replace(/[^a-z0-9-]/g, '');
+      const { data: taken } = await supabase.from('vendors').select('id').eq('slug', normalizedSlug).neq('userId', userId).limit(1);
       if (taken?.length) return Response.json({ error: 'This store URL is already taken' }, { status: 400 });
-      updates.slug = body.slug;
+      updates.slug = normalizedSlug;
     }
     await supabase.from('vendors').update(updates).eq('id', existing.id);
     const { data: updated } = await supabase.from('vendors').select('*').eq('id', existing.id).single();
     return Response.json({ vendor: updated });
   } else {
-    const slug = body.slug || (session.user.email?.split('@')[0]?.toLowerCase().replace(/[^a-z0-9]/g, '') ?? '');
+    const slug = (body.slug || (session.user.email?.split('@')[0] ?? '')).toLowerCase().replace(/[^a-z0-9-]/g, '');
     const { data: vendor } = await supabase.from('vendors').insert({
       userId, businessName: body.businessName || session.user.name || '',
       description: body.description || '', logo: body.logo || null,
