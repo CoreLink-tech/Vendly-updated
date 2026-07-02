@@ -28,7 +28,11 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     businessName: string;
     status: string;
     slug: string;
+    phone?: string;
+    location?: string;
+    address?: string;
   } | null>(null);
+  const [isApprovedAmbassador, setIsApprovedAmbassador] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -39,12 +43,15 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       }
       const data = (await res.json()) as {
         user: { name: string; email: string };
-        vendor: { businessName: string; status: string; slug: string } | null;
+        vendor: { businessName: string; status: string; slug: string; phone?: string; location?: string; address?: string } | null;
+        ambassadorStatus: string | null;
       };
       setUser(data.user);
       setVendor(data.vendor);
+      setIsApprovedAmbassador(data.ambassadorStatus === 'approved');
 
       // If vendor doesn't have a profile yet, create one
+      let currentVendor = data.vendor;
       if (!data.vendor) {
         // Check for referral code stored during signup
         const ref = typeof localStorage !== 'undefined' ? localStorage.getItem('vendly_ref') : null;
@@ -57,18 +64,31 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         if (ref && typeof localStorage !== 'undefined') localStorage.removeItem('vendly_ref');
         const res2 = await fetch('/api/user/me');
         const data2 = (await res2.json()) as {
-          vendor: { businessName: string; status: string; slug: string } | null;
+          vendor: { businessName: string; status: string; slug: string; phone?: string; location?: string; address?: string } | null;
         };
         setVendor(data2.vendor);
+        currentVendor = data2.vendor;
+      }
+
+      // New vendors (and anyone who never finished setup) go through the
+      // one-time setup step before they see the dashboard at all.
+      const incomplete =
+        !currentVendor?.businessName || !currentVendor?.phone || !currentVendor?.location || !currentVendor?.address;
+      if (incomplete && pathname !== '/dashboard/setup') {
+        router.replace('/dashboard/setup');
       }
     }
     void load();
-  }, [router]);
+  }, [router, pathname]);
 
   const handleSignOut = async () => {
     await authClient.signOut();
     window.location.href = '/';
   };
+
+  if (pathname === '/dashboard/setup') {
+    return <>{children}</>;
+  }
 
   return (
     <div
@@ -158,7 +178,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
         {/* Nav items */}
         <nav className="flex-1 overflow-y-auto py-4 px-3">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.filter(
+            (item) => !(isApprovedAmbassador && item.href === '/dashboard/referrals')
+          ).map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link

@@ -34,9 +34,12 @@ export async function POST(request: Request) {
     if (!vendor.bankName || !vendor.accountNumber || !vendor.accountName) {
       return Response.json({ error: 'This store has not set up Pay Now yet' }, { status: 400 });
     }
-    if (!payerBankName) {
-      return Response.json({ error: 'Please confirm which bank you paid from' }, { status: 400 });
-    }
+    // payerBankName is intentionally NOT required here — the checkout UI is a
+    // two-step flow: create the order first, show the vendor's bank details
+    // in a modal, then the customer confirms which bank they paid from via
+    // /api/orders/confirm-payment. Requiring it upfront was leftover from an
+    // earlier single-step design and blocked every Pay Now order before the
+    // modal could ever show.
   }
 
   for (const item of items) {
