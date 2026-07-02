@@ -82,7 +82,8 @@ export default function StoreSettingsPage() {
       setMessage({ type: 'error', text: 'Upload failed' });
       return;
     }
-    setForm((f) => ({ ...f, logo: result.url }));
+    const url: string = result.url;
+    setForm((f) => ({ ...f, logo: url }));
   };
 
   const handleSave = async () => {

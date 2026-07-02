@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 import { withImagesList } from '@/lib/utils';
+import { sanitizeSearchInput } from '@/lib/sanitize';
 
 async function getVendorId(userId: string) {
   const { data } = await supabase.from('vendors').select('id').eq('userId', userId).single();
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
   if (!vendorId) return Response.json({ products: [] });
 
   const { searchParams } = new URL(request.url);
-  const search = searchParams.get('search') || '';
+  const search = sanitizeSearchInput(searchParams.get('search') || '');
   const category = searchParams.get('category') || '';
 
   let query = supabase.from('products').select('*, product_images(url, sortOrder)').eq('vendorId', vendorId).order('createdAt', { ascending: false });

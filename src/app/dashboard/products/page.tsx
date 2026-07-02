@@ -93,7 +93,8 @@ export default function ProductsPage() {
       setError('Upload failed');
       return;
     }
-    setForm((f) => ({ ...f, images: [...f.images, result.url] }));
+    const url: string = result.url;
+    setForm((f) => ({ ...f, images: [...f.images, url] }));
   };
 
   const removeImage = (idx: number) => {

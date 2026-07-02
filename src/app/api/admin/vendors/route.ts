@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
+import { sanitizeSearchInput } from '@/lib/sanitize';
 
 async function requireAdmin(userId: string) {
   const { data } = await supabase.from('user').select('role').eq('id', userId).single();
@@ -13,7 +14,7 @@ export async function GET(request: Request) {
   try { await requireAdmin(session.user.id); } catch { return Response.json({ error: 'Forbidden' }, { status: 403 }); }
 
   const { searchParams } = new URL(request.url);
-  const search = searchParams.get('search') || '';
+  const search = sanitizeSearchInput(searchParams.get('search') || '');
   const status = searchParams.get('status') || '';
   const type = searchParams.get('type') || '';
 
