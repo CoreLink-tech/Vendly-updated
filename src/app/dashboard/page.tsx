@@ -89,15 +89,21 @@ function StoreLinkBanner() {
 export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [storeViews, setStoreViews] = useState<{ today: number; week: number; total: number } | null>(null);
 
   useEffect(() => {
     fetch('/api/vendor/stats')
       .then((r) => r.json())
-      .then((data) => {
-        setStats(data as Stats);
-        setLoading(false);
-      })
+      .then((data) => { setStats(data as Stats); setLoading(false); })
       .catch(() => setLoading(false));
+
+    fetch('/api/vendor/analytics')
+      .then((r) => r.json())
+      .then((data) => {
+        const d = data as { storeViews?: { today: number; week: number; total: number } };
+        if (d.storeViews) setStoreViews(d.storeViews);
+      })
+      .catch(() => {});
   }, []);
 
   const formatCurrency = (n: number) =>
@@ -130,32 +136,12 @@ export default function DashboardPage() {
       <StoreLinkBanner />
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         {[
-          {
-            label: 'Total Products',
-            value: stats?.totalProducts ?? 0,
-            unit: '',
-            href: '/dashboard/products',
-          },
-          {
-            label: 'New Orders',
-            value: stats?.pendingOrders ?? 0,
-            unit: '',
-            href: '/dashboard/orders',
-          },
-          {
-            label: 'Total Orders',
-            value: stats?.totalOrders ?? 0,
-            unit: '',
-            href: '/dashboard/orders',
-          },
-          {
-            label: 'Revenue',
-            value: formatCurrency(stats?.revenue ?? 0),
-            unit: '',
-            href: '/dashboard/orders',
-          },
+          { label: 'Total Products', value: stats?.totalProducts ?? 0, unit: '', href: '/dashboard/products' },
+          { label: 'New Orders', value: stats?.pendingOrders ?? 0, unit: '', href: '/dashboard/orders' },
+          { label: 'Total Orders', value: stats?.totalOrders ?? 0, unit: '', href: '/dashboard/orders' },
+          { label: 'Revenue', value: formatCurrency(stats?.revenue ?? 0), unit: '', href: '/dashboard/orders' },
         ].map((card) => (
           <Link
             key={card.label}
@@ -172,6 +158,28 @@ export default function DashboardPage() {
           </Link>
         ))}
       </div>
+
+      {/* Store views */}
+      {storeViews !== null && (
+        <div className="rounded-xl border p-4 mb-8" style={{ backgroundColor: '#111111', borderColor: '#2a2a2a' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" style={{ color: '#22c55e' }}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>Store Views</span>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { label: 'Today', value: storeViews.today },
+              { label: 'This Week', value: storeViews.week },
+              { label: 'All Time', value: storeViews.total },
+            ].map((v) => (
+              <div key={v.label} className="rounded-lg p-3 text-center" style={{ backgroundColor: '#1a1a1a' }}>
+                <p className="text-xl font-bold" style={{ color: '#22c55e' }}>{v.value.toLocaleString()}</p>
+                <p className="text-[11px] mt-0.5" style={{ color: '#888888' }}>{v.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Quick actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">

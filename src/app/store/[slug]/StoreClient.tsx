@@ -45,7 +45,6 @@ export default function StoreClient({ slug }: { slug: string }) {
   const [trackError, setTrackError] = useState('');
   const [tracking, setTracking] = useState(false);
 
-  // Session ID for deduplicating views
   const [sessionId] = useState(() => {
     if (typeof sessionStorage === 'undefined') return Math.random().toString(36).slice(2);
     const existing = sessionStorage.getItem('vendly_sid');
@@ -54,6 +53,17 @@ export default function StoreClient({ slug }: { slug: string }) {
     sessionStorage.setItem('vendly_sid', id);
     return id;
   });
+
+  // Track store visit on mount (deduplicated per session per 24h server-side)
+  useEffect(() => {
+    if (vendor?.id) {
+      void fetch('/api/store/visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vendorId: vendor.id, sessionId }),
+      });
+    }
+  }, [vendor?.id, sessionId]);
 
   const trackView = (productId: string, vendorId: string) => {
     void fetch('/api/products/view', {
