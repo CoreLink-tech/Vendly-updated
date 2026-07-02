@@ -24,11 +24,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
-  const [vendor, setVendor] = useState<{
-    businessName: string;
-    status: string;
-    slug: string;
-  } | null>(null);
+  const [vendor, setVendor] = useState<{ businessName: string; status: string; slug: string } | null>(null);
+  const [isApprovedAmbassador, setIsApprovedAmbassador] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -40,9 +37,11 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       const data = (await res.json()) as {
         user: { name: string; email: string };
         vendor: { businessName: string; status: string; slug: string } | null;
+        ambassadorStatus?: string | null;
       };
       setUser(data.user);
       setVendor(data.vendor);
+      setIsApprovedAmbassador(data.ambassadorStatus === 'approved');
 
       // If vendor doesn't have a profile yet, create one
       if (!data.vendor) {
@@ -158,7 +157,11 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
         {/* Nav items */}
         <nav className="flex-1 overflow-y-auto py-4 px-3">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.filter((item) => {
+            // Approved ambassadors no longer need the Referral page — they have their own ambassador programme
+            if (item.href === '/dashboard/referrals' && isApprovedAmbassador) return false;
+            return true;
+          }).map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
