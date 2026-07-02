@@ -15,8 +15,20 @@ export async function POST(request: Request) {
   const { data: activationCode } = await supabase.from('activation_codes').select('*').eq('code', body.code.toUpperCase()).eq('status', 'unused').single();
   if (!activationCode) return Response.json({ error: 'Invalid or already used activation code' }, { status: 400 });
 
+  // Atomic claim: only succeeds if the code is still 'unused' at the moment of
+  // this write. If two requests race for the same code, only one UPDATE can
+  // match the WHERE status='unused' condition — the loser gets back no row
+  // and bails out here instead of both proceeding to create a subscription.
+  const { data: claimed } = await supabase
+    .from('activation_codes')
+    .update({ status: 'used', usedBy: vendor.id, usedAt: new Date().toISOString() })
+    .eq('id', activationCode.id)
+    .eq('status', 'unused')
+    .select()
+    .single();
+  if (!claimed) return Response.json({ error: 'This code was just claimed by someone else. Please request a new one.' }, { status: 409 });
+
   await supabase.from('vendors').update({ status: 'active', updatedAt: new Date().toISOString() }).eq('id', vendor.id);
-  await supabase.from('activation_codes').update({ status: 'used', usedBy: vendor.id, usedAt: new Date().toISOString() }).eq('id', activationCode.id);
 
   const endDate = new Date();
   activationCode.plan === 'yearly' ? endDate.setFullYear(endDate.getFullYear() + 1) : endDate.setMonth(endDate.getMonth() + 1);

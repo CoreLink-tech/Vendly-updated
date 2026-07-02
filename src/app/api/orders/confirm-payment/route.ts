@@ -10,11 +10,15 @@ export async function POST(request: Request) {
 
   const { data: order } = await supabase
     .from('orders')
-    .select('id, orderNumber, vendorId')
+    .select('id, orderNumber, vendorId, paymentStatus')
     .eq('id', orderId)
     .single();
 
   if (!order) return Response.json({ error: 'Order not found' }, { status: 404 });
+
+  if (order.paymentStatus === 'paid') {
+    return Response.json({ error: 'This order has already been confirmed as paid' }, { status: 400 });
+  }
 
   await supabase.from('orders').update({
     payerBankName: payerBankName.trim(),

@@ -19,6 +19,7 @@ interface Order {
   customerLocation: string;
   paymentMethod: string;
   paymentStatus: string;
+  payerBankName: string | null;
   status: string;
   subtotal: number;
   deliveryFee: number;
@@ -89,6 +90,24 @@ export default function OrdersPage() {
       setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, ...data.order } : o)));
       if (selected?.id === orderId)
         setSelected((prev) => (prev ? { ...prev, ...data.order } : null));
+    }
+    setUpdating(false);
+  };
+
+  const markPaid = async (orderId: string) => {
+    setUpdating(true);
+    const res = await fetch('/api/vendor/orders', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, paymentStatus: 'paid' }),
+    });
+    const data = (await res.json()) as { order: Order; error?: string };
+    if (res.ok) {
+      setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, ...data.order } : o)));
+      if (selected?.id === orderId)
+        setSelected((prev) => (prev ? { ...prev, ...data.order } : null));
+    } else {
+      alert(data.error || 'Failed to mark as paid');
     }
     setUpdating(false);
   };
@@ -326,6 +345,32 @@ export default function OrdersPage() {
                   </p>
                 </div>
               </div>
+
+              {selected.paymentMethod === 'full_payment' && selected.payerBankName && (
+                <div
+                  className="p-3 rounded-lg text-sm"
+                  style={{ backgroundColor: '#0d0d0d' }}
+                >
+                  <p className="text-xs mb-0.5" style={{ color: '#888888' }}>
+                    Customer says they paid from
+                  </p>
+                  <p style={{ color: '#f5f5f5' }}>{selected.payerBankName}</p>
+                  <p className="text-xs mt-1" style={{ color: '#666666' }}>
+                    Check your bank alerts for a matching transfer before confirming.
+                  </p>
+                </div>
+              )}
+
+              {selected.paymentMethod === 'full_payment' && selected.paymentStatus !== 'paid' && (
+                <button
+                  onClick={() => void markPaid(selected.id)}
+                  disabled={updating}
+                  className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                >
+                  {updating ? 'Updating…' : 'Mark Payment Received'}
+                </button>
+              )}
 
               {/* Order pipeline */}
               <div>

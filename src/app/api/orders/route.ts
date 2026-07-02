@@ -39,8 +39,20 @@ export async function POST(request: Request) {
     }
   }
 
-  const { data: products } = await supabase.from('products').select('*').in('id', items.map(i => i.productId));
-  if (!products?.length) return Response.json({ error: 'Products not found' }, { status: 404 });
+  for (const item of items) {
+    if (!item.productId || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 1000) {
+      return Response.json({ error: 'Invalid item quantity' }, { status: 400 });
+    }
+  }
+
+  const { data: products } = await supabase
+    .from('products')
+    .select('*')
+    .eq('vendorId', vendorId)
+    .in('id', items.map(i => i.productId));
+  if (!products?.length || products.length !== new Set(items.map(i => i.productId)).size) {
+    return Response.json({ error: 'One or more products are unavailable' }, { status: 400 });
+  }
 
   let subtotal = 0;
   const orderItems = items.map(item => {

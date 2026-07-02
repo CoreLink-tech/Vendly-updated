@@ -32,15 +32,30 @@ export async function PUT(request: Request) {
   const vendorId = await getVendorId(session.user.id);
   if (!vendorId) return Response.json({ error: 'Not found' }, { status: 404 });
 
-  const body = await request.json() as { orderId: string; status: string };
-  const { orderId, status } = body;
+  const body = await request.json() as { orderId: string; status?: string; paymentStatus?: string };
+  const { orderId, status, paymentStatus } = body;
 
-  const { data: orderCheck } = await supabase.from('orders').select('id').eq('id', orderId).eq('vendorId', vendorId).single();
+  const { data: orderCheck } = await supabase
+    .from('orders')
+    .select('id, paymentMethod, paymentStatus')
+    .eq('id', orderId)
+    .eq('vendorId', vendorId)
+    .single();
   if (!orderCheck) return Response.json({ error: 'Order not found' }, { status: 404 });
+
+  if (paymentStatus === 'paid') {
+    if (orderCheck.paymentMethod !== 'full_payment') {
+      return Response.json({ error: 'Only bank transfer (Pay Now) orders can be marked paid this way' }, { status: 400 });
+    }
+    if (orderCheck.paymentStatus === 'paid') {
+      return Response.json({ error: 'Already marked as paid' }, { status: 400 });
+    }
+    await supabase.from('orders').update({ paymentStatus: 'paid', paymentConfirmedAt: new Date().toISOString(), updatedAt: new Date().toISOString() }).eq('id', orderId);
+  }
 
   if (status === 'delivered') {
     await settleOrderDelivery(orderId);
-  } else {
+  } else if (status) {
     await supabase.from('orders').update({ status, updatedAt: new Date().toISOString() }).eq('id', orderId);
   }
 

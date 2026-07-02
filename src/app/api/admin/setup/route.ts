@@ -1,8 +1,11 @@
 import { supabase } from '@/lib/supabase';
 
-const SETUP_SECRET = process.env.ADMIN_SETUP_SECRET || 'vendly-admin-2026';
+const SETUP_SECRET = process.env.ADMIN_SETUP_SECRET;
 
 export async function POST(request: Request) {
+  if (!SETUP_SECRET) {
+    return Response.json({ error: 'ADMIN_SETUP_SECRET is not configured on the server. Set it in Vercel env vars first.' }, { status: 503 });
+  }
   const body = await request.json() as { email: string; secret: string };
   if (body.secret !== SETUP_SECRET) return Response.json({ error: 'Invalid secret' }, { status: 403 });
 
