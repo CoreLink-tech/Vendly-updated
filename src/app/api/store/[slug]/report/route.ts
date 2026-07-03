@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { getClientIp } from '@/lib/request';
 
 export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -32,11 +33,28 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
   if (vendorError) console.error('[store/[slug]/report] vendor lookup failed:', vendorError.message);
   if (!vendor) return Response.json({ error: 'Store not found' }, { status: 404 });
 
+  // Hard rate limit, not just a dedupe — the risk here is a flood of
+  // distinct fake complaints burying real ones in a vendor's dashboard,
+  // not identical repeats. 3 per hour per IP per vendor is generous for a
+  // real frustrated customer, restrictive for a scripted flood.
+  const ip = getClientIp(request);
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count: recentCount } = await supabase
+    .from('reports')
+    .select('id', { count: 'exact', head: true })
+    .eq('vendorId', vendor.id)
+    .eq('ipAddress', ip)
+    .gte('createdAt', oneHourAgo);
+  if ((recentCount || 0) >= 3) {
+    return Response.json({ error: 'Too many reports submitted. Please try again later.' }, { status: 429 });
+  }
+
   const { error } = await supabase.from('reports').insert({
     vendorId: vendor.id,
     customerName,
     customerPhone,
     message,
+    ipAddress: ip,
   });
 
   if (error) return Response.json({ error: 'Failed to submit report' }, { status: 500 });

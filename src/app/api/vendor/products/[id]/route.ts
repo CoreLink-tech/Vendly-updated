@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 import { withImages } from '@/lib/utils';
+import { extractStoragePath } from '@/lib/storage-path';
 
 async function getVendorId(userId: string) {
   const { data } = await supabase.from('vendors').select('id').eq('userId', userId).single();
@@ -30,6 +31,18 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   if (!vendorId) return Response.json({ error: 'Not found' }, { status: 404 });
 
   const body = await request.json() as { name?: string; description?: string; price?: number; category?: string; stock?: number; status?: string; images?: string[] };
+  if (body.images && body.images.length > 8) {
+    return Response.json({ error: 'Maximum 8 images per product' }, { status: 400 });
+  }
+
+  // Verify ownership explicitly before touching product_images — the
+  // products.update() below is correctly scoped with .eq('vendorId', ...)
+  // and just silently affects 0 rows if this vendor doesn't own it, but
+  // nothing was stopping the product_images delete/insert further down
+  // from running against ANY productId regardless of who owns it.
+  const { data: owned } = await supabase.from('products').select('id').eq('id', id).eq('vendorId', vendorId).single();
+  if (!owned) return Response.json({ error: 'Product not found' }, { status: 404 });
+
   const updates: Record<string, unknown> = { updatedAt: new Date().toISOString() };
   if (body.name !== undefined) updates.name = body.name;
   if (body.description !== undefined) updates.description = body.description;
@@ -41,8 +54,19 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   await supabase.from('products').update(updates).eq('id', id).eq('vendorId', vendorId);
 
   if (body.images !== undefined) {
+    const { data: oldImages } = await supabase.from('product_images').select('url').eq('productId', id);
     await supabase.from('product_images').delete().eq('productId', id);
     if (body.images.length) await supabase.from('product_images').insert(body.images.map((url, i) => ({ productId: id, url, sortOrder: i })));
+
+    if (oldImages?.length) {
+      const paths = oldImages
+        .map((img) => extractStoragePath(img.url, 'product-images'))
+        .filter((p): p is string => p !== null);
+      if (paths.length) {
+        const { error: removeError } = await supabase.storage.from('product-images').remove(paths);
+        if (removeError) console.error('[products/[id]] failed to remove old storage files:', removeError.message);
+      }
+    }
   }
 
   const { data: product } = await supabase.from('products').select('*, product_images(url, sortOrder)').eq('id', id).single();
@@ -57,6 +81,23 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   const vendorId = await getVendorId(session.user.id);
   if (!vendorId) return Response.json({ error: 'Not found' }, { status: 404 });
 
-  await supabase.from('products').delete().eq('id', id).eq('vendorId', vendorId);
+  // Fetch image URLs before deleting — the FK cascade will remove the
+  // product_images rows automatically, but it can't touch the actual
+  // files sitting in storage. Grab them first or they're gone for good.
+  const { data: images } = await supabase.from('product_images').select('url').eq('productId', id);
+
+  const { error: deleteError } = await supabase.from('products').delete().eq('id', id).eq('vendorId', vendorId);
+  if (deleteError) return Response.json({ error: 'Failed to delete product' }, { status: 500 });
+
+  if (images?.length) {
+    const paths = images
+      .map((img) => extractStoragePath(img.url, 'product-images'))
+      .filter((p): p is string => p !== null);
+    if (paths.length) {
+      const { error: removeError } = await supabase.storage.from('product-images').remove(paths);
+      if (removeError) console.error('[products/[id]] failed to remove storage files on delete:', removeError.message);
+    }
+  }
+
   return Response.json({ success: true });
 }

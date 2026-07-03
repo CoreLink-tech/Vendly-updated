@@ -37,6 +37,9 @@ export async function POST(request: Request) {
 
   const body = await request.json() as { name: string; description?: string; price: number; category?: string; stock?: number; images?: string[] };
   if (!body.name || !body.price) return Response.json({ error: 'Name and price are required' }, { status: 400 });
+  if (body.images && body.images.length > 8) {
+    return Response.json({ error: 'Maximum 8 images per product' }, { status: 400 });
+  }
 
   const { data: product } = await supabase.from('products').insert({
     vendorId, name: body.name, description: body.description || '',

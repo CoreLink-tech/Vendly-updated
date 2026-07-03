@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { getClientIp } from '@/lib/request';
 import { NextRequest } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -7,9 +8,19 @@ export async function POST(request: NextRequest) {
     const { vendorId, sessionId } = body;
     if (!vendorId) return Response.json({ ok: false });
 
-    // Deduplicate: same session only counts once per 24 hours
+    const ip = getClientIp(request);
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+    const { data: recentFromIp } = await supabase
+      .from('store_visits')
+      .select('id')
+      .eq('vendorId', vendorId)
+      .eq('ipAddress', ip)
+      .gte('visitedAt', cutoff)
+      .limit(1);
+    if (recentFromIp?.length) return Response.json({ ok: true, deduped: true });
+
     if (sessionId) {
-      const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
       const { data: existing } = await supabase
         .from('store_visits')
         .select('id')
@@ -23,6 +34,7 @@ export async function POST(request: NextRequest) {
     await supabase.from('store_visits').insert({
       vendorId,
       sessionId: sessionId || null,
+      ipAddress: ip,
       userAgent: request.headers.get('user-agent') || null,
     });
 

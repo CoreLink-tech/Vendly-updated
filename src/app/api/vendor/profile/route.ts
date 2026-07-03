@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
+import { extractStoragePath } from '@/lib/storage-path';
 
 const HEX_COLOR_RE = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
@@ -22,9 +23,10 @@ export async function POST(request: Request) {
   const body = await request.json() as { businessName?: string; description?: string; logo?: string; location?: string; phone?: string; address?: string; slug?: string; referredBy?: string; useLogistics?: boolean; allowPayOnDelivery?: boolean; bankName?: string; accountNumber?: string; accountName?: string; primaryColor?: string; backgroundColor?: string };
   const userId = session.user.id;
 
-  const { data: existing } = await supabase.from('vendors').select('id').eq('userId', userId).single();
+  const { data: existing } = await supabase.from('vendors').select('id, logo').eq('userId', userId).single();
 
   if (existing) {
+    const oldLogoUrl = existing.logo;
     const updates: Record<string, unknown> = { updatedAt: new Date().toISOString() };
     if (body.businessName !== undefined) updates.businessName = body.businessName;
     if (body.description !== undefined) updates.description = body.description;
@@ -52,6 +54,15 @@ export async function POST(request: Request) {
       updates.slug = normalizedSlug;
     }
     await supabase.from('vendors').update(updates).eq('id', existing.id);
+
+    if (body.logo !== undefined && oldLogoUrl && oldLogoUrl !== body.logo) {
+      const oldPath = extractStoragePath(oldLogoUrl, 'vendor-logos');
+      if (oldPath) {
+        const { error: removeError } = await supabase.storage.from('vendor-logos').remove([oldPath]);
+        if (removeError) console.error('[vendor/profile] failed to remove old logo:', removeError.message);
+      }
+    }
+
     const { data: updated } = await supabase.from('vendors').select('*').eq('id', existing.id).single();
     return Response.json({ vendor: updated });
   } else {

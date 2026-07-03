@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { getClientIp } from '@/lib/request';
 
 function generateOrderNumber(): string {
   const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -22,6 +23,18 @@ export async function POST(request: Request) {
 
   if (!vendorId || !customerName || !customerPhone || !customerAddress || !customerLocation || !items?.length) {
     return Response.json({ error: 'Missing required fields' }, { status: 400 });
+  }
+
+  const ip = getClientIp(request);
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count: recentOrderCount } = await supabase
+    .from('orders')
+    .select('id', { count: 'exact', head: true })
+    .eq('vendorId', vendorId)
+    .eq('customerIp', ip)
+    .gte('createdAt', oneHourAgo);
+  if ((recentOrderCount || 0) >= 10) {
+    return Response.json({ error: 'Too many orders placed recently. Please try again later.' }, { status: 429 });
   }
 
   const { data: vendor } = await supabase.from('vendors').select('useLogistics, allowPayOnDelivery, bankName, accountNumber, accountName').eq('id', vendorId).single();
@@ -88,6 +101,7 @@ export async function POST(request: Request) {
     subtotal,
     deliveryFee,
     total: subtotal + deliveryFee,
+    customerIp: ip,
   }).select().single();
   if (!order) return Response.json({ error: 'Failed to create order' }, { status: 500 });
 
