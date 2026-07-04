@@ -1,5 +1,6 @@
 'use client';
 import { NavIcon, IconName } from '@/components/NavIcon';
+import { SITE_URL } from '@/lib/site';
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -106,7 +107,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           style={{ borderColor: '#2a2a2a' }}
         >
           <div className="flex items-center">
-            <img src="/logo-icon.png" alt="Vendly" className="h-14 w-auto" />
+            <img src="/logo-full.png" alt="Vendly" className="h-14 w-auto" />
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -145,7 +146,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             {vendor.slug && (
               <button
                 onClick={() => {
-                  const url = `${window.location.origin}/store/${vendor.slug}`;
+                  const url = `${SITE_URL}/store/${vendor.slug}`;
                   void navigator.clipboard.writeText(url);
                   setLinkCopied(true);
                   setTimeout(() => setLinkCopied(false), 1500);
@@ -163,7 +164,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             )}
             {vendor.slug && (
               <a
-                href={`/store/${vendor.slug}`}
+                href={`${SITE_URL}/store/${vendor.slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-2 w-full flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-lg border text-xs font-semibold transition-colors"
@@ -247,7 +248,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <img src="/logo-icon.png" alt="Vendly" className="h-12 w-auto" />
+          <img src="/logo-full.png" alt="Vendly" className="h-12 w-auto" />
           <div className="w-6" />
         </header>
 

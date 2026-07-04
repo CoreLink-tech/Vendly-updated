@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { SITE_URL } from '@/lib/site';
 
 interface Stats {
   totalProducts: number;
@@ -54,7 +55,7 @@ function StoreLinkBanner() {
       .then((d) => {
         const data = d as { vendor: { slug?: string } | null };
         if (data.vendor?.slug) {
-          setStoreUrl(`${window.location.origin}/store/${data.vendor.slug}`);
+          setStoreUrl(`${SITE_URL}/store/${data.vendor.slug}`);
         }
       });
   }, []);

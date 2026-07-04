@@ -14,12 +14,14 @@ const pool = new Pool({
 
 const trustedOrigins = [
   process.env.BETTER_AUTH_URL,
-  'https://vendlyapp.vercel.app',
+  'https://vendlyapp.com.ng',
+  'https://www.vendlyapp.com.ng',
+  'https://vendlyapp.vercel.app', // kept during the domain transition — remove once nobody's using it
 ].filter((v): v is string => Boolean(v));
 
 export const auth = betterAuth({
   database: pool,
-  baseURL: process.env.BETTER_AUTH_URL || 'https://vendlyapp.vercel.app',
+  baseURL: process.env.BETTER_AUTH_URL || 'https://vendlyapp.com.ng',
   secret: process.env.BETTER_AUTH_SECRET || 'vendly-secret-key-2026',
   trustedOrigins,
   emailAndPassword: {

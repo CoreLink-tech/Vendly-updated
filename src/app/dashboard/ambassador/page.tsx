@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { SITE_URL } from '@/lib/site';
 
 interface AmbassadorData {
   status: string | null; // null = not applied, 'pending', 'approved', 'declined'
@@ -65,9 +66,7 @@ export default function AmbassadorPage() {
     setSaving(false);
   };
 
-  const ambassadorLink = data?.ambassadorCode
-    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/account/signup?amb=${data.ambassadorCode}`
-    : '';
+  const ambassadorLink = data?.ambassadorCode ? `${SITE_URL}/account/signup?amb=${data.ambassadorCode}` : '';
 
   const copyLink = () => {
     if (typeof navigator !== 'undefined') {

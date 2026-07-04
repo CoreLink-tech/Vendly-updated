@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import useUpload from '@/utils/useUpload';
+import { SITE_URL } from '@/lib/site';
 
 interface Vendor {
   id: string;
@@ -121,9 +122,7 @@ export default function StoreSettingsPage() {
     setSaving(false);
   };
 
-  const storeUrl = form.slug
-    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/store/${form.slug}`
-    : '';
+  const storeUrl = form.slug ? `${SITE_URL}/store/${form.slug}` : '';
 
   return (
     <div className="max-w-2xl">
@@ -145,7 +144,7 @@ export default function StoreSettingsPage() {
             Your store:
           </span>
           <a
-            href={`/store/${form.slug}`}
+            href={storeUrl}
             target="_blank"
             className="text-xs font-mono truncate flex-1"
             style={{ color: '#22c55e' }}
@@ -153,7 +152,7 @@ export default function StoreSettingsPage() {
             {storeUrl}
           </a>
           <a
-            href={`/store/${form.slug}`}
+            href={storeUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 text-xs px-2.5 py-1 rounded border font-semibold"

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { SITE_URL } from '@/lib/site';
 
 interface ReferralData {
   slug: string;
@@ -49,9 +50,7 @@ export default function ReferralsPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  const referralLink = data?.slug
-    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/account/signup?ref=${data.slug}`
-    : '';
+  const referralLink = data?.slug ? `${SITE_URL}/account/signup?ref=${data.slug}` : '';
 
   const copyLink = () => {
     if (typeof navigator !== 'undefined') {
