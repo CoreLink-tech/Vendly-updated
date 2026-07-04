@@ -38,10 +38,11 @@ export default function CheckoutClient({ slug }: { slug: string }) {
 
   // Pay Now flow states
   const [showPayNowModal, setShowPayNowModal] = useState(false);
-  const [payerBankName, setPayerBankName] = useState('');
+  const [payerName, setPayerName] = useState('');
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
   const [pendingOrderNumber, setPendingOrderNumber] = useState<string | null>(null);
+  const [platformPayOnDeliveryEnabled, setPlatformPayOnDeliveryEnabled] = useState(true);
 
   useEffect(() => {
     if (typeof sessionStorage !== 'undefined') {
@@ -51,10 +52,12 @@ export default function CheckoutClient({ slug }: { slug: string }) {
     fetch(`/api/store/${slug}`)
       .then((r) => r.json())
       .then((d) => {
-        const data = d as { vendor: Vendor };
+        const data = d as { vendor: Vendor; platformPayOnDeliveryEnabled?: boolean };
         setVendor(data.vendor);
-        // default payment method based on vendor settings
-        if (data.vendor.allowPayOnDelivery) {
+        const podEnabled = data.vendor.allowPayOnDelivery && (data.platformPayOnDeliveryEnabled ?? true);
+        setPlatformPayOnDeliveryEnabled(data.platformPayOnDeliveryEnabled ?? true);
+        // default payment method based on vendor settings AND the platform-wide override
+        if (podEnabled) {
           setPaymentMethod('payment_on_delivery');
         } else {
           setPaymentMethod('full_payment');
@@ -119,12 +122,12 @@ export default function CheckoutClient({ slug }: { slug: string }) {
 
   // Step 2: buyer clicks "I Have Paid" and enters their bank name
   const handleConfirmPayment = async () => {
-    if (!payerBankName.trim()) return;
+    if (!payerName.trim()) return;
     setConfirmingPayment(true);
     const res = await fetch('/api/orders/confirm-payment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId: pendingOrderId, payerBankName: payerBankName.trim() }),
+      body: JSON.stringify({ orderId: pendingOrderId, payerName: payerName.trim() }),
     });
     const data = (await res.json()) as { orderNumber?: string; error?: string };
     if (!res.ok) {
@@ -231,7 +234,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
               <div>
                 <p className="text-xs font-medium mb-2" style={{ color: '#aaaaaa' }}>Payment Method</p>
                 <div className="grid grid-cols-2 gap-3">
-                  {vendor.allowPayOnDelivery && (
+                  {vendor.allowPayOnDelivery && platformPayOnDeliveryEnabled && (
                     <button
                       onClick={() => setPaymentMethod('payment_on_delivery')}
                       className="p-3 rounded-lg border text-left transition-colors"
@@ -365,15 +368,15 @@ export default function CheckoutClient({ slug }: { slug: string }) {
             </div>
 
             <label className="flex flex-col gap-1.5 text-xs font-medium mb-4" style={{ color: '#aaaaaa' }}>
-              Your Bank Name (for receipt)
+              Sender&apos;s Name (as it shows on your bank alert)
               <input
-                value={payerBankName}
-                onChange={(e) => setPayerBankName(e.target.value)}
-                placeholder="e.g. Opay, GTBank, Access Bank…"
+                value={payerName}
+                onChange={(e) => setPayerName(e.target.value)}
+                placeholder="e.g. Jane Okafor"
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none"
                 style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
               />
-              <span style={{ color: '#555' }}>This will appear on your order receipt</span>
+              <span style={{ color: '#555' }}>Helps the seller match your transfer to your order</span>
             </label>
 
             <div className="flex gap-3">
@@ -386,7 +389,7 @@ export default function CheckoutClient({ slug }: { slug: string }) {
               </button>
               <button
                 onClick={() => void handleConfirmPayment()}
-                disabled={!payerBankName.trim() || confirmingPayment}
+                disabled={!payerName.trim() || confirmingPayment}
                 className="flex-1 py-3 rounded-lg text-sm font-semibold disabled:opacity-50"
                 style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
               >

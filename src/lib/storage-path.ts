@@ -13,3 +13,30 @@ export function extractStoragePath(publicUrl: string, bucket: string): string | 
   if (idx === -1) return null;
   return decodeURIComponent(publicUrl.slice(idx + marker.length));
 }
+
+/**
+ * Deletes an image file regardless of whether it's hosted on R2 (new
+ * uploads, post-migration) or still on Supabase Storage (anything
+ * uploaded before the migration that hasn't been replaced yet). Silently
+ * no-ops if the URL doesn't match either pattern rather than throwing —
+ * callers treat storage cleanup as best-effort, never blocking on it.
+ */
+export async function deleteImageByUrl(url: string, supabaseBucket: 'product-images' | 'vendor-logos'): Promise<void> {
+  const { extractR2Key, deleteFromR2 } = await import('@/lib/r2');
+  const r2Key = extractR2Key(url);
+  if (r2Key) {
+    try {
+      await deleteFromR2(r2Key);
+    } catch (err) {
+      console.error('[deleteImageByUrl] R2 delete failed:', err);
+    }
+    return;
+  }
+
+  const supabasePath = extractStoragePath(url, supabaseBucket);
+  if (supabasePath) {
+    const { supabase } = await import('@/lib/supabase');
+    const { error } = await supabase.storage.from(supabaseBucket).remove([supabasePath]);
+    if (error) console.error('[deleteImageByUrl] Supabase delete failed:', error.message);
+  }
+}

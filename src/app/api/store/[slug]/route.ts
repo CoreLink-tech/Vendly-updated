@@ -38,5 +38,20 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
 
   const { data: products } = await supabase.from('products').select('*, product_images(url, sortOrder)').eq('vendorId', vendor.id).eq('status', 'active').gt('stock', 0).order('createdAt', { ascending: false });
 
-  return Response.json({ vendor: { ...vendor, primaryColor, backgroundColor }, products: withImagesList(products) });
+  // Platform-wide override — isolated the same way as the theme columns
+  // above, so if this table/row is ever missing it fails safe (POD stays
+  // available) rather than breaking the whole storefront.
+  let platformPayOnDeliveryEnabled = true;
+  try {
+    const { data: setting } = await supabase.from('platform_settings').select('value').eq('key', 'pay_on_delivery_enabled').single();
+    if (setting) platformPayOnDeliveryEnabled = setting.value;
+  } catch (e) {
+    console.error('[store/[slug]] platform_settings unavailable, defaulting to enabled:', e instanceof Error ? e.message : e);
+  }
+
+  return Response.json({
+    vendor: { ...vendor, primaryColor, backgroundColor },
+    products: withImagesList(products),
+    platformPayOnDeliveryEnabled,
+  });
 }

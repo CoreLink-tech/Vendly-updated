@@ -19,7 +19,7 @@ interface Order {
   customerLocation: string;
   paymentMethod: string;
   paymentStatus: string;
-  payerBankName: string | null;
+  payerName: string | null;
   status: string;
   subtotal: number;
   deliveryFee: number;
@@ -346,17 +346,17 @@ export default function OrdersPage() {
                 </div>
               </div>
 
-              {selected.paymentMethod === 'full_payment' && selected.payerBankName && (
+              {selected.paymentMethod === 'full_payment' && selected.payerName && (
                 <div
                   className="p-3 rounded-lg text-sm"
                   style={{ backgroundColor: '#0d0d0d' }}
                 >
                   <p className="text-xs mb-0.5" style={{ color: '#888888' }}>
-                    Customer says they paid from
+                    Transfer should show sender name
                   </p>
-                  <p style={{ color: '#f5f5f5' }}>{selected.payerBankName}</p>
+                  <p style={{ color: '#f5f5f5' }}>{selected.payerName}</p>
                   <p className="text-xs mt-1" style={{ color: '#666666' }}>
-                    Check your bank alerts for a matching transfer before confirming.
+                    Check your bank alerts for a transfer from this name before confirming.
                   </p>
                 </div>
               )}

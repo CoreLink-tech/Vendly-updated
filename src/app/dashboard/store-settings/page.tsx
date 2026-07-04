@@ -86,6 +86,24 @@ export default function StoreSettingsPage() {
     setForm((f) => ({ ...f, logo: url }));
   };
 
+  // These two toggles save immediately on click rather than waiting for
+  // the main Save button. They flip visually the instant you tap them, so
+  // if that didn't also persist, a vendor reasonably assumes it's done and
+  // navigates away — which is exactly how "I turned off Pay on Delivery
+  // but it still showed on my storefront" happens. Whether a payment
+  // method is offered shouldn't depend on remembering a separate save step.
+  const [toggleSaving, setToggleSaving] = useState<string | null>(null);
+  const saveToggle = async (key: 'useLogistics' | 'allowPayOnDelivery', value: boolean) => {
+    setForm((f) => ({ ...f, [key]: value }));
+    setToggleSaving(key);
+    await fetch('/api/vendor/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ [key]: value }),
+    });
+    setToggleSaving(null);
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setMessage(null);
@@ -357,12 +375,14 @@ export default function StoreSettingsPage() {
               <p className="text-xs font-medium" style={{ color: '#f5f5f5' }}>Use Vendly Logistics</p>
               <p className="text-[11px] mt-0.5" style={{ color: '#888888' }}>
                 Off if you handle your own pickup/delivery — your orders won&apos;t go to the logistics dashboard.
+                {toggleSaving === 'useLogistics' && ' Saving…'}
               </p>
             </div>
             <button
               type="button"
-              onClick={() => setForm((f) => ({ ...f, useLogistics: !f.useLogistics }))}
-              className="shrink-0 w-11 h-6 rounded-full relative transition-colors"
+              onClick={() => void saveToggle('useLogistics', !form.useLogistics)}
+              disabled={toggleSaving === 'useLogistics'}
+              className="shrink-0 w-11 h-6 rounded-full relative transition-colors disabled:opacity-60"
               style={{ backgroundColor: form.useLogistics ? '#22c55e' : '#2a2a2a' }}
             >
               <span
@@ -377,12 +397,14 @@ export default function StoreSettingsPage() {
               <p className="text-xs font-medium" style={{ color: '#f5f5f5' }}>Allow Pay on Delivery</p>
               <p className="text-[11px] mt-0.5" style={{ color: '#888888' }}>
                 Off to require payment upfront only — buyers will only see &quot;Pay Now&quot;.
+                {toggleSaving === 'allowPayOnDelivery' && ' Saving…'}
               </p>
             </div>
             <button
               type="button"
-              onClick={() => setForm((f) => ({ ...f, allowPayOnDelivery: !f.allowPayOnDelivery }))}
-              className="shrink-0 w-11 h-6 rounded-full relative transition-colors"
+              onClick={() => void saveToggle('allowPayOnDelivery', !form.allowPayOnDelivery)}
+              disabled={toggleSaving === 'allowPayOnDelivery'}
+              className="shrink-0 w-11 h-6 rounded-full relative transition-colors disabled:opacity-60"
               style={{ backgroundColor: form.allowPayOnDelivery ? '#22c55e' : '#2a2a2a' }}
             >
               <span

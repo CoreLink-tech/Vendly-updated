@@ -16,10 +16,10 @@ export async function POST(request: Request) {
     customerAddress: string;
     customerLocation: string; // state — used to look up the logistics rate
     paymentMethod: 'full_payment' | 'payment_on_delivery';
-    payerBankName?: string; // required for full_payment — the bank the buyer says they paid from
+    payerName?: string; // required for full_payment — the sender's name as it shows on their bank transfer
     items: Array<{ productId: string; quantity: number }>;
   };
-  const { vendorId, customerName, customerPhone, customerAddress, customerLocation, paymentMethod, payerBankName, items } = body;
+  const { vendorId, customerName, customerPhone, customerAddress, customerLocation, paymentMethod, payerName, items } = body;
 
   if (!vendorId || !customerName || !customerPhone || !customerAddress || !customerLocation || !items?.length) {
     return Response.json({ error: 'Missing required fields' }, { status: 400 });
@@ -40,16 +40,22 @@ export async function POST(request: Request) {
   const { data: vendor } = await supabase.from('vendors').select('useLogistics, allowPayOnDelivery, bankName, accountNumber, accountName').eq('id', vendorId).single();
   if (!vendor) return Response.json({ error: 'Store not found' }, { status: 404 });
 
-  if (paymentMethod === 'payment_on_delivery' && !vendor.allowPayOnDelivery) {
-    return Response.json({ error: 'This store does not accept Pay on Delivery' }, { status: 400 });
+  if (paymentMethod === 'payment_on_delivery') {
+    if (!vendor.allowPayOnDelivery) {
+      return Response.json({ error: 'This store does not accept Pay on Delivery' }, { status: 400 });
+    }
+    const { data: podSetting } = await supabase.from('platform_settings').select('value').eq('key', 'pay_on_delivery_enabled').single();
+    if (podSetting && podSetting.value === false) {
+      return Response.json({ error: 'Pay on Delivery is currently unavailable' }, { status: 400 });
+    }
   }
   if (paymentMethod === 'full_payment') {
     if (!vendor.bankName || !vendor.accountNumber || !vendor.accountName) {
       return Response.json({ error: 'This store has not set up Pay Now yet' }, { status: 400 });
     }
-    // payerBankName is intentionally NOT required here — the checkout UI is a
+    // payerName is intentionally NOT required here — the checkout UI is a
     // two-step flow: create the order first, show the vendor's bank details
-    // in a modal, then the customer confirms which bank they paid from via
+    // in a modal, then the customer confirms the sender name on their transfer via
     // /api/orders/confirm-payment. Requiring it upfront was leftover from an
     // earlier single-step design and blocked every Pay Now order before the
     // modal could ever show.
@@ -96,7 +102,7 @@ export async function POST(request: Request) {
     customerLocation,
     paymentMethod,
     paymentStatus: paymentMethod === 'full_payment' ? 'awaiting_confirmation' : 'pending',
-    payerBankName: paymentMethod === 'full_payment' ? payerBankName : null,
+    payerName: paymentMethod === 'full_payment' ? payerName : null,
     status: 'new',
     subtotal,
     deliveryFee,

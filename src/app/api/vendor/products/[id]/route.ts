@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 import { withImages } from '@/lib/utils';
-import { extractStoragePath } from '@/lib/storage-path';
+import { deleteImageByUrl } from '@/lib/storage-path';
 
 async function getVendorId(userId: string) {
   const { data } = await supabase.from('vendors').select('id').eq('userId', userId).single();
@@ -59,13 +59,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     if (body.images.length) await supabase.from('product_images').insert(body.images.map((url, i) => ({ productId: id, url, sortOrder: i })));
 
     if (oldImages?.length) {
-      const paths = oldImages
-        .map((img) => extractStoragePath(img.url, 'product-images'))
-        .filter((p): p is string => p !== null);
-      if (paths.length) {
-        const { error: removeError } = await supabase.storage.from('product-images').remove(paths);
-        if (removeError) console.error('[products/[id]] failed to remove old storage files:', removeError.message);
-      }
+      await Promise.all(oldImages.map((img) => deleteImageByUrl(img.url, 'product-images')));
     }
   }
 
@@ -90,13 +84,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   if (deleteError) return Response.json({ error: 'Failed to delete product' }, { status: 500 });
 
   if (images?.length) {
-    const paths = images
-      .map((img) => extractStoragePath(img.url, 'product-images'))
-      .filter((p): p is string => p !== null);
-    if (paths.length) {
-      const { error: removeError } = await supabase.storage.from('product-images').remove(paths);
-      if (removeError) console.error('[products/[id]] failed to remove storage files on delete:', removeError.message);
-    }
+    await Promise.all(images.map((img) => deleteImageByUrl(img.url, 'product-images')));
   }
 
   return Response.json({ success: true });

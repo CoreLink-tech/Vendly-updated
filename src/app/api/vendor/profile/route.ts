@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
-import { extractStoragePath } from '@/lib/storage-path';
+import { deleteImageByUrl } from '@/lib/storage-path';
 
 const HEX_COLOR_RE = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
@@ -56,11 +56,7 @@ export async function POST(request: Request) {
     await supabase.from('vendors').update(updates).eq('id', existing.id);
 
     if (body.logo !== undefined && oldLogoUrl && oldLogoUrl !== body.logo) {
-      const oldPath = extractStoragePath(oldLogoUrl, 'vendor-logos');
-      if (oldPath) {
-        const { error: removeError } = await supabase.storage.from('vendor-logos').remove([oldPath]);
-        if (removeError) console.error('[vendor/profile] failed to remove old logo:', removeError.message);
-      }
+      await deleteImageByUrl(oldLogoUrl, 'vendor-logos');
     }
 
     const { data: updated } = await supabase.from('vendors').select('*').eq('id', existing.id).single();

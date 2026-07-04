@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { href: '/admin/logistics-routes', label: 'Route Pricing', icon: 'truck' as IconName },
   { href: '/admin/withdrawals', label: 'Withdrawals', icon: 'money' as IconName },
   { href: '/admin/support', label: 'Support', icon: 'chat' as IconName },
+  { href: '/admin/settings', label: 'Settings', icon: 'settings' as IconName },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
