@@ -12,6 +12,7 @@ const exo2 = Exo_2({
 });
 
 export const metadata: Metadata = {
+	metadataBase: new URL("https://vendlyapp.com.ng"),
 	title: "Vendly",
 	description: "Your storefront, simplified.",
 	icons: {
@@ -22,7 +23,17 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Vendly",
 		description: "Your storefront, simplified.",
-		images: [{ url: "/logo.png", width: 512, height: 512 }],
+		url: "https://vendlyapp.com.ng",
+		siteName: "Vendly",
+		images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Vendly — Your storefront, simplified." }],
+		locale: "en_US",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Vendly",
+		description: "Your storefront, simplified.",
+		images: ["/og-image.png"],
 	},
 };
 
