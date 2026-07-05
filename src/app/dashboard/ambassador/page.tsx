@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { SITE_URL } from '@/lib/site';
 
 interface AmbassadorData {
   status: string | null; // null = not applied, 'pending', 'approved', 'declined'
@@ -29,6 +28,13 @@ export default function AmbassadorPage() {
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Withdrawal state
+  const [showWithdraw, setShowWithdraw] = useState(false);
+  const [wForm, setWForm] = useState({ bankName: '', accountNumber: '', accountName: '' });
+  const [wAmount, setWAmount] = useState('');
+  const [wSaving, setWSaving] = useState(false);
+  const [wMsg, setWMsg] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/vendor/ambassador')
@@ -66,7 +72,29 @@ export default function AmbassadorPage() {
     setSaving(false);
   };
 
-  const ambassadorLink = data?.ambassadorCode ? `${SITE_URL}/account/signup?amb=${data.ambassadorCode}` : '';
+  const submitWithdrawal = async () => {
+    const amount = parseFloat(wAmount);
+    const balance = data?.withdrawableBalance ?? 0;
+    if (!wForm.bankName || !wForm.accountNumber || !wForm.accountName || !wAmount) {
+      setWMsg('All fields are required'); return;
+    }
+    if (isNaN(amount) || amount <= 0) { setWMsg('Enter a valid amount'); return; }
+    if (amount > balance) { setWMsg(`Amount cannot exceed your withdrawable balance of ₦${balance.toLocaleString()}`); return; }
+    setWSaving(true); setWMsg(null);
+    const res = await fetch('/api/vendor/withdrawals', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...wForm, amount, type: 'ambassador' }),
+    });
+    const d = (await res.json()) as { error?: string };
+    if (!res.ok) { setWMsg(d.error || 'Failed to submit'); }
+    else { setWMsg('Withdrawal request submitted! The admin will process it shortly.'); setShowWithdraw(false); setWAmount(''); setWForm({ bankName: '', accountNumber: '', accountName: '' }); }
+    setWSaving(false);
+  };
+
+  const ambassadorLink = data?.ambassadorCode
+    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/account/signup?amb=${data.ambassadorCode}`
+    : '';
 
   const copyLink = () => {
     if (typeof navigator !== 'undefined') {
@@ -147,8 +175,8 @@ export default function AmbassadorPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {[
-              { label: 'Total Invites', value: data.referredVendors ?? 0 },
-              { label: 'Active Invites', value: data.activeSubscriptions ?? 0 },
+              { label: 'Referred Vendors', value: data.referredVendors ?? 0 },
+              { label: 'Active Subscriptions', value: data.activeSubscriptions ?? 0 },
               {
                 label: 'Recurring/month',
                 value: `₦${Number(data.recurringCommission ?? 0).toLocaleString()}`,
@@ -172,6 +200,81 @@ export default function AmbassadorPage() {
               </div>
             ))}
           </div>
+
+          {/* Withdrawal */}
+          {(data.withdrawableBalance ?? 0) > 0 && (
+            <div className="mb-6 p-4 rounded-xl border" style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e30' }}>
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>Request Withdrawal</p>
+                  <p className="text-xs mt-0.5" style={{ color: '#888888' }}>
+                    Available: ₦{Number(data.withdrawableBalance).toLocaleString()}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowWithdraw(!showWithdraw)}
+                  className="text-xs font-semibold px-4 py-2 rounded-lg"
+                  style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                >
+                  Withdraw
+                </button>
+              </div>
+
+              {showWithdraw && (
+                <div className="mt-4 space-y-3">
+                  {[
+                    { key: 'bankName', label: 'Bank Name', placeholder: 'e.g. GTBank' },
+                    { key: 'accountNumber', label: 'Account Number', placeholder: '10-digit account number' },
+                    { key: 'accountName', label: 'Account Name', placeholder: 'Name on account' },
+                  ].map(({ key, label, placeholder }) => (
+                    <label key={key} className="flex flex-col gap-1 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+                      {label}
+                      <input
+                        value={wForm[key as keyof typeof wForm]}
+                        onChange={(e) => setWForm((f) => ({ ...f, [key]: e.target.value }))}
+                        placeholder={placeholder}
+                        className="rounded-lg border px-3 py-2 text-sm outline-none"
+                        style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                      />
+                    </label>
+                  ))}
+                  <label className="flex flex-col gap-1 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+                    Amount (₦) — max ₦{Number(data.withdrawableBalance).toLocaleString()}
+                    <input
+                      type="number"
+                      min={1}
+                      max={data.withdrawableBalance}
+                      value={wAmount}
+                      onChange={(e) => setWAmount(e.target.value)}
+                      placeholder="Enter amount"
+                      className="rounded-lg border px-3 py-2 text-sm outline-none"
+                      style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                    />
+                  </label>
+                  {wMsg && (
+                    <p className="text-xs" style={{ color: wMsg.includes('submitted') ? '#22c55e' : '#f87171' }}>{wMsg}</p>
+                  )}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => void submitWithdrawal()}
+                      disabled={wSaving}
+                      className="flex-1 py-2 rounded-lg text-sm font-semibold disabled:opacity-50"
+                      style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                    >
+                      {wSaving ? 'Submitting…' : 'Submit Request'}
+                    </button>
+                    <button
+                      onClick={() => setShowWithdraw(false)}
+                      className="px-4 py-2 rounded-lg text-sm"
+                      style={{ backgroundColor: '#2a2a2a', color: '#888888' }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div
             className="p-4 rounded-xl border"
