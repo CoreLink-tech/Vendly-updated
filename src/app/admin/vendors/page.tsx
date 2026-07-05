@@ -87,6 +87,15 @@ export default function AdminVendorsPage() {
     setActionLoading(false);
   };
 
+  const deleteVendor = async (vendorId: string) => {
+    if (!window.confirm('Permanently delete this vendor and ALL their data? This cannot be undone.')) return;
+    setActionLoading(true);
+    await fetch(`/api/admin/vendors?vendorId=${vendorId}`, { method: 'DELETE' });
+    load();
+    setSelected(null);
+    setActionLoading(false);
+  };
+
   return (
     <div>
       <div className="mb-8">
@@ -332,6 +341,21 @@ export default function AdminVendorsPage() {
                   View Store →
                 </a>
               )}
+
+              {/* Permanent delete */}
+              <div className="border-t pt-3 mt-1" style={{ borderColor: '#2a2a2a' }}>
+                <button
+                  onClick={() => void deleteVendor(selected.id)}
+                  disabled={actionLoading}
+                  className="w-full py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50"
+                  style={{ backgroundColor: '#ef44441a', color: '#ef4444', border: '1px solid #ef444430' }}
+                >
+                  {actionLoading ? 'Deleting…' : '🗑 Permanently Delete Vendor'}
+                </button>
+                <p className="text-[10px] text-center mt-1.5" style={{ color: '#555' }}>
+                  Deletes vendor, all products, orders, and account. Cannot be undone.
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -473,7 +473,77 @@ export default function StoreSettingsPage() {
         >
           {saving ? 'Saving…' : 'Save Settings'}
         </button>
+
+        {/* Danger zone */}
+        <DeleteAccountSection />
       </div>
+    </div>
+  );
+}
+
+function DeleteAccountSection() {
+  const [open, setOpen] = useState(false);
+  const [confirm, setConfirm] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleDelete = async () => {
+    if (confirm !== 'DELETE MY ACCOUNT') { setError('Type DELETE MY ACCOUNT exactly to confirm'); return; }
+    setDeleting(true); setError(null);
+    const res = await fetch('/api/account', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirm }),
+    });
+    const d = (await res.json()) as { error?: string };
+    if (!res.ok) { setError(d.error || 'Failed to delete account'); setDeleting(false); return; }
+    window.location.href = '/';
+  };
+
+  return (
+    <div className="border-t pt-6 mt-2" style={{ borderColor: '#2a2a2a' }}>
+      <p className="text-xs font-semibold mb-1" style={{ color: '#ef4444' }}>Danger Zone</p>
+      <p className="text-xs mb-3" style={{ color: '#888888' }}>
+        Permanently deletes your account, all products, orders, and data. This cannot be undone.
+      </p>
+      {!open ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="text-xs font-semibold px-4 py-2 rounded-lg border"
+          style={{ borderColor: '#ef4444', color: '#ef4444' }}
+        >
+          Delete My Account
+        </button>
+      ) : (
+        <div className="space-y-3 p-4 rounded-xl border" style={{ borderColor: '#ef444430', backgroundColor: '#1a0000' }}>
+          <p className="text-xs font-semibold" style={{ color: '#ef4444' }}>
+            This will permanently delete your store, all products, orders, and your login. Type{' '}
+            <span className="font-mono">DELETE MY ACCOUNT</span> to confirm.
+          </p>
+          <input
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            placeholder="DELETE MY ACCOUNT"
+            className="w-full rounded-lg border px-3 py-2 text-sm outline-none font-mono"
+            style={{ backgroundColor: '#0d0d0d', borderColor: '#ef444460', color: '#f5f5f5' }}
+          />
+          {error && <p className="text-xs" style={{ color: '#ef4444' }}>{error}</p>}
+          <div className="flex gap-2">
+            <button
+              onClick={() => void handleDelete()}
+              disabled={deleting || confirm !== 'DELETE MY ACCOUNT'}
+              className="flex-1 py-2 rounded-lg text-sm font-semibold disabled:opacity-40"
+              style={{ backgroundColor: '#ef4444', color: '#ffffff' }}
+            >
+              {deleting ? 'Deleting…' : 'Permanently Delete'}
+            </button>
+            <button onClick={() => { setOpen(false); setConfirm(''); setError(null); }}
+              className="px-4 py-2 rounded-lg text-sm" style={{ backgroundColor: '#2a2a2a', color: '#888888' }}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
