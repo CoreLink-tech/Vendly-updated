@@ -54,15 +54,17 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       // If vendor doesn't have a profile yet, create one
       let currentVendor = data.vendor;
       if (!data.vendor) {
-        // Check for referral code stored during signup
-        const ref = typeof localStorage !== 'undefined' ? localStorage.getItem('vendly_ref') : null;
-        const profileBody = ref ? { referredBy: ref } : {};
+        // Check for referral/ambassador code stored during signup — one
+        // generic key covers both since the backend disambiguates which
+        // type it actually is.
+        const code = typeof localStorage !== 'undefined' ? localStorage.getItem('vendly_referral_code') : null;
+        const profileBody = code ? { referredBy: code, ambassadorCode: code } : {};
         await fetch('/api/vendor/profile', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(profileBody),
         });
-        if (ref && typeof localStorage !== 'undefined') localStorage.removeItem('vendly_ref');
+        if (code && typeof localStorage !== 'undefined') localStorage.removeItem('vendly_referral_code');
         const res2 = await fetch('/api/user/me');
         const data2 = (await res2.json()) as {
           vendor: { businessName: string; status: string; slug: string; phone?: string; location?: string; address?: string } | null;

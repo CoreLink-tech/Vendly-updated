@@ -42,6 +42,17 @@ export async function POST(request: Request) {
     }
   }
 
+  // If this vendor signed up via an ambassador's link, the referral row
+  // was already created at signup with plan='trial' so it counted toward
+  // "total invites" immediately. Now that they've actually paid, update
+  // it to the real plan and commission — this is what makes them count
+  // as an "active" invite instead of just a registered one.
+  const { data: ambassadorReferral } = await supabase.from('ambassador_referrals').select('id').eq('referredVendorId', vendor.id).single();
+  if (ambassadorReferral) {
+    const ambassadorCommission = activationCode.plan === 'yearly' ? 10000 : 1000;
+    await supabase.from('ambassador_referrals').update({ plan: activationCode.plan, commission: ambassadorCommission }).eq('id', ambassadorReferral.id);
+  }
+
   const { data: updatedVendor } = await supabase.from('vendors').select('*').eq('id', vendor.id).single();
   return Response.json({ success: true, vendor: updatedVendor });
 }

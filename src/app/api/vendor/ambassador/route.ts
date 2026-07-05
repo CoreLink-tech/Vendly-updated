@@ -13,16 +13,25 @@ export async function GET() {
   if (!amb) return Response.json({ status: null });
   if (amb.status !== 'approved') return Response.json({ status: amb.status });
 
-  const [{ count: referredCount }, { data: earnings }, { data: withdrawals }] = await Promise.all([
+  const [{ count: referredCount }, { data: referralRows }, { data: withdrawals }] = await Promise.all([
     supabase.from('ambassador_referrals').select('*', { count: 'exact', head: true }).eq('ambassadorId', amb.id),
-    supabase.from('ambassador_referrals').select('commission').eq('ambassadorId', amb.id),
+    supabase.from('ambassador_referrals').select('commission, plan').eq('ambassadorId', amb.id),
     supabase.from('withdrawals').select('amount').eq('vendorId', vendor.id).eq('type', 'ambassador').in('status', ['completed', 'pending']),
   ]);
 
-  const totalEarnings = (earnings || []).reduce((s: number, r: { commission: number }) => s + Number(r.commission), 0);
+  const totalEarnings = (referralRows || []).reduce((s: number, r: { commission: number }) => s + Number(r.commission), 0);
   const totalWithdrawn = (withdrawals || []).reduce((s: number, w: { amount: number }) => s + Number(w.amount), 0);
+  // "Active" means they've actually subscribed, not just registered —
+  // plan starts as 'trial' at signup and only changes once they pay.
+  const activeSubscriptions = (referralRows || []).filter((r: { plan: string }) => r.plan !== 'trial').length;
 
-  return Response.json({ status: 'approved', ambassadorCode: amb.ambassadorCode, referredVendors: referredCount, withdrawableBalance: Math.max(0, totalEarnings - totalWithdrawn) });
+  return Response.json({
+    status: 'approved',
+    ambassadorCode: amb.ambassadorCode,
+    referredVendors: referredCount || 0,
+    activeSubscriptions,
+    withdrawableBalance: Math.max(0, totalEarnings - totalWithdrawn),
+  });
 }
 
 export async function POST(request: Request) {

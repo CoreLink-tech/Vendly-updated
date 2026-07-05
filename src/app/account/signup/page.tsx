@@ -7,7 +7,7 @@ import { authClient } from '@/lib/auth-client';
 function SignUpForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
-  const ref = searchParams.get('ref') || '';
+  const [referralCode, setReferralCode] = useState(searchParams.get('ref') || searchParams.get('amb') || '');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,9 +31,10 @@ function SignUpForm() {
       return;
     }
 
-    // Store referral code to handle after signup
-    if (ref && typeof window !== 'undefined') {
-      localStorage.setItem('vendly_ref', ref);
+    // Store referral/ambassador code to handle after signup — the backend
+    // figures out which type it is, so one generic key covers both.
+    if (referralCode.trim() && typeof window !== 'undefined') {
+      localStorage.setItem('vendly_referral_code', referralCode.trim());
     }
 
     if (typeof window !== 'undefined') {
@@ -139,12 +140,26 @@ function SignUpForm() {
             />
           </label>
 
-          {ref && (
+          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            Referral Code (optional)
+            <input
+              type="text"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value)}
+              placeholder="Have a code? Enter it here"
+              className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              onFocus={(e) => { e.target.style.borderColor = '#22c55e'; }}
+              onBlur={(e) => { e.target.style.borderColor = '#2a2a2a'; }}
+            />
+          </label>
+
+          {referralCode.trim() && (
             <div
               className="text-xs px-3 py-2 rounded-lg border"
               style={{ borderColor: '#22c55e30', backgroundColor: '#22c55e08', color: '#22c55e' }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 inline mr-1"><polyline points="20 6 9 17 4 12"/></svg> Referral code applied
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 inline mr-1"><polyline points="20 6 9 17 4 12"/></svg> Referral code will be applied
             </div>
           )}
 

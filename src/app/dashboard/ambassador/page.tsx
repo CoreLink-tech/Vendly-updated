@@ -147,8 +147,8 @@ export default function AmbassadorPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {[
-              { label: 'Referred Vendors', value: data.referredVendors ?? 0 },
-              { label: 'Active Subscriptions', value: data.activeSubscriptions ?? 0 },
+              { label: 'Total Invites', value: data.referredVendors ?? 0 },
+              { label: 'Active Invites', value: data.activeSubscriptions ?? 0 },
               {
                 label: 'Recurring/month',
                 value: `₦${Number(data.recurringCommission ?? 0).toLocaleString()}`,

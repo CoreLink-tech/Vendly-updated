@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const body = await request.json() as { businessName?: string; description?: string; logo?: string; location?: string; phone?: string; address?: string; slug?: string; referredBy?: string; useLogistics?: boolean; allowPayOnDelivery?: boolean; bankName?: string; accountNumber?: string; accountName?: string; primaryColor?: string; backgroundColor?: string };
+  const body = await request.json() as { businessName?: string; description?: string; logo?: string; location?: string; phone?: string; address?: string; slug?: string; referredBy?: string; ambassadorCode?: string; useLogistics?: boolean; allowPayOnDelivery?: boolean; bankName?: string; accountNumber?: string; accountName?: string; primaryColor?: string; backgroundColor?: string };
   const userId = session.user.id;
 
   const { data: existing } = await supabase.from('vendors').select('id, logo').eq('userId', userId).single();
@@ -63,13 +63,40 @@ export async function POST(request: Request) {
     return Response.json({ vendor: updated });
   } else {
     const slug = (body.slug || (session.user.email?.split('@')[0] ?? '')).toLowerCase().replace(/[^a-z0-9-]/g, '');
+
+    // A single code can come in as either an ambassador code or a regular
+    // vendor referral slug — the signup form doesn't know which, since the
+    // person could have typed it in manually rather than followed a link.
+    // Check ambassador codes first; only fall back to treating it as a
+    // vendor slug if it doesn't match one.
+    const candidateCode = body.ambassadorCode || body.referredBy;
+    let matchedAmbassador: { id: string } | null = null;
+    if (candidateCode) {
+      const { data: amb } = await supabase.from('ambassadors').select('id').eq('ambassadorCode', candidateCode).eq('status', 'approved').single();
+      matchedAmbassador = amb;
+    }
+
     const { data: vendor } = await supabase.from('vendors').insert({
       userId, businessName: body.businessName || session.user.name || '',
       description: body.description || '', logo: body.logo || null,
       location: body.location || '', phone: body.phone || '',
       address: body.address || '', slug, status: 'active',
-      referredBy: body.referredBy || null,
+      referredBy: matchedAmbassador ? null : (body.referredBy || null),
     }).select().single();
+
+    if (vendor && matchedAmbassador) {
+      // Tracked at registration, not activation — this is what makes
+      // "total invites" mean everyone who signed up via the link, not just
+      // the ones who eventually paid. plan starts as 'trial' and gets
+      // updated to the real plan by /api/vendor/activate once they pay,
+      // which is what makes them count as an "active" invite.
+      await supabase.from('ambassador_referrals').insert({
+        ambassadorId: matchedAmbassador.id,
+        referredVendorId: vendor.id,
+        plan: 'trial',
+        commission: 0,
+      });
+    }
 
     if (vendor) {
       // Auto-create 3-day free trial
