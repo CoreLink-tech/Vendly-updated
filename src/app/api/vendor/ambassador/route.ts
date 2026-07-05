@@ -45,8 +45,8 @@ export async function POST(request: Request) {
   const { data: existing } = await supabase.from('ambassadors').select('id').eq('vendorId', vendor.id).in('status', ['pending', 'approved']);
   if (existing?.length) return Response.json({ error: 'Application already submitted' }, { status: 400 });
 
-  const body = await request.json() as { fullName: string; email: string; phone: string; businessName: string; reason: string };
-  if (!body.fullName || !body.email || !body.phone || !body.businessName || !body.reason) return Response.json({ error: 'All fields required' }, { status: 400 });
+  const body = await request.json() as { fullName: string; email: string; phone: string; businessName: string; reason?: string };
+  if (!body.fullName || !body.email || !body.phone || !body.businessName) return Response.json({ error: 'Name, email, phone and business name are required' }, { status: 400 });
 
   const { data: ambassador } = await supabase.from('ambassadors').insert({ vendorId: vendor.id, ...body, status: 'pending' }).select().single();
   return Response.json({ ambassador }, { status: 201 });
