@@ -50,9 +50,9 @@ export default function AmbassadorPage() {
   }, []);
 
   const handleApply = async () => {
-    const { fullName, email, phone, businessName, reason } = form;
-    if (!fullName || !email || !phone || !businessName || !reason) {
-      setMsg({ type: 'error', text: 'All fields required' });
+    const { fullName, email, phone, businessName } = form;
+    if (!fullName || !email || !phone || !businessName) {
+      setMsg({ type: 'error', text: 'Please fill in all required fields' });
       return;
     }
     setSaving(true);
@@ -416,13 +416,15 @@ export default function AmbassadorPage() {
                 className="flex flex-col gap-1.5 text-xs font-medium"
                 style={{ color: '#aaaaaa' }}
               >
-                Why do you want to be an ambassador?
+                Why do you want to be an ambassador?{' '}
+                <span style={{ color: '#555555', fontWeight: 400 }}>(optional)</span>
                 <textarea
                   value={form.reason}
                   onChange={(e) => setForm((f) => ({ ...f, reason: e.target.value }))}
                   rows={4}
                   className="rounded-lg border px-3 py-2.5 text-sm outline-none resize-none"
                   style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  placeholder="Tell us a bit about yourself and your network (optional)"
                 />
               </label>
               {msg && (
