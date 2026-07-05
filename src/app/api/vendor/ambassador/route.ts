@@ -40,7 +40,6 @@ export async function POST(request: Request) {
 
   const { data: vendor } = await supabase.from('vendors').select('*').eq('userId', session.user.id).single();
   if (!vendor) return Response.json({ error: 'Vendor profile not found' }, { status: 404 });
-  if (vendor.status !== 'active') return Response.json({ error: 'Activate your store first' }, { status: 400 });
 
   const { data: existing } = await supabase.from('ambassadors').select('id').eq('vendorId', vendor.id).in('status', ['pending', 'approved']);
   if (existing?.length) return Response.json({ error: 'Application already submitted' }, { status: 400 });
