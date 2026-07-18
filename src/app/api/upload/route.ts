@@ -1,8 +1,8 @@
 import { auth } from '@/lib/auth';
-import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 import sharp from 'sharp';
+import { uploadToR2 } from '@/lib/r2';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -71,18 +71,16 @@ export async function POST(request: NextRequest) {
 
     // Convert everything to WebP
     const webpBuffer = await toWebp(fileBuffer);
-    const filename = `${session.user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
+    const filename = `${bucket}/${session.user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
 
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .upload(filename, webpBuffer, { contentType: 'image/webp', upsert: false });
-
-    if (error) {
-      console.error('Storage upload error:', error);
-      return Response.json({ error: error.message }, { status: 500 });
+    let publicUrl: string;
+    try {
+      publicUrl = await uploadToR2(filename, webpBuffer, 'image/webp');
+    } catch (err) {
+      console.error('R2 upload error:', err);
+      return Response.json({ error: 'Upload failed. Storage is temporarily unavailable.' }, { status: 500 });
     }
 
-    const { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(data.path);
     return Response.json({ url: publicUrl, mimeType: 'image/webp' });
   } catch (err) {
     console.error('Upload error:', err);
