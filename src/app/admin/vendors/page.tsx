@@ -45,17 +45,9 @@ export default function AdminVendorsPage() {
   const [selected, setSelected] = useState<Vendor | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('monthly');
-  const [foundingOpen, setFoundingOpen] = useState(false);
 
-  useEffect(() => {
-    fetch('/api/public/founding-status')
-      .then((r) => r.json())
-      .then((d) => setFoundingOpen((d as { isOpen: boolean }).isOpen))
-      .catch(() => setFoundingOpen(false));
-  }, []);
-
-  const monthlyPrice = foundingOpen ? 3000 : 4000;
-  const yearlyPrice = foundingOpen ? 30000 : 40000;
+  const monthlyPrice = 4000;
+  const yearlyPrice = 40000;
 
   const load = () => {
     const qs = new URLSearchParams();

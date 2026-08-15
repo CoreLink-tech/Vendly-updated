@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { NavIcon } from '@/components/NavIcon';
-import { FoundingCounter } from '@/components/FoundingCounter';
 
 export default function HomePage() {
   return (
@@ -143,31 +142,21 @@ export default function HomePage() {
       {/* Pricing */}
       <section className="px-6 md:px-12 py-20 border-t" style={{ borderColor: '#2a2a2a' }}>
         <div className="max-w-4xl mx-auto text-center">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-6 border"
-            style={{
-              backgroundColor: 'rgba(34,197,94,0.08)',
-              borderColor: 'rgba(34,197,94,0.25)',
-              color: '#22c55e',
-            }}
+          <p
+            className="text-xs font-medium uppercase tracking-widest mb-4"
+            style={{ color: '#22c55e' }}
           >
-            🚀 Vendly Founding 100
-          </div>
+            Pricing
+          </p>
           <h2
             className="text-3xl md:text-4xl font-semibold tracking-tight mb-4"
             style={{ color: '#f5f5f5' }}
           >
-            Become one of the first businesses
-            <br />
-            powering the future of online selling
+            Simple, transparent pricing
           </h2>
-          <p className="text-gray-400 mb-6 text-sm">
-            Founding pricing is limited to the first 100 vendors — lock it in for life.
+          <p className="text-gray-400 mb-14 text-sm">
+            No hidden fees. No commissions. Just a flat subscription.
           </p>
-
-          <div className="mb-8">
-            <FoundingCounter />
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             <div
@@ -180,24 +169,21 @@ export default function HomePage() {
               >
                 Monthly
               </p>
-              <div className="flex items-end gap-2 mb-1">
+              <div className="flex items-end gap-1 mb-6">
                 <span className="text-4xl font-semibold" style={{ color: '#f5f5f5' }}>
-                  ₦3,000
+                  ₦4,000
                 </span>
                 <span className="text-sm mb-1.5" style={{ color: '#888888' }}>
                   /month
                 </span>
               </div>
-              <p className="text-xs mb-6" style={{ color: '#666666' }}>
-                <span style={{ textDecoration: 'line-through' }}>₦4,000</span> regular price
-              </p>
               <ul className="space-y-3 mb-8">
                 {[
-                  'Professional online store',
-                  'Vendor dashboard',
-                  'Founding Vendor Badge',
-                  'Early access benefits',
-                  'Order & logistics management',
+                  'Your own store URL',
+                  'Unlimited products',
+                  'Order management',
+                  'Logistics coordination',
+                  'Referral system',
                 ].map((f) => (
                   <li
                     key={f}
@@ -213,7 +199,7 @@ export default function HomePage() {
                 className="block text-center text-sm font-semibold py-3 rounded-lg border transition-colors"
                 style={{ borderColor: '#22c55e', color: '#22c55e' }}
               >
-                Become a Founding Vendor
+                Get Started
               </Link>
             </div>
 
@@ -233,25 +219,24 @@ export default function HomePage() {
               >
                 Yearly
               </p>
-              <div className="flex items-end gap-2 mb-1">
+              <div className="flex items-end gap-1 mb-2">
                 <span className="text-4xl font-semibold" style={{ color: '#f5f5f5' }}>
-                  ₦30,000
+                  ₦40,000
                 </span>
                 <span className="text-sm mb-1.5" style={{ color: '#888888' }}>
                   /year
                 </span>
               </div>
               <p className="text-xs mb-6" style={{ color: '#22c55e' }}>
-                <span style={{ textDecoration: 'line-through', color: '#666666' }}>₦40,000</span>{' '}
-                — save ₦10,000
+                Save ₦8,000 — 2 months free
               </p>
               <ul className="space-y-3 mb-8">
                 {[
-                  'Professional online store',
-                  'Vendor dashboard',
-                  'Founding Vendor Badge',
-                  'Early access benefits',
-                  'Order & logistics management',
+                  'Your own store URL',
+                  'Unlimited products',
+                  'Order management',
+                  'Logistics coordination',
+                  'Referral system',
                 ].map((f) => (
                   <li
                     key={f}
@@ -267,15 +252,10 @@ export default function HomePage() {
                 className="block text-center text-sm font-semibold py-3 rounded-lg transition-opacity hover:opacity-90"
                 style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
               >
-                Become a Founding Vendor
+                Get Started
               </Link>
             </div>
           </div>
-
-          <p className="text-xs mt-8" style={{ color: '#555555' }}>
-            After the first 100 vendors, pricing returns to ₦4,000/month or ₦40,000/year. Founding
-            vendors keep their rate for as long as they stay subscribed.
-          </p>
         </div>
       </section>
 

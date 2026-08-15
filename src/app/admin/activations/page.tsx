@@ -23,7 +23,6 @@ export default function ActivationsPage() {
   const [generating, setGenerating] = useState(false);
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('monthly');
   const [count, setCount] = useState('1');
-  const [isFounding, setIsFounding] = useState(true);
   const [genError, setGenError] = useState('');
   const [newCodes, setNewCodes] = useState<string[]>([]);
   const [copiedAll, setCopiedAll] = useState(false);
@@ -51,7 +50,7 @@ export default function ActivationsPage() {
     const res = await fetch('/api/admin/activation-codes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan, count: parseInt(count) || 1, isFounding }),
+      body: JSON.stringify({ plan, count: parseInt(count) || 1 }),
     });
     const data = (await res.json()) as { codes: string[]; error?: string; warning?: string };
     if (!res.ok) {
@@ -127,30 +126,6 @@ export default function ActivationsPage() {
               className="rounded-lg border px-3 py-2 text-sm w-20 outline-none"
               style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
             />
-          </div>
-          <div>
-            <p className="text-xs font-medium mb-1.5" style={{ color: '#aaaaaa' }}>
-              Batch
-            </p>
-            <button
-              onClick={() => setIsFounding(!isFounding)}
-              className="px-4 py-2 rounded-lg border text-xs font-semibold flex items-center gap-2"
-              style={{
-                borderColor: isFounding ? '#22c55e' : '#2a2a2a',
-                color: isFounding ? '#22c55e' : '#888888',
-                backgroundColor: isFounding ? '#22c55e10' : 'transparent',
-              }}
-            >
-              <span
-                className="w-3 h-3 rounded-sm border flex items-center justify-center"
-                style={{ borderColor: isFounding ? '#22c55e' : '#555555' }}
-              >
-                {isFounding && (
-                  <span className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: '#22c55e' }} />
-                )}
-              </span>
-              Founding 100
-            </button>
           </div>
           <button
             onClick={() => {

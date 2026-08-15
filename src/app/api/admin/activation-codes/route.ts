@@ -34,29 +34,9 @@ export async function POST(request: Request) {
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   try { await requireAdmin(session.user.id); } catch { return Response.json({ error: 'Forbidden' }, { status: 403 }); }
 
-  const body = await request.json() as { plan: 'monthly' | 'yearly'; count?: number; isFounding?: boolean };
-  const { plan, count = 1, isFounding = false } = body;
+  const body = await request.json() as { plan: 'monthly' | 'yearly'; count?: number };
+  const { plan, count = 1 } = body;
   if (!plan) return Response.json({ error: 'Plan required' }, { status: 400 });
-
-  if (isFounding) {
-    const { count: usedFoundingCount } = await supabase
-      .from('activation_codes')
-      .select('id', { count: 'exact', head: true })
-      .eq('isFounding', true)
-      .eq('status', 'used');
-    const { count: unusedFoundingCount } = await supabase
-      .from('activation_codes')
-      .select('id', { count: 'exact', head: true })
-      .eq('isFounding', true)
-      .eq('status', 'unused');
-    const claimed = (usedFoundingCount || 0) + (unusedFoundingCount || 0);
-    if (claimed + count > 100) {
-      return Response.json(
-        { error: `Only ${Math.max(0, 100 - claimed)} founding slot(s) left. Reduce quantity or uncheck founding.` },
-        { status: 400 }
-      );
-    }
-  }
 
   const generatedCodes: string[] = [];
   const failures: string[] = [];
@@ -71,7 +51,7 @@ export async function POST(request: Request) {
     }
     const { error: insertError } = await supabase
       .from('activation_codes')
-      .insert({ code, plan, createdBy: session.user.id, isFounding });
+      .insert({ code, plan, createdBy: session.user.id });
     if (insertError) {
       console.error('[activation-codes] insert failed:', insertError.message);
       failures.push(code);
