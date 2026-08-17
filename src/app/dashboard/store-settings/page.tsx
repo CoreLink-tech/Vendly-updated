@@ -495,8 +495,9 @@ function DeleteAccountSection() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ confirm }),
     });
-    const d = (await res.json()) as { error?: string };
+    const d = (await res.json()) as { error?: string; warning?: string };
     if (!res.ok) { setError(d.error || 'Failed to delete account'); setDeleting(false); return; }
+    if (d.warning) alert(d.warning);
     window.location.href = '/';
   };
 

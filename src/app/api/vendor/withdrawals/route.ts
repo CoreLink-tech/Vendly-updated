@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     }, { status: 400 });
   }
 
-  const { data: withdrawal } = await supabase.from('withdrawals').insert({
+  const { data: withdrawal, error: insertError } = await supabase.from('withdrawals').insert({
     vendorId: vendor.id,
     amount,
     bankName,
@@ -70,6 +70,21 @@ export async function POST(request: Request) {
     type,
     status: 'pending',
   }).select().single();
+
+  if (insertError) {
+    // Unique constraint on (vendorId, type) WHERE status='pending' — this is
+    // the actual fix for the race condition: the balance check above and
+    // this insert are two separate steps, so two near-simultaneous requests
+    // (a double-tap, a network retry, two open tabs) could both pass the
+    // balance check before either insert lands. The database constraint is
+    // what actually closes that gap; one of the two requests will always
+    // fail here instead of both silently succeeding.
+    if (insertError.code === '23505') {
+      return Response.json({ error: `You already have a pending ${type} withdrawal request. Wait for it to be processed before submitting another.` }, { status: 409 });
+    }
+    console.error('[vendor/withdrawals] insert failed:', insertError.message);
+    return Response.json({ error: 'Failed to submit withdrawal request' }, { status: 500 });
+  }
 
   return Response.json({ withdrawal }, { status: 201 });
 }

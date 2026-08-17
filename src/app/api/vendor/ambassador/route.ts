@@ -40,6 +40,7 @@ export async function POST(request: Request) {
 
   const { data: vendor } = await supabase.from('vendors').select('*').eq('userId', session.user.id).single();
   if (!vendor) return Response.json({ error: 'Vendor profile not found' }, { status: 404 });
+  if (vendor.status === 'suspended') return Response.json({ error: 'Your account is suspended and cannot apply' }, { status: 403 });
 
   const { data: existing } = await supabase.from('ambassadors').select('id').eq('vendorId', vendor.id).in('status', ['pending', 'approved']);
   if (existing?.length) return Response.json({ error: 'Application already submitted' }, { status: 400 });

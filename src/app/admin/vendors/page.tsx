@@ -45,6 +45,9 @@ export default function AdminVendorsPage() {
   const [selected, setSelected] = useState<Vendor | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('monthly');
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const monthlyPrice = 4000;
   const yearlyPrice = 40000;
@@ -79,12 +82,24 @@ export default function AdminVendorsPage() {
     setActionLoading(false);
   };
 
-  const deleteVendor = async (vendorId: string) => {
-    if (!window.confirm('Permanently delete this vendor and ALL their data? This cannot be undone.')) return;
+  const deleteVendor = async (vendorId: string, businessName: string) => {
+    if (deleteConfirmText !== businessName) {
+      setDeleteError(`Type "${businessName}" exactly to confirm`);
+      return;
+    }
+    setDeleteError(null);
     setActionLoading(true);
-    await fetch(`/api/admin/vendors?vendorId=${vendorId}`, { method: 'DELETE' });
+    const res = await fetch(`/api/admin/vendors?vendorId=${vendorId}`, { method: 'DELETE' });
+    const d = (await res.json()) as { success?: boolean; error?: string; warning?: string };
+    if (!res.ok) {
+      setDeleteError(d.error || 'Failed to delete vendor');
+      setActionLoading(false);
+      return;
+    }
+    if (d.warning) alert(d.warning);
     load();
     setSelected(null);
+    setDeleteConfirmText('');
     setActionLoading(false);
   };
 
@@ -170,7 +185,7 @@ export default function AdminVendorsPage() {
               <div
                 key={v.id}
                 className="flex items-center gap-4 px-4 md:px-6 py-4 cursor-pointer hover:bg-[#1e1e1e] transition-colors"
-                onClick={() => setSelected(v)}
+                onClick={() => { setSelected(v); setDeleteConfirmVisible(false); setDeleteConfirmText(''); setDeleteError(null); }}
               >
                 <div
                   className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs font-bold"
@@ -336,17 +351,47 @@ export default function AdminVendorsPage() {
 
               {/* Permanent delete */}
               <div className="border-t pt-3 mt-1" style={{ borderColor: '#2a2a2a' }}>
-                <button
-                  onClick={() => void deleteVendor(selected.id)}
-                  disabled={actionLoading}
-                  className="w-full py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50"
-                  style={{ backgroundColor: '#ef44441a', color: '#ef4444', border: '1px solid #ef444430' }}
-                >
-                  {actionLoading ? 'Deleting…' : '🗑 Permanently Delete Vendor'}
-                </button>
-                <p className="text-[10px] text-center mt-1.5" style={{ color: '#555' }}>
-                  Deletes vendor, all products, orders, and account. Cannot be undone.
-                </p>
+                {!deleteConfirmVisible ? (
+                  <button
+                    onClick={() => { setDeleteConfirmVisible(true); setDeleteConfirmText(''); setDeleteError(null); }}
+                    className="w-full py-2.5 rounded-lg text-sm font-semibold"
+                    style={{ backgroundColor: '#ef44441a', color: '#ef4444', border: '1px solid #ef444430' }}
+                  >
+                    🗑 Permanently Delete Vendor
+                  </button>
+                ) : (
+                  <div className="space-y-2 p-3 rounded-lg" style={{ backgroundColor: '#1a0000', border: '1px solid #ef444440' }}>
+                    <p className="text-xs" style={{ color: '#ef4444' }}>
+                      Deletes vendor, all products, orders, and account. Cannot be undone. Type{' '}
+                      <span className="font-mono font-semibold">{selected.businessName}</span> to confirm.
+                    </p>
+                    <input
+                      value={deleteConfirmText}
+                      onChange={(e) => setDeleteConfirmText(e.target.value)}
+                      placeholder={selected.businessName}
+                      className="w-full rounded-lg border px-3 py-2 text-sm outline-none font-mono"
+                      style={{ backgroundColor: '#0d0d0d', borderColor: '#ef444460', color: '#f5f5f5' }}
+                    />
+                    {deleteError && <p className="text-xs" style={{ color: '#ef4444' }}>{deleteError}</p>}
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => void deleteVendor(selected.id, selected.businessName)}
+                        disabled={actionLoading}
+                        className="flex-1 py-2 rounded-lg text-sm font-semibold disabled:opacity-40"
+                        style={{ backgroundColor: '#ef4444', color: '#ffffff' }}
+                      >
+                        {actionLoading ? 'Deleting…' : 'Permanently Delete'}
+                      </button>
+                      <button
+                        onClick={() => { setDeleteConfirmVisible(false); setDeleteConfirmText(''); setDeleteError(null); }}
+                        className="px-4 py-2 rounded-lg text-sm"
+                        style={{ backgroundColor: '#2a2a2a', color: '#888888' }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

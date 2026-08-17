@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { SITE_URL } from '@/lib/site';
 
 interface AmbassadorData {
   status: string | null; // null = not applied, 'pending', 'approved', 'declined'
@@ -92,9 +93,7 @@ export default function AmbassadorPage() {
     setWSaving(false);
   };
 
-  const ambassadorLink = data?.ambassadorCode
-    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/account/signup?amb=${data.ambassadorCode}`
-    : '';
+  const ambassadorLink = data?.ambassadorCode ? `${SITE_URL}/account/signup?amb=${data.ambassadorCode}` : '';
 
   const copyLink = () => {
     if (typeof navigator !== 'undefined') {
@@ -175,8 +174,8 @@ export default function AmbassadorPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {[
-              { label: 'Referred Vendors', value: data.referredVendors ?? 0 },
-              { label: 'Active Subscriptions', value: data.activeSubscriptions ?? 0 },
+              { label: 'Total Invites', value: data.referredVendors ?? 0 },
+              { label: 'Active Invites', value: data.activeSubscriptions ?? 0 },
               {
                 label: 'Recurring/month',
                 value: `₦${Number(data.recurringCommission ?? 0).toLocaleString()}`,
