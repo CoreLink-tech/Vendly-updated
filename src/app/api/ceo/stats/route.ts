@@ -2,6 +2,9 @@ import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const MONTHLY_PRICE = 4000;
 const YEARLY_PRICE = 40000;
 

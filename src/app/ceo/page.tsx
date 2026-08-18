@@ -48,9 +48,9 @@ function Card({ label, value, sub }: { label: string; value: string; sub?: strin
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="mb-8">
+    <div id={id} className="mb-8 scroll-mt-4">
       <h2 className="text-sm font-semibold mb-3 tracking-wide" style={{ color: '#888888' }}>
         {title.toUpperCase()}
       </h2>
@@ -64,7 +64,7 @@ export default function CeoDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/ceo/stats')
+    fetch('/api/ceo/stats', { cache: 'no-store' })
       .then(async (r) => {
         if (!r.ok) throw new Error((await r.json()).error || 'Failed to load');
         return r.json();
@@ -85,7 +85,7 @@ export default function CeoDashboard() {
 
   return (
     <div>
-      <Section title="Business Overview">
+      <Section id="overview" title="Business Overview">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card label="MRR" value={naira(overview.mrr)} />
           <Card label="ARR" value={naira(overview.arr)} />
@@ -98,7 +98,7 @@ export default function CeoDashboard() {
         </div>
       </Section>
 
-      <Section title="Revenue">
+      <Section id="revenue" title="Revenue">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card
             label="This Month"
@@ -115,7 +115,7 @@ export default function CeoDashboard() {
         </div>
       </Section>
 
-      <Section title="Customer Funnel">
+      <Section id="funnel" title="Customer Funnel">
         <div className="rounded-lg border p-5 space-y-3" style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}>
           {[
             { label: 'Registered', value: funnel.registered },
@@ -133,7 +133,7 @@ export default function CeoDashboard() {
         </div>
       </Section>
 
-      <Section title="Subscriptions">
+      <Section id="subscriptions" title="Subscriptions">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
           <Card label="Active" value={subscriptions.active.toLocaleString()} />
           <Card label="Monthly" value={subscriptions.monthly.toLocaleString()} />
@@ -167,7 +167,7 @@ export default function CeoDashboard() {
         </div>
       </Section>
 
-      <Section title="Financial Activity">
+      <Section id="financial" title="Financial Activity">
         <div className="grid grid-cols-2 gap-4">
           <Card label="Pending Withdrawals" value={naira(financial.pendingWithdrawals)} />
         </div>
