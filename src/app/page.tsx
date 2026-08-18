@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { NavIcon } from '@/components/NavIcon';
+import HowItWorks from '@/components/HowItWorks';
 
 export default function HomePage() {
   return (
@@ -138,6 +139,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* How it works */}
+      <HowItWorks />
 
       {/* Pricing */}
       <section className="px-6 md:px-12 py-20 border-t" style={{ borderColor: '#2a2a2a' }}>
