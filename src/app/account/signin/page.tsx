@@ -35,6 +35,8 @@ function SignInForm() {
         window.location.href = callbackUrl;
       } else if (role === 'admin') {
         window.location.href = '/admin';
+      } else if (role === 'ceo') {
+        window.location.href = '/ceo';
       } else if (role === 'logistics') {
         window.location.href = '/logistics';
       } else {
