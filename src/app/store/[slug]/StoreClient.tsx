@@ -23,11 +23,39 @@ interface Vendor {
   address: string;
   logisticsEnabled: boolean;
   payLaterEnabled: boolean;
+  primaryColor?: string;
+  backgroundColor?: string;
 }
 
 interface CartItem {
   product: Product;
   quantity: number;
+}
+
+// Picks readable text (near-black or near-white) against a given hex
+// background so custom accent colors stay legible for any vendor's choice.
+function getContrastText(hex: string): string {
+  const normalized = hex.replace('#', '');
+  const full = normalized.length === 3
+    ? normalized.split('').map((c) => c + c).join('')
+    : normalized;
+  if (!/^[0-9a-f]{6}$/i.test(full)) return '#0d0d0d';
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? '#0d0d0d' : '#f5f5f5';
+}
+
+// Appends an alpha suffix to a hex color for tinted backgrounds (e.g. "20"
+// for ~12% opacity), normalizing 3-digit hex to 6-digit first.
+function hexWithAlpha(hex: string, alpha: string): string {
+  const normalized = hex.replace('#', '');
+  const full = normalized.length === 3
+    ? normalized.split('').map((c) => c + c).join('')
+    : normalized;
+  if (!/^[0-9a-f]{6}$/i.test(full)) return `${hex}${alpha}`;
+  return `#${full}${alpha}`;
 }
 
 export default function StoreClient({ slug }: { slug: string }) {
@@ -157,8 +185,13 @@ export default function StoreClient({ slug }: { slug: string }) {
     );
   }
 
+  const accent = vendor.primaryColor || '#22c55e';
+  const bg = vendor.backgroundColor || '#0d0d0d';
+  const accentText = getContrastText(accent);
+  const accentTint = hexWithAlpha(accent, '20');
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#0d0d0d', fontFamily: 'Inter, sans-serif' }}>
+    <div className="min-h-screen" style={{ backgroundColor: bg, fontFamily: 'Inter, sans-serif' }}>
       {/* Store header */}
       <div className="border-b" style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}>
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-8">
@@ -189,7 +222,7 @@ export default function StoreClient({ slug }: { slug: string }) {
               <button
                 onClick={() => setShowCart(true)}
                 className="relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold"
-                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                style={{ backgroundColor: accent, color: accentText }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                 Cart{cartCount > 0 && <span className="font-bold">({cartCount})</span>}
@@ -218,7 +251,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                   style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
                   onClick={() => { setSelectedProduct(p); setSelectedQty(1); if (vendor) trackView(p.id, vendor.id); }}
                 >
-                  <div className="aspect-square overflow-hidden" style={{ backgroundColor: '#0d0d0d' }}>
+                  <div className="aspect-square overflow-hidden" style={{ backgroundColor: bg }}>
                     {p.images?.[0] ? (
                       <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
                     ) : (
@@ -231,11 +264,11 @@ export default function StoreClient({ slug }: { slug: string }) {
                     <p className="text-sm font-semibold truncate" style={{ color: '#f5f5f5' }}>{p.name}</p>
                     <p className="text-xs mt-0.5" style={{ color: '#888888' }}>{p.category || 'General'}</p>
                     <div className="flex items-center justify-between mt-3">
-                      <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>₦{Number(p.price).toLocaleString()}</span>
+                      <span className="text-sm font-semibold" style={{ color: accent }}>₦{Number(p.price).toLocaleString()}</span>
                       <button
                         onClick={(e) => { e.stopPropagation(); addToCart(p, 1); }}
                         className="text-xs px-3 py-1.5 rounded-lg font-semibold"
-                        style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
+                        style={{ backgroundColor: accentTint, color: accent }}
                       >
                         Add
                       </button>
@@ -252,7 +285,7 @@ export default function StoreClient({ slug }: { slug: string }) {
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-8 overflow-y-auto" style={{ backgroundColor: 'rgba(0,0,0,0.9)' }}>
           <div className="w-full max-w-lg rounded-xl border overflow-hidden" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
-            <div className="aspect-video overflow-hidden" style={{ backgroundColor: '#0d0d0d' }}>
+            <div className="aspect-video overflow-hidden" style={{ backgroundColor: bg }}>
               {selectedProduct.images?.[0] ? (
                 <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="w-full h-full object-cover" />
               ) : (
@@ -273,7 +306,7 @@ export default function StoreClient({ slug }: { slug: string }) {
               </div>
               <p className="text-sm mt-3 leading-relaxed" style={{ color: '#aaaaaa' }}>{selectedProduct.description || 'No description available.'}</p>
               <div className="flex items-center justify-between mt-5">
-                <span className="text-2xl font-semibold" style={{ color: '#22c55e' }}>₦{Number(selectedProduct.price).toLocaleString()}</span>
+                <span className="text-2xl font-semibold" style={{ color: accent }}>₦{Number(selectedProduct.price).toLocaleString()}</span>
                 <span className="text-xs" style={{ color: '#555555' }}>{selectedProduct.stock} in stock</span>
               </div>
 
@@ -284,7 +317,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                   <button
                     onClick={() => setSelectedQty(Math.max(1, selectedQty - 1))}
                     className="px-3 py-2 text-sm font-bold"
-                    style={{ backgroundColor: '#0d0d0d', color: '#f5f5f5' }}
+                    style={{ backgroundColor: bg, color: '#f5f5f5' }}
                   >−</button>
                   <input
                     type="number"
@@ -296,15 +329,15 @@ export default function StoreClient({ slug }: { slug: string }) {
                       if (!isNaN(v) && v >= 1 && v <= selectedProduct.stock) setSelectedQty(v);
                     }}
                     className="w-14 text-center text-sm py-2 outline-none"
-                    style={{ backgroundColor: '#0d0d0d', color: '#f5f5f5' }}
+                    style={{ backgroundColor: bg, color: '#f5f5f5' }}
                   />
                   <button
                     onClick={() => setSelectedQty(Math.min(selectedProduct.stock, selectedQty + 1))}
                     className="px-3 py-2 text-sm font-bold"
-                    style={{ backgroundColor: '#0d0d0d', color: '#f5f5f5' }}
+                    style={{ backgroundColor: bg, color: '#f5f5f5' }}
                   >+</button>
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>
+                <span className="text-sm font-semibold" style={{ color: accent }}>
                   = ₦{(Number(selectedProduct.price) * selectedQty).toLocaleString()}
                 </span>
               </div>
@@ -316,7 +349,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                   setShowCart(true);
                 }}
                 className="w-full mt-4 py-3 rounded-lg text-sm font-semibold"
-                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                style={{ backgroundColor: accent, color: accentText }}
               >
                 Add {selectedQty} to Cart
               </button>
@@ -345,7 +378,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                 <div className="flex-1 overflow-y-auto p-4 space-y-3">
                   {cart.map((item) => (
                     <div key={item.product.id} className="flex items-center gap-3 p-3 rounded-lg border" style={{ borderColor: '#2a2a2a' }}>
-                      <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0" style={{ backgroundColor: '#0d0d0d' }}>
+                      <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0" style={{ backgroundColor: bg }}>
                         {item.product.images?.[0] ? (
                           <img src={item.product.images[0]} alt={item.product.name} className="w-full h-full object-cover" />
                         ) : (
@@ -356,19 +389,19 @@ export default function StoreClient({ slug }: { slug: string }) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold truncate" style={{ color: '#f5f5f5' }}>{item.product.name}</p>
-                        <p className="text-xs mt-0.5" style={{ color: '#22c55e' }}>₦{Number(item.product.price).toLocaleString()}</p>
+                        <p className="text-xs mt-0.5" style={{ color: accent }}>₦{Number(item.product.price).toLocaleString()}</p>
                         {/* Inline quantity controls in cart */}
                         <div className="flex items-center gap-1 mt-1.5">
                           <button
                             onClick={() => updateCartQty(item.product.id, item.quantity - 1)}
                             className="w-6 h-6 rounded flex items-center justify-center text-xs font-bold border"
-                            style={{ borderColor: '#2a2a2a', color: '#aaaaaa', backgroundColor: '#0d0d0d' }}
+                            style={{ borderColor: '#2a2a2a', color: '#aaaaaa', backgroundColor: bg }}
                           >−</button>
                           <span className="text-xs w-6 text-center" style={{ color: '#f5f5f5' }}>{item.quantity}</span>
                           <button
                             onClick={() => updateCartQty(item.product.id, item.quantity + 1)}
                             className="w-6 h-6 rounded flex items-center justify-center text-xs font-bold border"
-                            style={{ borderColor: '#2a2a2a', color: '#aaaaaa', backgroundColor: '#0d0d0d' }}
+                            style={{ borderColor: '#2a2a2a', color: '#aaaaaa', backgroundColor: bg }}
                           >+</button>
                         </div>
                       </div>
@@ -382,7 +415,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                 <div className="p-4 border-t" style={{ borderColor: '#2a2a2a' }}>
                   <div className="flex justify-between text-sm font-semibold mb-4">
                     <span style={{ color: '#f5f5f5' }}>Total</span>
-                    <span style={{ color: '#22c55e' }}>₦{cartTotal.toLocaleString()}</span>
+                    <span style={{ color: accent }}>₦{cartTotal.toLocaleString()}</span>
                   </div>
                   <Link
                     href={`/store/${slug}/checkout`}
@@ -393,7 +426,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                       }
                     }}
                     className="block w-full text-center py-3 rounded-lg text-sm font-semibold"
-                    style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                    style={{ backgroundColor: accent, color: accentText }}
                   >
                     Checkout →
                   </Link>
@@ -421,14 +454,14 @@ export default function StoreClient({ slug }: { slug: string }) {
                 onChange={(e) => setTrackId(e.target.value)}
                 placeholder="e.g. VDL-A1B2C3D4"
                 className="flex-1 rounded-lg border px-3 py-2.5 text-sm outline-none font-mono"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: bg, borderColor: '#2a2a2a', color: '#f5f5f5' }}
                 onKeyDown={(e) => { if (e.key === 'Enter') void handleTrack(); }}
               />
               <button
                 onClick={() => void handleTrack()}
                 disabled={tracking || !trackId.trim()}
                 className="px-4 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50"
-                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                style={{ backgroundColor: accent, color: accentText }}
               >
                 {tracking ? '…' : 'Track'}
               </button>
@@ -439,10 +472,10 @@ export default function StoreClient({ slug }: { slug: string }) {
             )}
 
             {trackResult && (
-              <div className="mt-5 p-4 rounded-lg border" style={{ borderColor: '#2a2a2a', backgroundColor: '#0d0d0d' }}>
+              <div className="mt-5 p-4 rounded-lg border" style={{ borderColor: '#2a2a2a', backgroundColor: bg }}>
                 <div className="flex items-center justify-between mb-3">
-                  <code className="text-sm font-mono font-bold" style={{ color: '#22c55e' }}>{trackResult.orderNumber}</code>
-                  <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}>
+                  <code className="text-sm font-mono font-bold" style={{ color: accent }}>{trackResult.orderNumber}</code>
+                  <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: accentTint, color: accent }}>
                     {STATUS_LABELS[trackResult.status] || trackResult.status}
                   </span>
                 </div>

@@ -4,6 +4,38 @@ import { useEffect, useRef, useState } from 'react';
 import useUpload from '@/utils/useUpload';
 import { SITE_URL } from '@/lib/site';
 
+// A varied set of accent colors covering the common storefront palette —
+// greens, blues, warm tones, purples/pinks, and neutrals — so vendors have
+// real choices beyond the default green, plus custom hex/picker entry.
+const ACCENT_PRESETS = [
+  '#22c55e', '#16a34a', '#0ea5e9', '#2563eb', '#6366f1',
+  '#a855f7', '#ec4899', '#f43f5e', '#f97316', '#f59e0b',
+  '#eab308', '#14b8a6', '#64748b', '#ffffff',
+];
+
+// Background presets: true dark, warm/cool near-blacks, and a couple of
+// light options for vendors who want a bright storefront instead.
+const BACKGROUND_PRESETS = [
+  '#0d0d0d', '#111827', '#18181b', '#1c1917', '#0f172a',
+  '#171717', '#292524', '#f5f5f4', '#ffffff', '#fafafa',
+];
+
+// Picks readable text (near-black or near-white) against a given hex color,
+// mirroring the contrast logic used on the live storefront so this preview
+// matches what buyers will actually see.
+function getContrastText(hex: string): string {
+  const normalized = (hex || '').replace('#', '');
+  const full = normalized.length === 3
+    ? normalized.split('').map((c) => c + c).join('')
+    : normalized;
+  if (!/^[0-9a-f]{6}$/i.test(full)) return '#0d0d0d';
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? '#0d0d0d' : '#f5f5f5';
+}
+
 interface Vendor {
   id: string;
   businessName: string;
@@ -306,7 +338,7 @@ export default function StoreSettingsPage() {
         <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
           <p className="text-xs font-semibold mb-1" style={{ color: '#f5f5f5' }}>Store Colors</p>
           <p className="text-[11px] mb-3" style={{ color: '#888888' }}>
-            Customize the accent color and background of your public storefront.
+            Customize the accent color and background of your public storefront. The preview below updates as you type.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
@@ -327,6 +359,21 @@ export default function StoreSettingsPage() {
                   placeholder="#22c55e"
                 />
               </div>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {ACCENT_PRESETS.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    title={c}
+                    onClick={() => setForm((f) => ({ ...f, primaryColor: c }))}
+                    className="w-6 h-6 rounded-full border-2 transition-transform hover:scale-110"
+                    style={{
+                      backgroundColor: c,
+                      borderColor: form.primaryColor.toLowerCase() === c.toLowerCase() ? '#f5f5f5' : '#2a2a2a',
+                    }}
+                  />
+                ))}
+              </div>
             </label>
             <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
               Background Color
@@ -346,26 +393,87 @@ export default function StoreSettingsPage() {
                   placeholder="#0d0d0d"
                 />
               </div>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {BACKGROUND_PRESETS.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    title={c}
+                    onClick={() => setForm((f) => ({ ...f, backgroundColor: c }))}
+                    className="w-6 h-6 rounded-full border-2 transition-transform hover:scale-110"
+                    style={{
+                      backgroundColor: c,
+                      borderColor: form.backgroundColor.toLowerCase() === c.toLowerCase() ? '#f5f5f5' : '#2a2a2a',
+                    }}
+                  />
+                ))}
+              </div>
             </label>
           </div>
 
-          {/* Live preview */}
-          <div
-            className="mt-4 rounded-lg border p-4 flex items-center justify-between"
-            style={{ backgroundColor: form.backgroundColor, borderColor: '#2a2a2a' }}
-          >
-            <div>
-              <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
-                {form.businessName || 'Your Store'}
-              </p>
-              <p className="text-xs mt-0.5" style={{ color: '#888888' }}>Storefront preview</p>
-            </div>
-            <span
-              className="text-xs px-4 py-2 rounded-lg font-semibold"
-              style={{ backgroundColor: form.primaryColor, color: '#0d0d0d' }}
+          {/* Live storefront preview — mirrors the actual public store layout so
+              vendors can see the real effect of their color choices, not just a swatch. */}
+          <div className="mt-4">
+            <p className="text-[11px] font-medium mb-2" style={{ color: '#888888' }}>Live Preview</p>
+            <div
+              className="rounded-xl border overflow-hidden"
+              style={{ backgroundColor: form.backgroundColor, borderColor: '#2a2a2a' }}
             >
-              Add to Cart
-            </span>
+              {/* mock header */}
+              <div className="flex items-center gap-3 p-4 border-b" style={{ borderColor: '#ffffff15' }}>
+                <div
+                  className="w-10 h-10 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border"
+                  style={{ borderColor: '#ffffff15', backgroundColor: '#00000020' }}
+                >
+                  {form.logo ? (
+                    <img src={form.logo} alt="Logo" className="w-full h-full object-cover" />
+                  ) : (
+                    <span style={{ color: getContrastText(form.backgroundColor) + '80' }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    </span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold truncate" style={{ color: getContrastText(form.backgroundColor) }}>
+                    {form.businessName || 'Your Store'}
+                  </p>
+                  <p className="text-[11px] truncate" style={{ color: getContrastText(form.backgroundColor) + '99' }}>
+                    {form.description || 'Welcome to our store!'}
+                  </p>
+                </div>
+                <span
+                  className="shrink-0 text-[11px] px-3 py-1.5 rounded-lg font-semibold"
+                  style={{ backgroundColor: form.primaryColor, color: getContrastText(form.primaryColor) }}
+                >
+                  Cart
+                </span>
+              </div>
+
+              {/* mock product card */}
+              <div className="p-4">
+                <div className="grid grid-cols-2 gap-3 max-w-xs">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="rounded-lg border overflow-hidden" style={{ borderColor: '#ffffff15', backgroundColor: '#00000020' }}>
+                      <div className="aspect-square" style={{ backgroundColor: '#00000030' }} />
+                      <div className="p-2">
+                        <p className="text-[11px] font-medium truncate" style={{ color: getContrastText(form.backgroundColor) }}>
+                          Sample Product
+                        </p>
+                        <div className="flex items-center justify-between mt-1.5">
+                          <span className="text-[11px] font-semibold" style={{ color: form.primaryColor }}>₦{i}0,000</span>
+                          <span
+                            className="text-[10px] px-2 py-1 rounded font-semibold"
+                            style={{ backgroundColor: form.primaryColor + '20', color: form.primaryColor }}
+                          >
+                            Add
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
