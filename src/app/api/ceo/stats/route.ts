@@ -8,6 +8,11 @@ export const revalidate = 0;
 const MONTHLY_PRICE = 4000;
 const YEARLY_PRICE = 40000;
 
+// Financial reset point: only revenue/subscription activity from this date
+// forward counts toward money metrics. Vendor registration/activation counts
+// remain all-time and are unaffected by this cutoff.
+const CUTOFF_DATE = '2026-08-18T00:00:00.000Z';
+
 function priceFor(plan: string): number {
   return plan === 'yearly' ? YEARLY_PRICE : MONTHLY_PRICE;
 }
@@ -51,9 +56,13 @@ export async function GET() {
   ] = await Promise.all([
     supabase.from('vendors').select('*', { count: 'exact', head: true }),
     supabase.from('vendors').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-    supabase.from('activation_codes').select('plan, usedAt, usedBy').eq('status', 'used'),
-    supabase.from('subscriptions').select('id, plan, status, vendorId, startDate, endDate').eq('status', 'active'),
-    supabase.from('subscriptions').select('id, plan, status, vendorId, startDate, endDate'),
+    supabase.from('activation_codes').select('plan, usedAt, usedBy').eq('status', 'used').gte('usedAt', CUTOFF_DATE),
+    supabase
+      .from('subscriptions')
+      .select('id, plan, status, vendorId, startDate, endDate, createdAt')
+      .eq('status', 'active')
+      .gte('createdAt', CUTOFF_DATE),
+    supabase.from('subscriptions').select('id, plan, status, vendorId, startDate, endDate, createdAt').gte('createdAt', CUTOFF_DATE),
     supabase.from('withdrawals').select('amount').eq('status', 'pending'),
   ]);
 
@@ -164,7 +173,6 @@ export async function GET() {
     financial: {
       pendingWithdrawals: pendingWithdrawalsTotal,
     },
-    dataNote:
-      'Revenue figures are derived from used activation codes at fixed plan prices — Vendly has no payment gateway, so failed/pending/refunded transactions cannot be tracked.',
+    dataNote: `Financial and subscription metrics count activity from ${CUTOFF_DATE.slice(0, 10)} onward only (a clean reset point). Registered/Activated vendor counts remain all-time. Revenue is derived from used activation codes at fixed plan prices — Vendly has no payment gateway, so failed/pending/refunded transactions cannot be tracked.`,
   });
 }
