@@ -29,7 +29,11 @@ export default function LogisticsRoutesPage() {
   const loadRoutes = () => {
     fetch('/api/admin/logistics-routes')
       .then((r) => r.json())
-      .then((d) => { setRoutes((d as { routes: Route[] }).routes); setLoading(false); });
+      .then((d) => { setRoutes((d as { routes: Route[] }).routes); setLoading(false); })
+      .catch(() => {
+        setMessage({ type: 'error', text: 'Failed to load routes. Please refresh the page.' });
+        setLoading(false);
+      });
   };
 
   useEffect(() => { loadRoutes(); }, []);

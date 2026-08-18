@@ -68,6 +68,9 @@ export default function StoreSettingsPage() {
             backgroundColor: data.vendor.backgroundColor || '#0d0d0d',
           });
         }
+      })
+      .catch(() => {
+        setMessage({ type: 'error', text: 'Failed to load your store settings. Please refresh the page.' });
       });
   }, []);
 
