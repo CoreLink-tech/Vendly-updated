@@ -58,8 +58,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     await supabase.from('product_images').delete().eq('productId', id);
     if (body.images.length) await supabase.from('product_images').insert(body.images.map((url, i) => ({ productId: id, url, sortOrder: i })));
 
-    if (oldImages?.length) {
-      await Promise.all(oldImages.map((img) => deleteImageByUrl(img.url, 'product-images')));
+    // Only delete files from storage that were actually dropped from the
+    // list — not every old URL. Images the vendor kept unchanged are still
+    // referenced by the freshly-inserted rows above; deleting them from R2
+    // here would leave the DB pointing at a file that no longer exists.
+    const newUrls = new Set(body.images);
+    const removedImages = (oldImages || []).filter((img) => !newUrls.has(img.url));
+    if (removedImages.length) {
+      await Promise.all(removedImages.map((img) => deleteImageByUrl(img.url, 'product-images')));
     }
   }
 
