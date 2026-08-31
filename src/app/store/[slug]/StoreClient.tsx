@@ -243,23 +243,25 @@ export default function StoreClient({ slug }: { slug: string }) {
       {/* Store header */}
       <div className="border-b" style={{ borderColor: t.border, backgroundColor: t.surface }}>
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-8">
-          <div className="flex items-center gap-5">
-            <div className="w-16 h-16 rounded-xl overflow-hidden border flex items-center justify-center" style={{ borderColor: t.border, backgroundColor: t.surfaceHigh }}>
-              {vendor.logo ? (
-                <img src={vendor.logo} alt={vendor.businessName} className="w-full h-full object-cover" />
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" style={{ color: t.icon }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-xl font-semibold" style={{ color: t.text }}>{vendor.businessName}</h1>
-              <p className="text-sm mt-0.5 truncate" style={{ color: t.textMuted }}>{vendor.description || 'Welcome to our store!'}</p>
-              <div className="flex items-center gap-4 mt-2 text-xs" style={{ color: t.textFaint }}>
-                {vendor.location && <span>{vendor.location}</span>}
-                {vendor.phone && <span>{vendor.phone}</span>}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+            <div className="flex items-center gap-5 min-w-0">
+              <div className="w-16 h-16 shrink-0 rounded-xl overflow-hidden border flex items-center justify-center" style={{ borderColor: t.border, backgroundColor: t.surfaceHigh }}>
+                {vendor.logo ? (
+                  <img src={vendor.logo} alt={vendor.businessName} className="w-full h-full object-cover" />
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" style={{ color: t.icon }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl font-semibold" style={{ color: t.text }}>{vendor.businessName}</h1>
+                <p className="text-sm mt-0.5" style={{ color: t.textMuted }}>{vendor.description || 'Welcome to our store!'}</p>
+                <div className="flex items-center gap-4 mt-2 text-xs" style={{ color: t.textFaint }}>
+                  {vendor.location && <span>{vendor.location}</span>}
+                  {vendor.phone && <span>{vendor.phone}</span>}
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 sm:ml-auto shrink-0">
               <button
                 onClick={() => setTrackOpen(true)}
                 className="text-xs px-3 py-2 rounded-lg border font-medium"
