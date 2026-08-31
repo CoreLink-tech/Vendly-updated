@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { NavIcon, type IconName } from '@/components/NavIcon';
+import { landing, displayFont } from '@/lib/landing-theme';
 
 interface Step {
   label: string;
@@ -50,6 +51,7 @@ const STEPS: Step[] = [
 ];
 
 const SLIDE_MS = 5500;
+const onDark = { text: landing.paper, sub: 'rgba(255,252,244,0.72)', faint: 'rgba(255,252,244,0.45)', line: 'rgba(255,252,244,0.14)', hover: 'rgba(255,252,244,0.06)' };
 
 export default function HowItWorks() {
   const [active, setActive] = useState(0);
@@ -77,22 +79,13 @@ export default function HowItWorks() {
 
   return (
     <section
-      className="px-6 md:px-12 py-20 border-t"
-      style={{ borderColor: '#2a2a2a' }}
+      className="px-6 md:px-12 py-20"
+      style={{ backgroundColor: landing.paper }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       <div className="max-w-6xl mx-auto">
-        <p
-          className="text-xs font-medium uppercase tracking-widest mb-4 text-center"
-          style={{ color: '#22c55e' }}
-        >
-          How it works
-        </p>
-        <h2
-          className="text-3xl md:text-4xl font-semibold tracking-tight mb-14 text-center"
-          style={{ color: '#f5f5f5' }}
-        >
+        <h2 className="text-3xl md:text-[2.5rem] font-semibold mb-14 max-w-xl" style={displayFont}>
           From sign-up to sold, in six steps
         </h2>
 
@@ -106,37 +99,26 @@ export default function HowItWorks() {
                   key={s.label}
                   onClick={() => goTo(i)}
                   className="text-left px-4 py-3.5 rounded-lg transition-colors relative overflow-hidden"
-                  style={{
-                    backgroundColor: isActive ? '#1a1a1a' : 'transparent',
-                  }}
+                  style={{ backgroundColor: isActive ? landing.paperDim : 'transparent' }}
                 >
                   {isActive && (
-                    <span
-                      className="absolute left-0 top-0 bottom-0 w-0.5"
-                      style={{ backgroundColor: '#22c55e' }}
-                    />
+                    <span className="absolute left-0 top-0 bottom-0 w-0.5" style={{ backgroundColor: landing.orange }} />
                   )}
                   <div className="flex items-center gap-3">
-                    <span
-                      className="text-xs font-mono w-5 shrink-0"
-                      style={{ color: isActive ? '#22c55e' : '#555555' }}
-                    >
+                    <span className="text-xs w-5 shrink-0" style={{ color: isActive ? landing.orange : landing.cocoa }}>
                       {String(i + 1).padStart(2, '0')}
                     </span>
-                    <span
-                      className="text-sm font-medium"
-                      style={{ color: isActive ? '#f5f5f5' : '#888888' }}
-                    >
+                    <span className="text-sm font-medium" style={{ color: isActive ? landing.ink : landing.cocoa }}>
                       {s.label}
                     </span>
                   </div>
                   {isActive && (
-                    <div className="mt-2.5 ml-8 h-0.5 rounded-full overflow-hidden" style={{ backgroundColor: '#2a2a2a' }}>
+                    <div className="mt-2.5 ml-8 h-0.5 rounded-full overflow-hidden" style={{ backgroundColor: landing.line }}>
                       <div
                         key={progressKey}
                         className="h-full rounded-full"
                         style={{
-                          backgroundColor: '#22c55e',
+                          backgroundColor: landing.orange,
                           animation: paused ? 'none' : `howItWorksProgress ${SLIDE_MS}ms linear forwards`,
                         }}
                       />
@@ -148,26 +130,20 @@ export default function HowItWorks() {
           </div>
 
           {/* Slide */}
-          <div
-            className="rounded-2xl border p-8 md:p-12 min-h-[420px] flex flex-col"
-            style={{ backgroundColor: '#111111', borderColor: '#2a2a2a' }}
-          >
+          <div className="rounded-2xl p-8 md:p-12 min-h-[420px] flex flex-col" style={{ backgroundColor: landing.ink }}>
             <div className="flex items-start justify-between mb-8">
-              <div
-                className="flex items-center justify-center w-12 h-12 rounded-xl"
-                style={{ backgroundColor: 'rgba(34,197,94,0.1)' }}
-              >
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(245,130,10,0.16)', color: landing.orange }}>
                 <NavIcon name={step.icon} />
               </div>
-              <span className="text-xs font-mono" style={{ color: '#555555' }}>
+              <span className="text-xs" style={{ color: onDark.faint }}>
                 {String(active + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
               </span>
             </div>
 
-            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight mb-3" style={{ color: '#f5f5f5' }}>
+            <h3 className="text-2xl md:text-3xl font-semibold mb-3" style={{ ...displayFont, color: onDark.text }}>
               {step.title}
             </h3>
-            <p className="text-sm md:text-base leading-relaxed max-w-lg mb-8" style={{ color: '#aaaaaa' }}>
+            <p className="text-sm md:text-base leading-relaxed max-w-lg mb-8" style={{ color: onDark.sub }}>
               {step.desc}
             </p>
 
@@ -185,10 +161,7 @@ export default function HowItWorks() {
               onClick={() => goTo(i)}
               aria-label={s.label}
               className="h-1.5 rounded-full transition-all"
-              style={{
-                width: i === active ? 24 : 8,
-                backgroundColor: i === active ? '#22c55e' : '#2a2a2a',
-              }}
+              style={{ width: i === active ? 24 : 8, backgroundColor: i === active ? landing.orange : landing.line }}
             />
           ))}
         </div>
@@ -198,16 +171,16 @@ export default function HowItWorks() {
           <button
             onClick={() => goTo(active - 1)}
             aria-label="Previous step"
-            className="w-9 h-9 rounded-full border flex items-center justify-center transition-colors hover:border-gray-500"
-            style={{ borderColor: '#2a2a2a', color: '#aaaaaa' }}
+            className="w-9 h-9 rounded-full border flex items-center justify-center"
+            style={{ borderColor: landing.line, color: landing.cocoa }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
           <button
             onClick={() => goTo(active + 1)}
             aria-label="Next step"
-            className="w-9 h-9 rounded-full border flex items-center justify-center transition-colors hover:border-gray-500"
-            style={{ borderColor: '#2a2a2a', color: '#aaaaaa' }}
+            className="w-9 h-9 rounded-full border flex items-center justify-center"
+            style={{ borderColor: landing.line, color: landing.cocoa }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
@@ -230,39 +203,39 @@ function StepMockup({ index }: { index: number }) {
   switch (index) {
     case 0:
       return (
-        <div className="rounded-lg border p-4 flex items-center gap-3" style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a' }}>
-          <div className="w-8 h-8 rounded-lg shrink-0" style={{ backgroundColor: 'rgba(34,197,94,0.15)' }} />
-          <code className="text-xs md:text-sm font-mono" style={{ color: '#22c55e' }}>vendly.com/store/your-name</code>
+        <div className="rounded-lg p-4 flex items-center gap-3" style={{ backgroundColor: onDark.hover }}>
+          <div className="w-8 h-8 rounded-lg shrink-0" style={{ backgroundColor: 'rgba(245,130,10,0.18)' }} />
+          <code className="text-xs md:text-sm" style={{ color: landing.orange }}>vendly.com/store/your-name</code>
         </div>
       );
     case 1:
       return (
         <div className="flex items-center gap-3">
-          {['#22c55e', '#0ea5e9', '#a855f7', '#f97316'].map((c) => (
-            <div key={c} className="w-8 h-8 rounded-full border-2" style={{ backgroundColor: c, borderColor: c === '#22c55e' ? '#f5f5f5' : 'transparent' }} />
+          {[landing.orange, landing.sky, landing.green, landing.orangeDeep].map((c) => (
+            <div key={c} className="w-8 h-8 rounded-full border-2" style={{ backgroundColor: c, borderColor: c === landing.orange ? landing.paper : 'transparent' }} />
           ))}
-          <span className="text-xs ml-2" style={{ color: '#555555' }}>Live preview updates instantly</span>
+          <span className="text-xs ml-2" style={{ color: onDark.faint }}>Live preview updates instantly</span>
         </div>
       );
     case 2:
       return (
         <div className="flex gap-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="w-16 rounded-lg border overflow-hidden" style={{ borderColor: '#2a2a2a' }}>
-              <div className="aspect-square" style={{ backgroundColor: '#1a1a1a' }} />
-              <div className="h-2 mt-1.5 mb-1 mx-1.5 rounded-full" style={{ backgroundColor: '#2a2a2a', width: '70%' }} />
-              <div className="h-1.5 mb-1.5 mx-1.5 rounded-full" style={{ backgroundColor: '#22c55e', width: '40%' }} />
+            <div key={i} className="w-16 rounded-lg overflow-hidden" style={{ border: `1px solid ${onDark.line}` }}>
+              <div className="aspect-square" style={{ backgroundColor: onDark.hover }} />
+              <div className="h-2 mt-1.5 mb-1 mx-1.5 rounded-full" style={{ backgroundColor: onDark.line, width: '70%' }} />
+              <div className="h-1.5 mb-1.5 mx-1.5 rounded-full" style={{ backgroundColor: landing.orange, width: '40%' }} />
             </div>
           ))}
         </div>
       );
     case 3:
       return (
-        <div className="flex items-center gap-3 text-xs" style={{ color: '#888888' }}>
-          <span className="px-3 py-1.5 rounded-lg" style={{ backgroundColor: '#0d0d0d', border: '1px solid #2a2a2a' }}>WhatsApp</span>
-          <span className="px-3 py-1.5 rounded-lg" style={{ backgroundColor: '#0d0d0d', border: '1px solid #2a2a2a' }}>Instagram</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          <span className="px-3 py-1.5 rounded-lg font-medium" style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}>Order placed</span>
+        <div className="flex items-center gap-3 text-xs" style={{ color: onDark.sub }}>
+          <span className="px-3 py-1.5 rounded-lg" style={{ backgroundColor: onDark.hover, border: `1px solid ${onDark.line}` }}>WhatsApp</span>
+          <span className="px-3 py-1.5 rounded-lg" style={{ backgroundColor: onDark.hover, border: `1px solid ${onDark.line}` }}>Instagram</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke={landing.orange} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <span className="px-3 py-1.5 rounded-lg font-medium" style={{ backgroundColor: landing.orange, color: landing.ink }}>Order placed</span>
         </div>
       );
     case 4: {
@@ -272,14 +245,11 @@ function StepMockup({ index }: { index: number }) {
           {stages.map((s, i) => (
             <div key={s} className="flex items-center">
               <div className="flex flex-col items-center gap-1.5">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: i <= 2 ? '#22c55e' : '#2a2a2a' }}
-                />
-                <span className="text-[10px] whitespace-nowrap" style={{ color: i <= 2 ? '#aaaaaa' : '#555555' }}>{s}</span>
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: i <= 2 ? landing.orange : onDark.line }} />
+                <span className="text-[10px] whitespace-nowrap" style={{ color: i <= 2 ? onDark.sub : onDark.faint }}>{s}</span>
               </div>
               {i < stages.length - 1 && (
-                <div className="w-8 md:w-12 h-0.5 mx-1 mb-4" style={{ backgroundColor: i < 2 ? '#22c55e' : '#2a2a2a' }} />
+                <div className="w-8 md:w-12 h-0.5 mx-1 mb-4" style={{ backgroundColor: i < 2 ? landing.orange : onDark.line }} />
               )}
             </div>
           ))}
@@ -290,7 +260,7 @@ function StepMockup({ index }: { index: number }) {
       return (
         <div className="flex items-end gap-1.5 h-12">
           {[40, 65, 45, 80, 60, 95].map((h, i) => (
-            <div key={i} className="w-4 rounded-t" style={{ height: `${h}%`, backgroundColor: i === 5 ? '#22c55e' : '#2a2a2a' }} />
+            <div key={i} className="w-4 rounded-t" style={{ height: `${h}%`, backgroundColor: i === 5 ? landing.orange : onDark.line }} />
           ))}
         </div>
       );

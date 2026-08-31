@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Exo_2 } from "next/font/google";
+import { Exo_2, Fraunces } from "next/font/google";
 import "./global.css";
 import { Providers } from "./providers";
 
@@ -9,6 +9,15 @@ const exo2 = Exo_2({
 	variable: "--font-exo2",
 	display: "swap",
 	weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+const fraunces = Fraunces({
+	subsets: ["latin"],
+	variable: "--font-fraunces",
+	display: "swap",
+	weight: "variable",
+	style: ["normal", "italic"],
+	axes: ["opsz", "SOFT", "WONK"],
 });
 
 export const metadata: Metadata = {
@@ -39,7 +48,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en" className={exo2.variable}>
+		<html lang="en" className={`${exo2.variable} ${fraunces.variable}`}>
 			<head>
 				<link
 					rel="stylesheet"

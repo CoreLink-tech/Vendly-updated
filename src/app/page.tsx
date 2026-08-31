@@ -1,137 +1,164 @@
 import Link from 'next/link';
-import { NavIcon } from '@/components/NavIcon';
+import { NavIcon, type IconName } from '@/components/NavIcon';
 import HowItWorks from '@/components/HowItWorks';
+import { AwningStripe } from '@/components/AwningStripe';
+import { MarketTag } from '@/components/MarketTag';
+import { landing, displayFont } from '@/lib/landing-theme';
+
+const FEATURES: { icon: IconName; title: string; desc: string; fill: string; accent: string }[] = [
+  {
+    icon: 'store',
+    title: 'Your own storefront',
+    desc: 'A store at vendly.com/store/your-name, with your logo, your colors, your description.',
+    fill: landing.paper,
+    accent: landing.orange,
+  },
+  {
+    icon: 'package',
+    title: 'List anything, no limit',
+    desc: 'Photos, pricing, stock, categories. One product or a hundred, all in the same place.',
+    fill: landing.greenDeep,
+    accent: landing.paper,
+  },
+  {
+    icon: 'truck',
+    title: 'Orders and delivery, tracked',
+    desc: 'Every order moves through received, accepted, prepared, delivered — with route-based logistics pricing built in.',
+    fill: landing.paperDim,
+    accent: landing.greenDeep,
+  },
+  {
+    icon: 'card',
+    title: 'Pay upfront or on delivery',
+    desc: 'Customers choose. You keep everything you make — Vendly takes no commission.',
+    fill: landing.paper,
+    accent: landing.green,
+  },
+  {
+    icon: 'dashboard',
+    title: 'One dashboard, real numbers',
+    desc: 'Sales, orders, and customers, updated live. No spreadsheet required.',
+    fill: landing.paperDim,
+    accent: landing.orangeDeep,
+  },
+  {
+    icon: 'ambassador',
+    title: 'Earn from referrals',
+    desc: 'Bring in other vendors and earn a recurring cut, every month they stay.',
+    fill: landing.orange,
+    accent: landing.ink,
+  },
+];
+
+const TAG_ITEMS = [
+  { label: 'Ankara dress', price: '₦12,000', accent: landing.orange, rotate: -6, top: '2%', left: '4%' },
+  { label: 'Wall art', price: '₦45,000', accent: landing.green, rotate: 5, top: '20%', left: '46%' },
+  { label: 'Suya & spice', price: '₦2,500', accent: landing.sky, rotate: 4, top: '46%', left: '2%' },
+  { label: 'Sneakers', price: '₦18,000', accent: landing.orangeDeep, rotate: -4, top: '60%', left: '44%' },
+];
 
 export default function HomePage() {
   return (
-    <main
-      className="min-h-screen font-inter"
-      style={{ backgroundColor: '#0d0d0d', color: '#f5f5f5' }}
-    >
+    <main className="min-h-screen" style={{ backgroundColor: landing.paper, color: landing.ink }}>
       {/* Nav */}
-      <nav
-        className="flex items-center justify-between px-6 md:px-12 py-4 border-b"
-        style={{ borderColor: '#2a2a2a' }}
-      >
+      <nav className="flex items-center justify-between px-6 md:px-12 py-4">
         <Link href="/" className="flex items-center">
-          <img src="/logo-full.png" alt="Vendly" className="h-16 w-auto" />
+          <img src="/logo-full.png" alt="Vendly" className="h-14 w-auto" />
         </Link>
         <div className="flex items-center gap-3">
           <Link
             href="/account/signin"
-            className="text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-            style={{ color: '#aaaaaa' }}
+            className="text-sm font-medium px-4 py-2 rounded-lg"
+            style={{ color: landing.cocoa }}
           >
-            Sign In
+            Sign in
           </Link>
           <Link
             href="/account/signup"
-            className="text-sm font-semibold px-5 py-2 rounded-lg transition-colors"
-            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+            className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-transform hover:-translate-y-0.5"
+            style={{ backgroundColor: landing.orange, color: landing.paper }}
           >
-            Get Started
+            Open your store
           </Link>
         </div>
       </nav>
+      <AwningStripe />
 
       {/* Hero */}
-      <section className="px-6 md:px-12 py-24 md:py-36 text-center max-w-5xl mx-auto">
-        <div
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-8 border"
-          style={{
-            backgroundColor: 'rgba(34,197,94,0.08)',
-            borderColor: 'rgba(34,197,94,0.25)',
-            color: '#22c55e',
-          }}
-        >
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#22c55e' }} />
-          Now accepting vendors — apply today
+      <section className="px-6 md:px-12 pt-16 pb-20 md:pt-24 md:pb-28 max-w-6xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-16 items-center">
+        <div>
+          <h1
+            className="text-[2.75rem] leading-[1.05] md:text-6xl md:leading-[1.05] font-semibold mb-6"
+            style={displayFont}
+          >
+            Everything you sell,
+            <br />
+            one link to show it.
+          </h1>
+          <p className="text-base md:text-lg max-w-md mb-9 leading-relaxed" style={{ color: landing.cocoa }}>
+            Build a storefront, list your products, take orders, and coordinate delivery — all from a
+            link you can drop straight into WhatsApp or Instagram.
+          </p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
+            <Link
+              href="/account/signup"
+              className="w-full sm:w-auto text-center text-sm font-semibold px-8 py-3.5 rounded-lg transition-transform hover:-translate-y-0.5"
+              style={{ backgroundColor: landing.green, color: landing.paper }}
+            >
+              Start your free trial
+            </Link>
+            <Link
+              href="/account/signin"
+              className="w-full sm:w-auto text-center text-sm font-medium px-8 py-3.5 rounded-lg border"
+              style={{ borderColor: landing.line, color: landing.ink }}
+            >
+              Sign in
+            </Link>
+          </div>
+          <p className="text-xs" style={{ color: landing.cocoa }}>
+            3 days free, then ₦4,000/month. No commission on anything you sell.
+          </p>
         </div>
-        <h1
-          className="text-4xl md:text-6xl font-semibold tracking-tight leading-tight mb-6"
-          style={{ color: '#f5f5f5' }}
-        >
-          Your complete
-          <br />
-          <span style={{ color: '#22c55e' }}>ecommerce operating system</span>
-        </h1>
-        <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Create your own storefront, manage products, receive orders, and coordinate logistics —
-          all in one place. No marketplace fees. Your store, your rules.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            href="/account/signup"
-            className="w-full sm:w-auto text-sm font-semibold px-8 py-3.5 rounded-lg transition-opacity hover:opacity-90"
-            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
-          >
-            Open Your Store Free
-          </Link>
-          <Link
-            href="/account/signin"
-            className="w-full sm:w-auto text-sm font-medium px-8 py-3.5 rounded-lg border transition-colors hover:border-gray-400"
-            style={{ borderColor: '#2a2a2a', color: '#aaaaaa' }}
-          >
-            Sign In →
-          </Link>
+
+        {/* Market-tag collage — stands in for the range of goods vendors sell */}
+        <div className="relative h-[360px] md:h-[420px] hidden sm:block" aria-hidden="true">
+          {TAG_ITEMS.map((tag) => (
+            <div key={tag.label} className="absolute" style={{ top: tag.top, left: tag.left }}>
+              <MarketTag rotate={tag.rotate} accent={tag.accent}>
+                <p className="text-sm font-semibold whitespace-nowrap">{tag.label}</p>
+                <p className="text-xs mt-0.5" style={{ color: landing.cocoa }}>{tag.price}</p>
+              </MarketTag>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Features */}
-      <section
-        className="px-6 md:px-12 py-20 border-t"
-        style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}
-      >
+      <section className="px-6 md:px-12 py-20" style={{ backgroundColor: landing.paperDim }}>
         <div className="max-w-6xl mx-auto">
-          <p
-            className="text-xs font-medium uppercase tracking-widest mb-12 text-center"
-            style={{ color: '#22c55e' }}
-          >
-            Everything you need
+          <h2 className="text-3xl md:text-[2.5rem] font-semibold mb-3 max-w-xl" style={displayFont}>
+            Everything a storefront needs, nothing it doesn't.
+          </h2>
+          <p className="text-base mb-12 max-w-lg" style={{ color: landing.cocoa }}>
+            Six things vendors ask for most, built in from day one.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: 'store',
-                title: 'Your Own Storefront',
-                desc: 'Get a unique URL at vendly.com/store/your-name. Customise your logo, description, and product catalogue.',
-              },
-              {
-                icon: 'package',
-                title: 'Product Management',
-                desc: 'Add unlimited products with images, pricing, stock tracking, and categories. Optimised delivery automatically.',
-              },
-              {
-                icon: 'truck',
-                title: 'Order & Logistics',
-                desc: 'Full order pipeline from new order to delivered. Built-in logistics coordination with route-based pricing.',
-              },
-              {
-                icon: 'card',
-                title: 'Flexible Payments',
-                desc: 'Customers pay upfront or on delivery. You keep 100% — Vendly only provides the infrastructure.',
-              },
-              {
-                icon: 'dashboard',
-                title: 'Business Dashboard',
-                desc: 'Real-time insights into your sales, orders, and customer data. All in one clean, fast dashboard.',
-              },
-              {
-                icon: 'ambassador',
-                title: 'Referral & Ambassador',
-                desc: 'Earn commissions by referring other vendors. Become an ambassador for recurring monthly income.',
-              },
-            ].map((f) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {FEATURES.map((f) => (
               <div
                 key={f.title}
-                className="p-6 rounded-xl border transition-colors"
-                style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+                className="p-7 rounded-2xl"
+                style={{ backgroundColor: f.fill, border: f.fill === landing.paper ? `1.5px solid ${landing.line}` : 'none' }}
               >
-                <div className="flex items-center justify-center w-10 h-10 mb-4" style={{ color: '#22c55e' }}><NavIcon name={f.icon as any} /></div>
-                <h3 className="text-base font-semibold mb-2" style={{ color: '#f5f5f5' }}>
+                <div className="flex items-center justify-center w-11 h-11 rounded-xl mb-5" style={{ color: f.accent, backgroundColor: 'rgba(0,0,0,0.06)' }}>
+                  <NavIcon name={f.icon} />
+                </div>
+                <h3 className="text-base font-semibold mb-2" style={{ color: f.fill === landing.greenDeep || f.fill === landing.orange ? landing.paper : landing.ink }}>
                   {f.title}
                 </h3>
-                <p className="text-sm leading-relaxed" style={{ color: '#888888' }}>
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: f.fill === landing.greenDeep || f.fill === landing.orange ? 'rgba(255,252,244,0.85)' : landing.cocoa }}
+                >
                   {f.desc}
                 </p>
               </div>
@@ -144,119 +171,70 @@ export default function HomePage() {
       <HowItWorks />
 
       {/* Pricing */}
-      <section className="px-6 md:px-12 py-20 border-t" style={{ borderColor: '#2a2a2a' }}>
+      <section className="px-6 md:px-12 py-24" style={{ backgroundColor: landing.paper }}>
         <div className="max-w-4xl mx-auto text-center">
-          <p
-            className="text-xs font-medium uppercase tracking-widest mb-4"
-            style={{ color: '#22c55e' }}
-          >
-            Pricing
-          </p>
-          <h2
-            className="text-3xl md:text-4xl font-semibold tracking-tight mb-4"
-            style={{ color: '#f5f5f5' }}
-          >
-            Simple, transparent pricing
+          <h2 className="text-3xl md:text-[2.5rem] font-semibold mb-3" style={displayFont}>
+            One price. Everything included.
           </h2>
-          <p className="text-gray-400 mb-14 text-sm">
-            No hidden fees. No commissions. Just a flat subscription.
+          <p className="mb-16 text-sm" style={{ color: landing.cocoa }}>
+            No commission, no hidden fees — pick monthly or save two months on yearly.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
             <div
-              className="p-8 rounded-xl border text-left"
-              style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+              className="p-8 rounded-2xl text-left"
+              style={{ backgroundColor: landing.paperDim, transform: 'rotate(-1.5deg)' }}
             >
-              <p
-                className="text-xs font-medium uppercase tracking-wider mb-4"
-                style={{ color: '#888888' }}
-              >
-                Monthly
-              </p>
+              <p className="text-xs font-medium mb-4" style={{ color: landing.cocoa }}>Monthly</p>
               <div className="flex items-end gap-1 mb-6">
-                <span className="text-4xl font-semibold" style={{ color: '#f5f5f5' }}>
-                  ₦4,000
-                </span>
-                <span className="text-sm mb-1.5" style={{ color: '#888888' }}>
-                  /month
-                </span>
+                <span className="text-4xl font-semibold" style={displayFont}>₦4,000</span>
+                <span className="text-sm mb-1.5" style={{ color: landing.cocoa }}>/month</span>
               </div>
               <ul className="space-y-3 mb-8">
-                {[
-                  'Your own store URL',
-                  'Unlimited products',
-                  'Order management',
-                  'Logistics coordination',
-                  'Referral system',
-                ].map((f) => (
-                  <li
-                    key={f}
-                    className="flex items-center gap-2 text-sm"
-                    style={{ color: '#aaaaaa' }}
-                  >
-                    <span style={{ color: '#22c55e' }}>-</span> {f}
+                {['Your own store URL', 'Unlimited products', 'Order management', 'Logistics coordination', 'Referral system'].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-sm" style={{ color: landing.ink }}>
+                    <span style={{ color: landing.green }}>✓</span> {f}
                   </li>
                 ))}
               </ul>
               <Link
                 href="/account/signup"
-                className="block text-center text-sm font-semibold py-3 rounded-lg border transition-colors"
-                style={{ borderColor: '#22c55e', color: '#22c55e' }}
+                className="block text-center text-sm font-semibold py-3 rounded-lg border"
+                style={{ borderColor: landing.green, color: landing.green }}
               >
-                Get Started
+                Get started
               </Link>
             </div>
 
             <div
-              className="p-8 rounded-xl border text-left relative"
-              style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e' }}
+              className="p-8 rounded-2xl text-left relative"
+              style={{ backgroundColor: landing.greenDeep, transform: 'rotate(1.5deg)' }}
             >
               <div
-                className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full"
-                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                className="absolute -top-3 -right-3 text-xs font-semibold px-3 py-1.5 rounded-full"
+                style={{ backgroundColor: landing.orange, color: landing.paper, transform: 'rotate(8deg)' }}
               >
-                Best Value
+                Best value
               </div>
-              <p
-                className="text-xs font-medium uppercase tracking-wider mb-4"
-                style={{ color: '#888888' }}
-              >
-                Yearly
-              </p>
+              <p className="text-xs font-medium mb-4" style={{ color: 'rgba(255,252,244,0.7)' }}>Yearly</p>
               <div className="flex items-end gap-1 mb-2">
-                <span className="text-4xl font-semibold" style={{ color: '#f5f5f5' }}>
-                  ₦40,000
-                </span>
-                <span className="text-sm mb-1.5" style={{ color: '#888888' }}>
-                  /year
-                </span>
+                <span className="text-4xl font-semibold" style={{ ...displayFont, color: landing.paper }}>₦40,000</span>
+                <span className="text-sm mb-1.5" style={{ color: 'rgba(255,252,244,0.7)' }}>/year</span>
               </div>
-              <p className="text-xs mb-6" style={{ color: '#22c55e' }}>
-                Save ₦8,000 — 2 months free
-              </p>
+              <p className="text-xs mb-6" style={{ color: landing.orange }}>Save ₦8,000 — two months free</p>
               <ul className="space-y-3 mb-8">
-                {[
-                  'Your own store URL',
-                  'Unlimited products',
-                  'Order management',
-                  'Logistics coordination',
-                  'Referral system',
-                ].map((f) => (
-                  <li
-                    key={f}
-                    className="flex items-center gap-2 text-sm"
-                    style={{ color: '#aaaaaa' }}
-                  >
-                    <span style={{ color: '#22c55e' }}>-</span> {f}
+                {['Your own store URL', 'Unlimited products', 'Order management', 'Logistics coordination', 'Referral system'].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-sm" style={{ color: landing.paper }}>
+                    <span style={{ color: landing.orange }}>✓</span> {f}
                   </li>
                 ))}
               </ul>
               <Link
                 href="/account/signup"
-                className="block text-center text-sm font-semibold py-3 rounded-lg transition-opacity hover:opacity-90"
-                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                className="block text-center text-sm font-semibold py-3 rounded-lg"
+                style={{ backgroundColor: landing.orange, color: landing.paper }}
               >
-                Get Started
+                Get started
               </Link>
             </div>
           </div>
@@ -264,53 +242,37 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section
-        className="px-6 md:px-12 py-20 border-t text-center"
-        style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}
-      >
-        <h2
-          className="text-3xl md:text-4xl font-semibold tracking-tight mb-4"
-          style={{ color: '#f5f5f5' }}
-        >
+      <section className="px-6 md:px-12 py-24 text-center relative overflow-hidden" style={{ backgroundColor: landing.orange }}>
+        <h2 className="text-3xl md:text-5xl font-semibold mb-4 max-w-2xl mx-auto" style={{ ...displayFont, color: landing.ink }}>
           Ready to open your store?
         </h2>
-        <p className="text-gray-400 mb-8 text-sm">
-          Join thousands of vendors already selling on Vendly.
+        <p className="mb-9 text-sm" style={{ color: landing.ink }}>
+          Three days free. No card required to start.
         </p>
         <Link
           href="/account/signup"
-          className="inline-flex items-center text-sm font-semibold px-8 py-3.5 rounded-lg transition-opacity hover:opacity-90"
-          style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+          className="inline-flex items-center text-sm font-semibold px-8 py-3.5 rounded-lg transition-transform hover:-translate-y-0.5"
+          style={{ backgroundColor: landing.ink, color: landing.paper }}
         >
-          Start for free →
+          Start your free trial
         </Link>
       </section>
 
       {/* Footer */}
-      <footer
-        className="px-6 md:px-12 py-8 border-t flex flex-col md:flex-row items-center justify-between gap-4"
-        style={{ borderColor: '#2a2a2a' }}
-      >
+      <AwningStripe height={6} />
+      <footer className="px-6 md:px-12 py-8 flex flex-col md:flex-row items-center justify-between gap-4" style={{ backgroundColor: landing.paper }}>
         <a href="/">
-          <img src="/logo-full.png" alt="Vendly" className="h-12 w-auto" />
+          <img src="/logo-full.png" alt="Vendly" className="h-10 w-auto" />
         </a>
-        <p className="text-xs" style={{ color: '#555555' }}>
+        <p className="text-xs" style={{ color: landing.cocoa }}>
           © 2026 Vendly. All rights reserved.
         </p>
         <div className="flex items-center gap-6">
-          <Link
-            href="/account/signin"
-            className="text-xs hover:text-gray-300 transition-colors"
-            style={{ color: '#555555' }}
-          >
-            Sign In
+          <Link href="/account/signin" className="text-xs" style={{ color: landing.cocoa }}>
+            Sign in
           </Link>
-          <Link
-            href="/account/signup"
-            className="text-xs hover:text-gray-300 transition-colors"
-            style={{ color: '#555555' }}
-          >
-            Sign Up
+          <Link href="/account/signup" className="text-xs" style={{ color: landing.cocoa }}>
+            Sign up
           </Link>
         </div>
       </footer>
