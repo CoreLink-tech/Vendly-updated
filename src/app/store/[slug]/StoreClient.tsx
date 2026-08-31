@@ -114,6 +114,7 @@ export default function StoreClient({ slug }: { slug: string }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedQty, setSelectedQty] = useState(1);
+  const [showVendorInfo, setShowVendorInfo] = useState(false);
   const [trackOpen, setTrackOpen] = useState(false);
   const [trackId, setTrackId] = useState('');
   const [trackResult, setTrackResult] = useState<{ status: string; orderNumber: string; customerName: string; createdAt: string } | null>(null);
@@ -242,26 +243,30 @@ export default function StoreClient({ slug }: { slug: string }) {
     <div className="min-h-screen" style={{ backgroundColor: bg, fontFamily: 'Inter, sans-serif' }}>
       {/* Store header */}
       <div className="border-b" style={{ borderColor: t.border, backgroundColor: t.surface }}>
-        <div className="max-w-6xl mx-auto px-4 md:px-8 py-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
-            <div className="flex items-center gap-5 min-w-0">
-              <div className="w-16 h-16 shrink-0 rounded-xl overflow-hidden border flex items-center justify-center" style={{ borderColor: t.border, backgroundColor: t.surfaceHigh }}>
+        <div className="max-w-6xl mx-auto px-4 md:px-8 py-5">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-12 h-12 shrink-0 rounded-xl overflow-hidden border flex items-center justify-center" style={{ borderColor: t.border, backgroundColor: t.surfaceHigh }}>
                 {vendor.logo ? (
                   <img src={vendor.logo} alt={vendor.businessName} className="w-full h-full object-cover" />
                 ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" style={{ color: t.icon }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" style={{ color: t.icon }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 )}
               </div>
-              <div className="flex-1 min-w-0">
-                <h1 className="text-xl font-semibold" style={{ color: t.text }}>{vendor.businessName}</h1>
-                <p className="text-sm mt-0.5" style={{ color: t.textMuted }}>{vendor.description || 'Welcome to our store!'}</p>
-                <div className="flex items-center gap-4 mt-2 text-xs" style={{ color: t.textFaint }}>
-                  {vendor.location && <span>{vendor.location}</span>}
-                  {vendor.phone && <span>{vendor.phone}</span>}
-                </div>
+              <div className="flex items-center gap-2 min-w-0">
+                <h1 className="text-lg font-semibold truncate" style={{ color: t.text }}>{vendor.businessName}</h1>
+                <button
+                  onClick={() => setShowVendorInfo((v) => !v)}
+                  aria-label={showVendorInfo ? 'Hide store info' : 'Show store info'}
+                  aria-expanded={showVendorInfo}
+                  className="shrink-0 w-6 h-6 rounded-full border flex items-center justify-center"
+                  style={{ borderColor: t.border, color: t.textMuted, backgroundColor: showVendorInfo ? t.surfaceHigh : 'transparent' }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </button>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:ml-auto shrink-0">
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => setTrackOpen(true)}
                 className="text-xs px-3 py-2 rounded-lg border font-medium"
@@ -279,6 +284,15 @@ export default function StoreClient({ slug }: { slug: string }) {
               </button>
             </div>
           </div>
+          {showVendorInfo && (
+            <div className="mt-3 pl-[60px]">
+              <p className="text-sm" style={{ color: t.textMuted }}>{vendor.description || 'Welcome to our store!'}</p>
+              <div className="flex items-center gap-4 mt-2 text-xs" style={{ color: t.textFaint }}>
+                {vendor.location && <span>{vendor.location}</span>}
+                {vendor.phone && <span>{vendor.phone}</span>}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
