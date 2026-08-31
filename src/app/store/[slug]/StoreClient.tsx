@@ -112,6 +112,7 @@ export default function StoreClient({ slug }: { slug: string }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedQty, setSelectedQty] = useState(1);
   const [trackOpen, setTrackOpen] = useState(false);
   const [trackId, setTrackId] = useState('');
@@ -296,7 +297,7 @@ export default function StoreClient({ slug }: { slug: string }) {
                   key={p.id}
                   className="rounded-xl border overflow-hidden cursor-pointer transition-shadow hover:shadow-lg"
                   style={{ backgroundColor: t.surface, borderColor: t.border }}
-                  onClick={() => { setSelectedProduct(p); setSelectedQty(1); if (vendor) trackView(p.id, vendor.id); }}
+                  onClick={() => { setSelectedProduct(p); setSelectedQty(1); setSelectedImageIndex(0); if (vendor) trackView(p.id, vendor.id); }}
                 >
                   <div className="aspect-square overflow-hidden" style={{ backgroundColor: t.surfaceHigh }}>
                     {p.images?.[0] ? (
@@ -332,15 +333,59 @@ export default function StoreClient({ slug }: { slug: string }) {
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-8 overflow-y-auto" style={{ backgroundColor: 'rgba(0,0,0,0.75)' }}>
           <div className="w-full max-w-lg rounded-xl border overflow-hidden" style={{ backgroundColor: t.surfaceHigh, borderColor: t.border }}>
-            <div className="aspect-video overflow-hidden" style={{ backgroundColor: t.surface }}>
-              {selectedProduct.images?.[0] ? (
-                <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="w-full h-full object-cover" />
+            <div className="relative aspect-video overflow-hidden" style={{ backgroundColor: t.surface }}>
+              {selectedProduct.images?.length ? (
+                <img
+                  src={selectedProduct.images[Math.min(selectedImageIndex, selectedProduct.images.length - 1)]}
+                  alt={selectedProduct.name}
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12" style={{ color: t.icon }}><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
                 </div>
               )}
+              {selectedProduct.images && selectedProduct.images.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    aria-label="Previous image"
+                    onClick={() => setSelectedImageIndex((i) => (i - 1 + selectedProduct.images.length) % selectedProduct.images.length)}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: 'rgba(0,0,0,0.5)', color: '#fff' }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Next image"
+                    onClick={() => setSelectedImageIndex((i) => (i + 1) % selectedProduct.images.length)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: 'rgba(0,0,0,0.5)', color: '#fff' }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M9 18l6-6-6-6"/></svg>
+                  </button>
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(0,0,0,0.5)', color: '#fff' }}>
+                    {selectedImageIndex + 1} / {selectedProduct.images.length}
+                  </div>
+                </>
+              )}
             </div>
+            {selectedProduct.images && selectedProduct.images.length > 1 && (
+              <div className="flex gap-2 px-6 pt-3 overflow-x-auto">
+                {selectedProduct.images.map((img, idx) => (
+                  <button
+                    key={img + idx}
+                    type="button"
+                    onClick={() => setSelectedImageIndex(idx)}
+                    className="w-14 h-14 shrink-0 rounded-lg overflow-hidden border-2"
+                    style={{ borderColor: idx === selectedImageIndex ? accent : t.border, backgroundColor: t.surfaceHigh }}
+                  >
+                    <img src={img} alt={`${selectedProduct.name} ${idx + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="p-6">
               <div className="flex items-start justify-between">
                 <div>
