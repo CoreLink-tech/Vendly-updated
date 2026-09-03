@@ -51,10 +51,8 @@ const FEATURES: { icon: IconName; title: string; desc: string; fill: string; acc
 ];
 
 const TAG_ITEMS = [
-  { label: 'Ankara dress', price: '₦12,000', accent: landing.orange, rotate: -6, top: '2%', left: '4%' },
-  { label: 'Wall art', price: '₦45,000', accent: landing.green, rotate: 5, top: '20%', left: '46%' },
-  { label: 'Suya & spice', price: '₦2,500', accent: landing.sky, rotate: 4, top: '46%', left: '2%' },
-  { label: 'Sneakers', price: '₦18,000', accent: landing.orangeDeep, rotate: -4, top: '60%', left: '44%' },
+  { label: 'Wall art', price: '₦45,000', accent: landing.orange, rotate: -6, top: '4%', left: '2%' },
+  { label: 'Ankara dress', price: '₦12,000', accent: landing.green, rotate: 5, top: '20%', left: '58%' },
 ];
 
 export default function HomePage() {
@@ -120,16 +118,49 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Market-tag collage — stands in for the range of goods vendors sell */}
-        <div className="relative h-[360px] md:h-[420px] hidden sm:block" aria-hidden="true">
-          {TAG_ITEMS.map((tag) => (
-            <div key={tag.label} className="absolute" style={{ top: tag.top, left: tag.left }}>
-              <MarketTag rotate={tag.rotate} accent={tag.accent}>
-                <p className="text-sm font-semibold whitespace-nowrap">{tag.label}</p>
-                <p className="text-xs mt-0.5" style={{ color: landing.cocoa }}>{tag.price}</p>
-              </MarketTag>
-            </div>
-          ))}
+        {/* Vendor illustration — a two-tone blob (the logo's own green + orange)
+            gives the white shirt something to sit against instead of
+            disappearing into the paper background. Two tags float near the
+            laptop, standing in for products going live on his store. */}
+        <div className="relative h-[380px] sm:h-[460px] md:h-[560px] flex items-end justify-center sm:justify-end" aria-hidden="true">
+          <div
+            className="absolute rounded-[45%_55%_60%_40%/50%_45%_55%_50%]"
+            style={{
+              backgroundColor: landing.green,
+              width: '78%',
+              height: '78%',
+              right: '2%',
+              bottom: '4%',
+            }}
+          />
+          <div
+            className="absolute rounded-[55%_45%_40%_60%/45%_55%_45%_55%]"
+            style={{
+              backgroundColor: landing.orange,
+              width: '38%',
+              height: '38%',
+              left: '4%',
+              bottom: '0%',
+              opacity: 0.9,
+            }}
+          />
+          <img
+            src="/hero-vendor.webp"
+            alt=""
+            className="relative z-10 h-full w-auto object-contain object-bottom"
+          />
+          <div className="absolute z-20 top-[2%] left-[0%] sm:left-[4%]">
+            <MarketTag rotate={TAG_ITEMS[0].rotate} accent={TAG_ITEMS[0].accent}>
+              <p className="text-sm font-semibold whitespace-nowrap">{TAG_ITEMS[0].label}</p>
+              <p className="text-xs mt-0.5" style={{ color: landing.cocoa }}>{TAG_ITEMS[0].price}</p>
+            </MarketTag>
+          </div>
+          <div className="absolute z-20 bottom-[30%] right-[-2%] sm:right-[2%]">
+            <MarketTag rotate={TAG_ITEMS[1].rotate} accent={TAG_ITEMS[1].accent}>
+              <p className="text-sm font-semibold whitespace-nowrap">{TAG_ITEMS[1].label}</p>
+              <p className="text-xs mt-0.5" style={{ color: landing.cocoa }}>{TAG_ITEMS[1].price}</p>
+            </MarketTag>
+          </div>
         </div>
       </section>
 
