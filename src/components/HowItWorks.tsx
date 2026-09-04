@@ -137,34 +137,36 @@ export default function HowItWorks() {
           </div>
 
           {/* Slide */}
-          <div className="rounded-2xl overflow-hidden min-h-[420px] md:min-h-[440px]" style={{ backgroundColor: landing.ink }}>
-            <div className="grid md:grid-cols-[1.15fr_0.85fr] gap-6 md:gap-4 items-stretch h-full">
-              <div className="p-8 md:p-12 md:pr-0 flex flex-col">
-                <div className="flex items-start justify-between mb-8">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(245,130,10,0.16)', color: landing.orange }}>
-                    <NavIcon name={step.icon} />
-                  </div>
-                  <span className="text-xs" style={{ color: onDark.faint }}>
-                    {String(active + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
-                  </span>
+          <div className="relative pb-10 sm:pb-14 md:pb-16">
+            <div className="rounded-2xl min-h-[440px] sm:min-h-[480px] md:min-h-[440px] p-8 md:p-12" style={{ backgroundColor: landing.ink }}>
+              <div className="flex items-start justify-between mb-8 max-w-[220px] sm:max-w-none">
+                <div className="flex items-center justify-center w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(245,130,10,0.16)', color: landing.orange }}>
+                  <NavIcon name={step.icon} />
                 </div>
-
-                <h3 className="text-2xl md:text-3xl font-semibold mb-3" style={{ ...displayFont, color: onDark.text }}>
-                  {step.title}
-                </h3>
-                <p className="text-sm md:text-base leading-relaxed max-w-lg" style={{ color: onDark.sub }}>
-                  {step.desc}
-                </p>
+                <span className="text-xs" style={{ color: onDark.faint }}>
+                  {String(active + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
+                </span>
               </div>
 
-              <div className="relative h-[220px] md:h-auto flex items-end justify-center md:justify-end px-6 md:px-0" aria-hidden="true">
-                <img
-                  key={step.image}
-                  src={step.image}
-                  alt=""
-                  className="h-full max-h-[220px] md:max-h-[380px] w-auto object-contain object-bottom"
-                />
-              </div>
+              <h3 className="text-2xl md:text-3xl font-semibold mb-3 max-w-[230px] sm:max-w-md md:max-w-lg" style={{ ...displayFont, color: onDark.text }}>
+                {step.title}
+              </h3>
+              <p className="text-sm md:text-base leading-relaxed max-w-[230px] sm:max-w-sm md:max-w-md" style={{ color: onDark.sub }}>
+                {step.desc}
+              </p>
+            </div>
+
+            {/* Character breaks past the card's bottom edge instead of being boxed inside it */}
+            <div
+              className="absolute z-10 pointer-events-none right-2 sm:right-6 md:right-10 bottom-0 h-[240px] w-[190px] sm:h-[300px] sm:w-[260px] md:h-[400px] md:w-[340px]"
+              aria-hidden="true"
+            >
+              <img
+                key={step.image}
+                src={step.image}
+                alt=""
+                className="h-full w-full object-contain object-bottom drop-shadow-[0_18px_24px_rgba(0,0,0,0.35)]"
+              />
             </div>
           </div>
         </div>
