@@ -136,18 +136,8 @@ export default function HowItWorks() {
             })}
           </div>
 
-          {/* Slide — image sits in normal flow above the copy, so nothing overlaps */}
+          {/* Slide — copy sits on top, image below it in normal flow, so nothing overlaps */}
           <div className="flex flex-col">
-            <div className="relative mx-auto w-full max-w-[280px] h-[220px] sm:max-w-sm sm:h-[280px] md:h-[320px] mb-8">
-              <ImageBlob />
-              <img
-                key={step.image}
-                src={step.image}
-                alt=""
-                className="relative z-10 h-full w-full object-contain drop-shadow-[0_14px_20px_rgba(23,35,28,0.18)]"
-              />
-            </div>
-
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0" style={{ backgroundColor: 'rgba(245,130,10,0.12)', color: landing.orange }}>
                 <NavIcon name={step.icon} />
@@ -160,9 +150,19 @@ export default function HowItWorks() {
             <h3 className="text-2xl md:text-3xl font-semibold mb-3" style={{ ...displayFont, color: landing.ink }}>
               {step.title}
             </h3>
-            <p className="text-sm md:text-base leading-relaxed max-w-md" style={{ color: landing.cocoa }}>
+            <p className="text-sm md:text-base leading-relaxed max-w-md mb-8" style={{ color: landing.cocoa }}>
               {step.desc}
             </p>
+
+            <div className="relative mx-auto w-full max-w-[280px] h-[220px] sm:max-w-sm sm:h-[280px] md:h-[320px]">
+              <ImageBlob />
+              <img
+                key={step.image}
+                src={step.image}
+                alt=""
+                className="relative z-10 h-full w-full object-contain drop-shadow-[0_14px_20px_rgba(23,35,28,0.18)]"
+              />
+            </div>
           </div>
         </div>
 
