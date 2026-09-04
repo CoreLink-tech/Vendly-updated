@@ -59,7 +59,6 @@ const STEPS: Step[] = [
 ];
 
 const SLIDE_MS = 5500;
-const onDark = { text: landing.paper, sub: 'rgba(255,252,244,0.72)', faint: 'rgba(255,252,244,0.45)', line: 'rgba(255,252,244,0.14)', hover: 'rgba(255,252,244,0.06)' };
 
 export default function HowItWorks() {
   const [active, setActive] = useState(0);
@@ -137,39 +136,33 @@ export default function HowItWorks() {
             })}
           </div>
 
-          {/* Slide */}
-          <div className="relative pb-10 sm:pb-14 md:pb-16">
-            <div className="rounded-2xl min-h-[440px] sm:min-h-[480px] md:min-h-[440px] p-8 md:p-12" style={{ backgroundColor: landing.ink }}>
-              <div className="flex items-start justify-between mb-8 max-w-[220px] sm:max-w-none">
-                <div className="flex items-center justify-center w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(245,130,10,0.16)', color: landing.orange }}>
-                  <NavIcon name={step.icon} />
-                </div>
-                <span className="text-xs" style={{ color: onDark.faint }}>
-                  {String(active + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
-                </span>
-              </div>
-
-              <h3 className="text-2xl md:text-3xl font-semibold mb-3 max-w-[230px] sm:max-w-md md:max-w-lg" style={{ ...displayFont, color: onDark.text }}>
-                {step.title}
-              </h3>
-              <p className="text-sm md:text-base leading-relaxed max-w-[230px] sm:max-w-sm md:max-w-md" style={{ color: onDark.sub }}>
-                {step.desc}
-              </p>
-            </div>
-
-            {/* Character breaks past the card's bottom edge instead of being boxed inside it */}
-            <div
-              className="absolute z-10 pointer-events-none right-2 sm:right-6 md:right-10 bottom-0 h-[240px] w-[190px] sm:h-[300px] sm:w-[260px] md:h-[400px] md:w-[340px]"
-              aria-hidden="true"
-            >
+          {/* Slide — image sits in normal flow above the copy, so nothing overlaps */}
+          <div className="flex flex-col">
+            <div className="relative mx-auto w-full max-w-[280px] h-[220px] sm:max-w-sm sm:h-[280px] md:h-[320px] mb-8">
               <ImageBlob />
               <img
                 key={step.image}
                 src={step.image}
                 alt=""
-                className="relative z-10 h-full w-full object-contain object-bottom drop-shadow-[0_18px_24px_rgba(0,0,0,0.35)]"
+                className="relative z-10 h-full w-full object-contain drop-shadow-[0_14px_20px_rgba(23,35,28,0.18)]"
               />
             </div>
+
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0" style={{ backgroundColor: 'rgba(245,130,10,0.12)', color: landing.orange }}>
+                <NavIcon name={step.icon} />
+              </div>
+              <span className="text-xs" style={{ color: landing.cocoa }}>
+                {String(active + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
+              </span>
+            </div>
+
+            <h3 className="text-2xl md:text-3xl font-semibold mb-3" style={{ ...displayFont, color: landing.ink }}>
+              {step.title}
+            </h3>
+            <p className="text-sm md:text-base leading-relaxed max-w-md" style={{ color: landing.cocoa }}>
+              {step.desc}
+            </p>
           </div>
         </div>
 
