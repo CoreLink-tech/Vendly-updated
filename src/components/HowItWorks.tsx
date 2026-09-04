@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { NavIcon, type IconName } from '@/components/NavIcon';
+import { ImageBlob } from '@/components/ImageBlob';
 import { landing, displayFont } from '@/lib/landing-theme';
 
 interface Step {
@@ -161,11 +162,12 @@ export default function HowItWorks() {
               className="absolute z-10 pointer-events-none right-2 sm:right-6 md:right-10 bottom-0 h-[240px] w-[190px] sm:h-[300px] sm:w-[260px] md:h-[400px] md:w-[340px]"
               aria-hidden="true"
             >
+              <ImageBlob />
               <img
                 key={step.image}
                 src={step.image}
                 alt=""
-                className="h-full w-full object-contain object-bottom drop-shadow-[0_18px_24px_rgba(0,0,0,0.35)]"
+                className="relative z-10 h-full w-full object-contain object-bottom drop-shadow-[0_18px_24px_rgba(0,0,0,0.35)]"
               />
             </div>
           </div>

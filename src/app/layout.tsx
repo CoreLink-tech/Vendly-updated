@@ -48,8 +48,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en" className={`${exo2.variable} ${fraunces.variable}`}>
+		<html lang="en" className={`${exo2.variable} ${fraunces.variable}`} style={{ colorScheme: 'light' }}>
 			<head>
+				<meta name="color-scheme" content="light" />
 				<link
 					rel="stylesheet"
 					href="/fontawesome/releases/v6.3.0/css/pro.min.css?token=2c15cc0cc7"

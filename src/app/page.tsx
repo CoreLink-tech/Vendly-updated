@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { NavIcon, type IconName } from '@/components/NavIcon';
 import HowItWorks from '@/components/HowItWorks';
 import { AwningStripe } from '@/components/AwningStripe';
-import { MarketTag } from '@/components/MarketTag';
+import { ImageBlob } from '@/components/ImageBlob';
 import { landing, displayFont } from '@/lib/landing-theme';
 
 const FEATURES: { icon: IconName; title: string; desc: string; fill: string; accent: string }[] = [
@@ -120,46 +120,38 @@ export default function HomePage() {
 
         {/* Vendor illustration — a two-tone blob (the logo's own green + orange)
             gives the white shirt something to sit against instead of
-            disappearing into the paper background. Two tags float near the
-            laptop, standing in for products going live on his store. */}
+            disappearing into the paper background. Two labels float clear
+            of him, standing in for products going live on his store. */}
         <div className="relative h-[380px] sm:h-[460px] md:h-[560px] flex items-end justify-center sm:justify-end" aria-hidden="true">
-          <div
-            className="absolute rounded-[45%_55%_60%_40%/50%_45%_55%_50%]"
-            style={{
-              backgroundColor: landing.green,
-              width: '78%',
-              height: '78%',
-              right: '2%',
-              bottom: '4%',
-            }}
-          />
-          <div
-            className="absolute rounded-[55%_45%_40%_60%/45%_55%_45%_55%]"
-            style={{
-              backgroundColor: landing.orange,
-              width: '38%',
-              height: '38%',
-              left: '4%',
-              bottom: '0%',
-              opacity: 0.9,
-            }}
-          />
+          <ImageBlob />
           <img
             src="/hero-vendor.webp"
             alt=""
             className="relative z-10 h-full w-auto object-contain object-bottom"
           />
-          <div className="absolute z-20 top-[2%] left-[0%] sm:left-[4%]">
-            <MarketTag rotate={TAG_ITEMS[0].rotate} accent={TAG_ITEMS[0].accent}>
-              <p className="text-sm font-semibold whitespace-nowrap">{TAG_ITEMS[0].label}</p>
-              <p className="text-xs mt-0.5" style={{ color: landing.cocoa }}>{TAG_ITEMS[0].price}</p>
-            </MarketTag>
+          <div
+            className="absolute z-20 top-[0%] left-[0%] sm:left-[2%]"
+            style={{ transform: 'rotate(-4deg)' }}
+          >
+            <p className="text-base font-semibold whitespace-nowrap" style={{ color: landing.ink, textShadow: '0 2px 10px rgba(255,252,244,0.9)' }}>
+              {TAG_ITEMS[0].label}
+            </p>
+            <p className="text-sm font-medium whitespace-nowrap" style={{ color: landing.orangeDeep, textShadow: '0 2px 10px rgba(255,252,244,0.9)' }}>
+              {TAG_ITEMS[0].price}
+            </p>
+            <span className="block w-10 h-0.5 rounded-full mt-1" style={{ backgroundColor: TAG_ITEMS[0].accent }} />
           </div>
-          <div className="absolute z-20 bottom-[30%] right-[-2%] sm:right-[2%]">
-            <MarketTag rotate={TAG_ITEMS[1].rotate} accent={TAG_ITEMS[1].accent}>
-              <p className="text-sm font-semibold whitespace-nowrap">{TAG_ITEMS[1].label}</p>
-              <p className="text-xs mt-0.5" style={{ color: landing.cocoa }}>{TAG_ITEMS[1].price}</p>
-            </MarketTag>
+          <div
+            className="absolute z-20 top-[76%] left-[-2%] sm:left-[0%]"
+            style={{ transform: 'rotate(-3deg)' }}
+          >
+            <p className="text-base font-semibold whitespace-nowrap" style={{ color: landing.ink, textShadow: '0 2px 10px rgba(255,178,10,0.6)' }}>
+              {TAG_ITEMS[1].label}
+            </p>
+            <p className="text-sm font-medium whitespace-nowrap" style={{ color: landing.ink, textShadow: '0 2px 10px rgba(255,178,10,0.6)' }}>
+              {TAG_ITEMS[1].price}
+            </p>
+            <span className="block w-10 h-0.5 rounded-full mt-1" style={{ backgroundColor: landing.paper }} />
           </div>
         </div>
       </section>
