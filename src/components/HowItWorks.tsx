@@ -9,6 +9,7 @@ interface Step {
   icon: IconName;
   title: string;
   desc: string;
+  image: string;
 }
 
 const STEPS: Step[] = [
@@ -17,36 +18,42 @@ const STEPS: Step[] = [
     icon: 'key',
     title: 'Sign up and claim your link',
     desc: 'Register in minutes and name your business. You get a unique storefront URL — vendly.com/store/your-name — that\u2019s yours from day one.',
+    image: '/how-it-works/step-create.webp',
   },
   {
     label: 'Customize your look',
     icon: 'settings',
     title: 'Make it look like you',
     desc: 'Add your logo, write your store description, and pick your brand colors. Every change previews live, so you see exactly what customers will see.',
+    image: '/how-it-works/step-customize.webp',
   },
   {
     label: 'Add your products',
     icon: 'package',
     title: 'List what you sell',
     desc: 'Upload products with photos, pricing, categories, and stock counts. Add one or add a hundred \u2014 there\u2019s no limit.',
+    image: '/how-it-works/step-products.webp',
   },
   {
     label: 'Share & sell',
     icon: 'link',
     title: 'Send your link, take orders',
     desc: 'Share your store link anywhere \u2014 WhatsApp, Instagram, wherever your customers are. They browse, add to cart, and check out. No app to download.',
+    image: '/how-it-works/step-share.webp',
   },
   {
     label: 'Manage every order',
     icon: 'truck',
     title: 'Track orders start to finish',
     desc: 'Follow each order through the pipeline \u2014 received, accepted, prepared, and delivered \u2014 with logistics coordination built in.',
+    image: '/how-it-works/step-orders.webp',
   },
   {
     label: 'Get paid & grow',
     icon: 'money',
     title: 'Keep 100%, grow at your pace',
     desc: 'Payments come straight to you \u2014 no commissions. Watch your sales in a real-time dashboard, and earn more by referring other vendors.',
+    image: '/how-it-works/step-grow.webp',
   },
 ];
 
@@ -130,25 +137,34 @@ export default function HowItWorks() {
           </div>
 
           {/* Slide */}
-          <div className="rounded-2xl p-8 md:p-12 min-h-[420px] flex flex-col" style={{ backgroundColor: landing.ink }}>
-            <div className="flex items-start justify-between mb-8">
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(245,130,10,0.16)', color: landing.orange }}>
-                <NavIcon name={step.icon} />
+          <div className="rounded-2xl overflow-hidden min-h-[420px] md:min-h-[440px]" style={{ backgroundColor: landing.ink }}>
+            <div className="grid md:grid-cols-[1.15fr_0.85fr] gap-6 md:gap-4 items-stretch h-full">
+              <div className="p-8 md:p-12 md:pr-0 flex flex-col">
+                <div className="flex items-start justify-between mb-8">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(245,130,10,0.16)', color: landing.orange }}>
+                    <NavIcon name={step.icon} />
+                  </div>
+                  <span className="text-xs" style={{ color: onDark.faint }}>
+                    {String(active + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
+                  </span>
+                </div>
+
+                <h3 className="text-2xl md:text-3xl font-semibold mb-3" style={{ ...displayFont, color: onDark.text }}>
+                  {step.title}
+                </h3>
+                <p className="text-sm md:text-base leading-relaxed max-w-lg" style={{ color: onDark.sub }}>
+                  {step.desc}
+                </p>
               </div>
-              <span className="text-xs" style={{ color: onDark.faint }}>
-                {String(active + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
-              </span>
-            </div>
 
-            <h3 className="text-2xl md:text-3xl font-semibold mb-3" style={{ ...displayFont, color: onDark.text }}>
-              {step.title}
-            </h3>
-            <p className="text-sm md:text-base leading-relaxed max-w-lg mb-8" style={{ color: onDark.sub }}>
-              {step.desc}
-            </p>
-
-            <div className="mt-auto">
-              <StepMockup index={active} />
+              <div className="relative h-[220px] md:h-auto flex items-end justify-center md:justify-end px-6 md:px-0" aria-hidden="true">
+                <img
+                  key={step.image}
+                  src={step.image}
+                  alt=""
+                  className="h-full max-h-[220px] md:max-h-[380px] w-auto object-contain object-bottom"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -195,76 +211,4 @@ export default function HowItWorks() {
       `}</style>
     </section>
   );
-}
-
-// Small illustrative mockups per step — echoing real Vendly UI (color
-// preview, product cards, order pipeline) rather than generic icon art.
-function StepMockup({ index }: { index: number }) {
-  switch (index) {
-    case 0:
-      return (
-        <div className="rounded-lg p-4 flex items-center gap-3" style={{ backgroundColor: onDark.hover }}>
-          <div className="w-8 h-8 rounded-lg shrink-0" style={{ backgroundColor: 'rgba(245,130,10,0.18)' }} />
-          <code className="text-xs md:text-sm" style={{ color: landing.orange }}>vendly.com/store/your-name</code>
-        </div>
-      );
-    case 1:
-      return (
-        <div className="flex items-center gap-3">
-          {[landing.orange, landing.sky, landing.green, landing.orangeDeep].map((c) => (
-            <div key={c} className="w-8 h-8 rounded-full border-2" style={{ backgroundColor: c, borderColor: c === landing.orange ? landing.paper : 'transparent' }} />
-          ))}
-          <span className="text-xs ml-2" style={{ color: onDark.faint }}>Live preview updates instantly</span>
-        </div>
-      );
-    case 2:
-      return (
-        <div className="flex gap-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="w-16 rounded-lg overflow-hidden" style={{ border: `1px solid ${onDark.line}` }}>
-              <div className="aspect-square" style={{ backgroundColor: onDark.hover }} />
-              <div className="h-2 mt-1.5 mb-1 mx-1.5 rounded-full" style={{ backgroundColor: onDark.line, width: '70%' }} />
-              <div className="h-1.5 mb-1.5 mx-1.5 rounded-full" style={{ backgroundColor: landing.orange, width: '40%' }} />
-            </div>
-          ))}
-        </div>
-      );
-    case 3:
-      return (
-        <div className="flex items-center gap-3 text-xs" style={{ color: onDark.sub }}>
-          <span className="px-3 py-1.5 rounded-lg" style={{ backgroundColor: onDark.hover, border: `1px solid ${onDark.line}` }}>WhatsApp</span>
-          <span className="px-3 py-1.5 rounded-lg" style={{ backgroundColor: onDark.hover, border: `1px solid ${onDark.line}` }}>Instagram</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke={landing.orange} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          <span className="px-3 py-1.5 rounded-lg font-medium" style={{ backgroundColor: landing.orange, color: landing.ink }}>Order placed</span>
-        </div>
-      );
-    case 4: {
-      const stages = ['Received', 'Accepted', 'Prepared', 'Delivered'];
-      return (
-        <div className="flex items-center">
-          {stages.map((s, i) => (
-            <div key={s} className="flex items-center">
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: i <= 2 ? landing.orange : onDark.line }} />
-                <span className="text-[10px] whitespace-nowrap" style={{ color: i <= 2 ? onDark.sub : onDark.faint }}>{s}</span>
-              </div>
-              {i < stages.length - 1 && (
-                <div className="w-8 md:w-12 h-0.5 mx-1 mb-4" style={{ backgroundColor: i < 2 ? landing.orange : onDark.line }} />
-              )}
-            </div>
-          ))}
-        </div>
-      );
-    }
-    case 5:
-      return (
-        <div className="flex items-end gap-1.5 h-12">
-          {[40, 65, 45, 80, 60, 95].map((h, i) => (
-            <div key={i} className="w-4 rounded-t" style={{ height: `${h}%`, backgroundColor: i === 5 ? landing.orange : onDark.line }} />
-          ))}
-        </div>
-      );
-    default:
-      return null;
-  }
 }
