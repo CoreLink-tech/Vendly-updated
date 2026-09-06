@@ -230,26 +230,6 @@ export default function HowItWorks() {
             />
           ))}
         </div>
-
-        {/* Prev / next controls */}
-        <div className="flex items-center justify-center gap-3 mt-8">
-          <button
-            onClick={() => goTo(active - 1)}
-            aria-label="Previous step"
-            className="w-9 h-9 rounded-full border flex items-center justify-center"
-            style={{ borderColor: landing.line, color: landing.cocoa }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <button
-            onClick={() => goTo(active + 1)}
-            aria-label="Next step"
-            className="w-9 h-9 rounded-full border flex items-center justify-center"
-            style={{ borderColor: landing.line, color: landing.cocoa }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
       </div>
 
       <style>{`
