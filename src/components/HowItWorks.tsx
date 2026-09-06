@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavIcon, type IconName } from '@/components/NavIcon';
 import { ImageBlob } from '@/components/ImageBlob';
 import { landing, displayFont } from '@/lib/landing-theme';
@@ -59,6 +59,7 @@ const STEPS: Step[] = [
 ];
 
 const SLIDE_MS = 5500;
+const TRANSITION_MS = 650;
 
 export default function HowItWorks() {
   const [active, setActive] = useState(0);
@@ -66,8 +67,14 @@ export default function HowItWorks() {
   const [progressKey, setProgressKey] = useState(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const [dragDeltaPx, setDragDeltaPx] = useState(0);
+  const dragStartX = useRef(0);
+  const pointerId = useRef<number | null>(null);
+
   useEffect(() => {
-    if (paused) return;
+    if (paused || dragging) return;
     timeoutRef.current = setTimeout(() => {
       setActive((i) => (i + 1) % STEPS.length);
       setProgressKey((k) => k + 1);
@@ -75,14 +82,39 @@ export default function HowItWorks() {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [active, paused]);
+  }, [active, paused, dragging]);
 
   const goTo = (i: number) => {
     setActive(((i % STEPS.length) + STEPS.length) % STEPS.length);
     setProgressKey((k) => k + 1);
   };
 
-  const step = STEPS[active];
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    pointerId.current = e.pointerId;
+    dragStartX.current = e.clientX;
+    setDragging(true);
+    setDragDeltaPx(0);
+    trackRef.current?.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging || pointerId.current !== e.pointerId) return;
+    setDragDeltaPx(e.clientX - dragStartX.current);
+  };
+
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging || pointerId.current !== e.pointerId) return;
+    const width = trackRef.current?.offsetWidth || 1;
+    const threshold = Math.min(80, width * 0.15);
+    if (dragDeltaPx <= -threshold) {
+      goTo(active + 1);
+    } else if (dragDeltaPx >= threshold) {
+      goTo(active - 1);
+    }
+    setDragging(false);
+    setDragDeltaPx(0);
+    pointerId.current = null;
+  };
 
   return (
     <section
@@ -136,32 +168,52 @@ export default function HowItWorks() {
             })}
           </div>
 
-          {/* Slide — copy sits on top, image below it in normal flow, so nothing overlaps */}
-          <div className="flex flex-col">
-            <div className="flex items-center justify-between mb-5">
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0" style={{ backgroundColor: 'rgba(245,130,10,0.12)', color: landing.orange }}>
-                <NavIcon name={step.icon} />
-              </div>
-              <span className="text-xs" style={{ color: landing.cocoa }}>
-                {String(active + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
-              </span>
-            </div>
+          {/* Slide — a horizontal track of all six frames that glides between them,
+              draggable with mouse or touch instead of jump-cutting on each change */}
+          <div
+            ref={trackRef}
+            className="overflow-hidden select-none touch-pan-y cursor-grab active:cursor-grabbing"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
+          >
+            <div
+              className="flex"
+              style={{
+                transform: `translateX(calc(${-active * 100}% + ${dragDeltaPx}px))`,
+                transition: dragging ? 'none' : `transform ${TRANSITION_MS}ms cubic-bezier(0.65,0,0.35,1)`,
+              }}
+            >
+              {STEPS.map((s, i) => (
+                <div key={s.label} className="flex flex-col w-full shrink-0 pr-1">
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0" style={{ backgroundColor: 'rgba(245,130,10,0.12)', color: landing.orange }}>
+                      <NavIcon name={s.icon} />
+                    </div>
+                    <span className="text-xs" style={{ color: landing.cocoa }}>
+                      {String(i + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
+                    </span>
+                  </div>
 
-            <h3 className="text-2xl md:text-3xl font-semibold mb-3" style={{ ...displayFont, color: landing.ink }}>
-              {step.title}
-            </h3>
-            <p className="text-sm md:text-base leading-relaxed max-w-md mb-8" style={{ color: landing.cocoa }}>
-              {step.desc}
-            </p>
+                  <h3 className="text-2xl md:text-3xl font-semibold mb-3" style={{ ...displayFont, color: landing.ink }}>
+                    {s.title}
+                  </h3>
+                  <p className="text-sm md:text-base leading-relaxed max-w-md mb-8" style={{ color: landing.cocoa }}>
+                    {s.desc}
+                  </p>
 
-            <div className="relative mx-auto w-full max-w-[280px] h-[220px] sm:max-w-sm sm:h-[280px] md:h-[320px]">
-              <ImageBlob />
-              <img
-                key={step.image}
-                src={step.image}
-                alt=""
-                className="relative z-10 h-full w-full object-contain drop-shadow-[0_14px_20px_rgba(23,35,28,0.18)]"
-              />
+                  <div className="relative mx-auto w-full max-w-[280px] h-[220px] sm:max-w-sm sm:h-[280px] md:h-[320px]">
+                    <ImageBlob />
+                    <img
+                      src={s.image}
+                      alt=""
+                      draggable={false}
+                      className="relative z-10 h-full w-full object-contain drop-shadow-[0_14px_20px_rgba(23,35,28,0.18)]"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
