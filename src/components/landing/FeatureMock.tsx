@@ -30,15 +30,29 @@ function Frame({ label, children }: { label: string; children: ReactNode }) {
 }
 
 export function StorefrontMock() {
+  const images = [
+    '/products/perfume.jpg',
+    '/products/tote.jpg',
+    '/products/slides.jpg',
+  ];
   return (
     <Frame label="vendly.app/store/nkiru">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[13px] font-semibold" style={{ ...displayFont, color: landing.ink }}>Nkiru &amp; Co.</p>
-        <span className="text-[9px] font-medium px-2 py-1 rounded-full" style={{ backgroundColor: landing.greenSoft, color: landing.green }}>Open</span>
+        <p className="text-[13px] font-semibold" style={{ ...displayFont, color: landing.ink }}>
+          Nkiru &amp; Co.
+        </p>
+        <span
+          className="text-[9px] font-medium px-2 py-1 rounded-full"
+          style={{ backgroundColor: landing.greenSoft, color: landing.green }}
+        >
+          Open
+        </span>
       </div>
       <div className="grid grid-cols-3 gap-2">
-        {['#C9A15A,#7A5A2A', '#2AA6E0,#0B5E38', '#F5820A,#8C3A05'].map((g, i) => (
-          <div key={i} className="aspect-square rounded-xl" style={{ background: `linear-gradient(160deg,${g})` }} />
+        {images.map((src, i) => (
+          <div key={i} className="aspect-square rounded-xl overflow-hidden">
+            <img src={src} alt="" className="w-full h-full object-cover" />
+          </div>
         ))}
       </div>
     </Frame>
@@ -47,25 +61,35 @@ export function StorefrontMock() {
 
 export function ProductsMock() {
   const rows = [
-    { name: 'Eau de Parfum 50ml', stock: '18 in stock', price: '₦10,500' },
-    { name: 'Woven Tote Bag', stock: '6 in stock', price: '₦6,400' },
-    { name: 'Ankara Slides', stock: '3 in stock', price: '₦10,000' },
+    { name: 'Eau de Parfum 50ml', stock: '18 in stock', price: '₦10,500', image: '/products/perfume.jpg' },
+    { name: 'Woven Tote Bag', stock: '6 in stock', price: '₦6,400', image: '/products/tote.jpg' },
+    { name: 'Ankara Slides', stock: '3 in stock', price: '₦10,000', image: '/products/slides.jpg' },
   ];
   return (
     <Frame label="Products · 47">
       <div className="space-y-2.5">
         {rows.map((r) => (
           <div key={r.name} className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg shrink-0" style={{ backgroundColor: landing.paperDim }} />
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-medium truncate" style={{ color: landing.ink }}>{r.name}</p>
-              <p className="text-[9px]" style={{ color: landing.cocoa }}>{r.stock}</p>
+            <div className="w-8 h-8 rounded-lg shrink-0 overflow-hidden">
+              <img src={r.image} alt="" className="w-full h-full object-cover" />
             </div>
-            <p className="text-[11px] font-semibold shrink-0" style={{ color: landing.green }}>{r.price}</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-medium truncate" style={{ color: landing.ink }}>
+                {r.name}
+              </p>
+              <p className="text-[9px]" style={{ color: landing.cocoa }}>
+                {r.stock}
+              </p>
+            </div>
+            <p className="text-[11px] font-semibold shrink-0" style={{ color: landing.green }}>
+              {r.price}
+            </p>
           </div>
         ))}
         <div className="flex items-center gap-1.5 pt-1">
-          <span className="text-[9px]" style={{ color: landing.cocoa }}>+ 44 more</span>
+          <span className="text-[9px]" style={{ color: landing.cocoa }}>
+            + 44 more
+          </span>
         </div>
       </div>
     </Frame>
