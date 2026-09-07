@@ -4,39 +4,39 @@
 
 :root {
     /* Vendly premium light theme */
-    --background: 40 33% 99%;           /* #FFFEFB warm off-white */
-    --foreground: 150 18% 10%;          /* #161F1A near-black */
-    --card: 0 0% 100%;
-    --card-foreground: 150 18% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 150 18% 10%;
-    --primary: 152 79% 20%;             /* #0B5E38 deep green */
-    --primary-foreground: 40 33% 99%;
-    --secondary: 40 30% 94%;            /* warm cream */
-    --secondary-foreground: 150 18% 10%;
-    --muted: 40 25% 94%;
-    --muted-foreground: 120 4% 37%;     /* #5C6259 */
-    --accent: 32 95% 50%;               /* #F5820A orange */
-    --accent-foreground: 40 33% 99%;
-    --destructive: 4 66% 46%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 40 15% 90%;               /* #E7E5DE */
-    --input: 40 15% 90%;
-    --ring: 152 79% 20%;
-    --radius: 0.875rem;                 /* ~14px base; cards use larger */
-    --chart-1: 152 79% 20%;
-    --chart-2: 32 95% 50%;
-    --chart-3: 173 58% 39%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --sidebar: 40 33% 99%;
-    --sidebar-foreground: 150 18% 10%;
-    --sidebar-primary: 152 79% 20%;
-    --sidebar-primary-foreground: 40 33% 99%;
-    --sidebar-accent: 145 28% 92%;      /* greenSoft */
-    --sidebar-accent-foreground: 152 79% 20%;
-    --sidebar-border: 40 15% 90%;
-    --sidebar-ring: 152 79% 20%;
+    --background: hsl(40 33% 99%);           /* #FFFEFB warm off-white */
+    --foreground: hsl(150 18% 10%);          /* #161F1A near-black */
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(150 18% 10%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(150 18% 10%);
+    --primary: hsl(152 79% 20%);             /* #0B5E38 deep green */
+    --primary-foreground: hsl(40 33% 99%);
+    --secondary: hsl(40 30% 94%);            /* warm cream */
+    --secondary-foreground: hsl(150 18% 10%);
+    --muted: hsl(40 25% 94%);
+    --muted-foreground: hsl(120 4% 37%);     /* #5C6259 */
+    --accent: hsl(32 95% 50%);               /* #F5820A orange */
+    --accent-foreground: hsl(40 33% 99%);
+    --destructive: hsl(4 66% 46%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(40 15% 90%);               /* #E7E5DE */
+    --input: hsl(40 15% 90%);
+    --ring: hsl(152 79% 20%);
+    --radius: 0.875rem;                      /* ~14px base; cards use larger */
+    --chart-1: hsl(152 79% 20%);
+    --chart-2: hsl(32 95% 50%);
+    --chart-3: hsl(173 58% 39%);
+    --chart-4: hsl(43 74% 66%);
+    --chart-5: hsl(27 87% 67%);
+    --sidebar: hsl(40 33% 99%);
+    --sidebar-foreground: hsl(150 18% 10%);
+    --sidebar-primary: hsl(152 79% 20%);
+    --sidebar-primary-foreground: hsl(40 33% 99%);
+    --sidebar-accent: hsl(145 28% 92%);      /* greenSoft */
+    --sidebar-accent-foreground: hsl(152 79% 20%);
+    --sidebar-border: hsl(40 15% 90%);
+    --sidebar-ring: hsl(152 79% 20%);
 }
 
 .dark {

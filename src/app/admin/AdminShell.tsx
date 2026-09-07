@@ -49,6 +49,19 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     window.location.href = '/';
   };
 
+  if (!user) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: theme.bg }}
+      >
+        <div className="text-sm" style={{ color: theme.green }}>
+          Loading admin…
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex" style={{ backgroundColor: theme.bg, color: theme.ink }}>
       <aside

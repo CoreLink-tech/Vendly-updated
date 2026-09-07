@@ -32,14 +32,15 @@ function SignInForm() {
       const data = (await res.json()) as { user: { role: string } };
       const role = data.user?.role;
 
-      if (callbackUrl) {
-        window.location.href = callbackUrl;
-      } else if (role === 'admin') {
+      // Staff roles always go to their console (ignore vendor callback URLs)
+      if (role === 'admin') {
         window.location.href = '/admin';
       } else if (role === 'ceo') {
         window.location.href = '/ceo';
       } else if (role === 'logistics') {
         window.location.href = '/logistics';
+      } else if (callbackUrl) {
+        window.location.href = callbackUrl;
       } else {
         window.location.href = '/dashboard';
       }

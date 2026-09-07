@@ -45,10 +45,26 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         return;
       }
       const data = (await res.json()) as {
-        user: { name: string; email: string };
+        user: { name: string; email: string; role?: string };
         vendor: { businessName: string; status: string; slug: string; phone?: string; location?: string; address?: string } | null;
         ambassadorStatus: string | null;
       };
+
+      // Staff accounts must never enter the vendor dashboard / auto-create a store
+      const role = data.user?.role;
+      if (role === 'admin') {
+        router.replace('/admin');
+        return;
+      }
+      if (role === 'ceo') {
+        router.replace('/ceo');
+        return;
+      }
+      if (role === 'logistics') {
+        router.replace('/logistics');
+        return;
+      }
+
       setUser(data.user);
       setVendor(data.vendor);
       setIsApprovedAmbassador(data.ambassadorStatus === 'approved');
