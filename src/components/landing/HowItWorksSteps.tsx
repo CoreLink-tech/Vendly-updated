@@ -21,35 +21,50 @@ const STEPS = [
 
 export function HowItWorksSteps() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-10">
-      {STEPS.map((s, i) => (
-        <div key={s.title} className="flex md:block gap-4">
-          {/* Mobile: vertical connector */}
-          <div className="flex md:hidden flex-col items-center shrink-0">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
-              style={{ ...displayFont, backgroundColor: landing.green, color: landing.paper }}
-            >
-              {i + 1}
+    <div className="relative">
+      {/* Desktop horizontal connector line */}
+      <div
+        className="hidden md:block absolute top-5 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-px"
+        style={{ backgroundColor: landing.line }}
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-10">
+        {STEPS.map((s, i) => (
+          <div key={s.title} className="relative flex md:flex-col gap-4 md:gap-0">
+            {/* Step number */}
+            <div className="flex md:justify-center shrink-0">
+              <div
+                className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold"
+                style={{
+                  ...displayFont,
+                  backgroundColor: landing.green,
+                  color: landing.paper,
+                  boxShadow: '0 0 0 6px ' + landing.paperDim,
+                }}
+              >
+                {i + 1}
+              </div>
             </div>
-            {i < STEPS.length - 1 && <span className="w-px flex-1 mt-2" style={{ backgroundColor: landing.line }} />}
-          </div>
-          {/* Desktop: horizontal connector */}
-          <div className="hidden md:flex items-center w-full">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
-              style={{ ...displayFont, backgroundColor: landing.green, color: landing.paper }}
-            >
-              {i + 1}
+
+            {/* Mobile vertical connector */}
+            {i < STEPS.length - 1 && (
+              <div
+                className="md:hidden absolute left-5 top-10 bottom-[-24px] w-px -translate-x-1/2"
+                style={{ backgroundColor: landing.line }}
+              />
+            )}
+
+            <div className="pt-0.5 md:pt-6 md:text-center">
+              <h3 className="text-base font-semibold mb-1.5" style={{ color: landing.ink }}>
+                {s.title}
+              </h3>
+              <p className="text-sm leading-relaxed max-w-[220px] md:mx-auto" style={{ color: landing.cocoa }}>
+                {s.desc}
+              </p>
             </div>
-            {i < STEPS.length - 1 && <span className="h-px flex-1 ml-3" style={{ backgroundColor: landing.line }} />}
           </div>
-          <div className="pt-0.5 md:pt-5 md:pr-6 pb-2 md:pb-0">
-            <h3 className="text-base font-semibold mb-1.5" style={{ color: landing.ink }}>{s.title}</h3>
-            <p className="text-sm leading-relaxed" style={{ color: landing.cocoa }}>{s.desc}</p>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

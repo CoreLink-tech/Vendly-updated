@@ -8,10 +8,21 @@ const frameStyle = {
 
 function Frame({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="rounded-[20px] overflow-hidden shadow-[0_16px_40px_-16px_rgba(22,31,26,0.16)]" style={frameStyle}>
-      <div className="px-4 py-2.5 flex items-center gap-2" style={{ borderBottom: `1px solid ${landing.line}` }}>
-        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: landing.green }} />
-        <p className="text-[11px] font-medium" style={{ color: landing.cocoa }}>{label}</p>
+    <div
+      className="rounded-[24px] overflow-hidden landing-soft-shadow"
+      style={frameStyle}
+    >
+      <div
+        className="px-4 py-2.5 flex items-center gap-2"
+        style={{ borderBottom: `1px solid ${landing.line}` }}
+      >
+        <span
+          className="w-1.5 h-1.5 rounded-full"
+          style={{ backgroundColor: landing.green }}
+        />
+        <p className="text-[11px] font-medium" style={{ color: landing.cocoa }}>
+          {label}
+        </p>
       </div>
       <div className="p-4">{children}</div>
     </div>

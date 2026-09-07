@@ -26,19 +26,28 @@ export function LandingNav() {
 
           <div className="hidden md:flex items-center gap-9">
             {LINKS.map((l) => (
-              <a key={l.href} href={l.href} className="text-sm font-medium" style={{ color: landing.ink }}>
+              <a
+                key={l.href}
+                href={l.href}
+                className="text-sm font-medium transition-opacity hover:opacity-70"
+                style={{ color: landing.ink }}
+              >
                 {l.label}
               </a>
             ))}
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/account/signin" className="text-sm font-medium px-4 py-2 rounded-full" style={{ color: landing.ink }}>
+            <Link
+              href="/account/signin"
+              className="text-sm font-medium px-4 py-2 rounded-full transition-opacity hover:opacity-70"
+              style={{ color: landing.ink }}
+            >
               Sign in
             </Link>
             <Link
               href="/account/signup"
-              className="text-sm font-semibold px-5 py-2.5 rounded-full transition-transform hover:-translate-y-0.5"
+              className="text-sm font-semibold px-5 py-2.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_16px_-6px_rgba(11,94,56,0.35)]"
               style={{ backgroundColor: landing.green, color: landing.paper }}
             >
               Create your store
