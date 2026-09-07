@@ -1,21 +1,19 @@
-// Landing page color tokens. Deep green carries the brand (logo, primary
-// buttons, the one dark section); orange is spent sparingly, as a mark of
-// emphasis rather than a second primary. Scoped to the landing page only —
-// the dashboard and storefront have their own theming.
+// Landing page color tokens — pulled from the Vendly mark itself (the
+// striped awning on the logo's shopping bag, and its green→orange
+// gradient) rather than a generic SaaS palette. Scoped to the landing
+// page only; the dashboard and storefront have their own theming.
 
 export const landing = {
-  ink: '#161F1A',        // near-black — body copy, headings
-  paper: '#FFFEFB',      // warm off-white base
-  paperDim: '#F7F3E9',   // deeper cream for alternating panels
-  green: '#0B5E38',      // primary
-  greenDeep: '#093F27',  // pressed/dark states, the one dark section fill
-  greenSoft: '#E7F0EA',  // tint for chips, icon wells on paper
-  orange: '#F5820A',     // accent — used sparingly, never as a second primary
-  orangeSoft: '#FCE9D2', // tint for accent chips
-  cocoa: '#5C6259',      // muted secondary text
-  line: '#E7E5DE',       // light gray hairline border, warmed slightly to sit on cream
-  lineOnDark: 'rgba(255,254,251,0.14)',
+  ink: '#17231C',       // near-black, warm toward green — body copy on paper, dark section fill
+  paper: '#FFFCF4',     // warm ivory base
+  paperDim: '#FBF1DD',  // slightly deeper cream for alternating panels
+  orange: '#F5820A',    // awning orange — primary accent
+  orangeDeep: '#C9600A',
+  green: '#128A4B',     // storefront green — secondary accent
+  greenDeep: '#0B5E38',
+  sky: '#2AA6E0',       // logo's swoosh blue — used sparingly
+  cocoa: '#5B4B3B',     // muted warm brown for secondary text on paper
+  line: '#E9DEC7',      // hairline border tone on paper
 } as const;
 
 export const displayFont = { fontFamily: 'var(--font-fraunces), Georgia, serif' };
-export const bodyFont = { fontFamily: 'var(--font-exo2), sans-serif' };
