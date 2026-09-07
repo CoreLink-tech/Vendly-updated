@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { SITE_URL } from '@/lib/site';
+import { theme } from '@/lib/theme';
 
 interface ReferralData {
   slug: string;
@@ -85,7 +86,7 @@ export default function ReferralsPage() {
         <div
           className="w-5 h-5 border-2 rounded-full"
           style={{
-            borderColor: '#22c55e',
+            borderColor: theme.green,
             borderTopColor: 'transparent',
             animation: 'spin 0.8s linear infinite',
           }}
@@ -104,10 +105,10 @@ export default function ReferralsPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Referral Dashboard
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Earn ₦1,000 per monthly or ₦10,000 per yearly referral.
         </p>
       </div>
@@ -115,15 +116,15 @@ export default function ReferralsPage() {
       {/* Referral link */}
       <div
         className="p-6 rounded-xl border mb-6"
-        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
       >
-        <p className="text-xs font-medium mb-3" style={{ color: '#aaaaaa' }}>
+        <p className="text-xs font-medium mb-3" style={{ color: theme.muted }}>
           Your Referral Link
         </p>
         <div className="flex items-center gap-3">
           <code
             className="flex-1 text-xs font-mono truncate px-3 py-2 rounded-lg"
-            style={{ backgroundColor: '#0d0d0d', color: '#22c55e' }}
+            style={{ backgroundColor: theme.bg, color: theme.green }}
           >
             {referralLink || 'Activate your store to get a referral link'}
           </code>
@@ -132,8 +133,8 @@ export default function ReferralsPage() {
               onClick={copyLink}
               className="shrink-0 text-xs px-4 py-2 rounded-lg transition-colors"
               style={{
-                backgroundColor: copied ? '#22c55e' : '#22c55e20',
-                color: copied ? '#0d0d0d' : '#22c55e',
+                backgroundColor: copied ? theme.green : theme.greenSoft,
+                color: copied ? theme.bg : theme.green,
               }}
             >
               {copied ? 'Copied!' : 'Copy'}
@@ -156,12 +157,12 @@ export default function ReferralsPage() {
           <div
             key={s.label}
             className="p-4 rounded-xl border"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
-            <p className="text-xs mb-1" style={{ color: '#888888' }}>
+            <p className="text-xs mb-1" style={{ color: theme.muted }}>
               {s.label}
             </p>
-            <p className="text-xl font-semibold" style={{ color: '#f5f5f5' }}>
+            <p className="text-xl font-semibold" style={{ color: theme.ink }}>
               {s.value}
             </p>
           </div>
@@ -174,12 +175,12 @@ export default function ReferralsPage() {
           <button
             onClick={() => setShowWithdraw(true)}
             className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-opacity hover:opacity-90"
-            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+            style={{ backgroundColor: theme.green, color: theme.bg }}
           >
             Request Withdrawal
           </button>
           {wMsg && (
-            <p className="text-xs mt-2" style={{ color: '#22c55e' }}>
+            <p className="text-xs mt-2" style={{ color: theme.green }}>
               {wMsg}
             </p>
           )}
@@ -189,31 +190,31 @@ export default function ReferralsPage() {
       {/* Commission info */}
       <div
         className="p-4 rounded-xl border mb-6"
-        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
       >
-        <p className="text-xs font-semibold mb-3" style={{ color: '#aaaaaa' }}>
+        <p className="text-xs font-semibold mb-3" style={{ color: theme.muted }}>
           Commission Rates
         </p>
         <div className="flex gap-4">
-          <div className="flex-1 text-center p-3 rounded-lg" style={{ backgroundColor: '#0d0d0d' }}>
-            <p className="text-xs mb-1" style={{ color: '#888888' }}>
+          <div className="flex-1 text-center p-3 rounded-lg" style={{ backgroundColor: theme.bg }}>
+            <p className="text-xs mb-1" style={{ color: theme.muted }}>
               Monthly plan
             </p>
-            <p className="text-lg font-semibold" style={{ color: '#22c55e' }}>
+            <p className="text-lg font-semibold" style={{ color: theme.green }}>
               ₦1,000
             </p>
-            <p className="text-[10px]" style={{ color: '#555555' }}>
+            <p className="text-[10px]" style={{ color: theme.faint }}>
               25% one-time
             </p>
           </div>
-          <div className="flex-1 text-center p-3 rounded-lg" style={{ backgroundColor: '#0d0d0d' }}>
-            <p className="text-xs mb-1" style={{ color: '#888888' }}>
+          <div className="flex-1 text-center p-3 rounded-lg" style={{ backgroundColor: theme.bg }}>
+            <p className="text-xs mb-1" style={{ color: theme.muted }}>
               Yearly plan
             </p>
-            <p className="text-lg font-semibold" style={{ color: '#22c55e' }}>
+            <p className="text-lg font-semibold" style={{ color: theme.green }}>
               ₦10,000
             </p>
-            <p className="text-[10px]" style={{ color: '#555555' }}>
+            <p className="text-[10px]" style={{ color: theme.faint }}>
               25% one-time
             </p>
           </div>
@@ -224,31 +225,31 @@ export default function ReferralsPage() {
       {data?.referrals && data.referrals.length > 0 && (
         <div
           className="rounded-xl border overflow-hidden"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
-          <div className="px-4 py-3 border-b" style={{ borderColor: '#2a2a2a' }}>
-            <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+          <div className="px-4 py-3 border-b" style={{ borderColor: theme.line }}>
+            <p className="text-sm font-semibold" style={{ color: theme.ink }}>
               Referral History
             </p>
           </div>
-          <div className="divide-y" style={{ borderColor: '#2a2a2a' }}>
+          <div className="divide-y" style={{ borderColor: theme.line }}>
             {data.referrals.map((r) => (
               <div key={r.id} className="flex items-center justify-between px-4 py-3">
                 <div>
-                  <p className="text-xs font-medium capitalize" style={{ color: '#f5f5f5' }}>
+                  <p className="text-xs font-medium capitalize" style={{ color: theme.ink }}>
                     {r.plan} plan
                   </p>
-                  <p className="text-[10px]" style={{ color: '#888888' }}>
+                  <p className="text-[10px]" style={{ color: theme.muted }}>
                     {fmtDate(r.createdAt)}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold" style={{ color: '#22c55e' }}>
+                  <span className="text-xs font-semibold" style={{ color: theme.green }}>
                     ₦{Number(r.commission).toLocaleString()}
                   </span>
                   <span
                     className="text-[10px] px-2 py-0.5 rounded-full border capitalize"
-                    style={{ borderColor: '#2a2a2a', color: '#888888' }}
+                    style={{ borderColor: theme.line, color: theme.muted }}
                   >
                     {r.status}
                   </span>
@@ -267,20 +268,20 @@ export default function ReferralsPage() {
         >
           <div
             className="w-full max-w-md rounded-xl border p-6"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-base font-semibold" style={{ color: '#f5f5f5' }}>
+              <h2 className="text-base font-semibold" style={{ color: theme.ink }}>
                 Request Withdrawal
               </h2>
-              <button onClick={() => setShowWithdraw(false)} style={{ color: '#888888' }}>
+              <button onClick={() => setShowWithdraw(false)} style={{ color: theme.muted }}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
             <div className="space-y-4">
               <label
                 className="flex flex-col gap-1.5 text-xs font-medium"
-                style={{ color: '#aaaaaa' }}
+                style={{ color: theme.muted }}
               >
                 Amount (₦)
                 <input
@@ -289,43 +290,43 @@ export default function ReferralsPage() {
                   onChange={(e) => setWAmount(e.target.value)}
                   max={data?.withdrawableBalance}
                   className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                 />
               </label>
               <label
                 className="flex flex-col gap-1.5 text-xs font-medium"
-                style={{ color: '#aaaaaa' }}
+                style={{ color: theme.muted }}
               >
                 Bank Name
                 <input
                   value={wForm.bankName}
                   onChange={(e) => setWForm((f) => ({ ...f, bankName: e.target.value }))}
                   className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                 />
               </label>
               <label
                 className="flex flex-col gap-1.5 text-xs font-medium"
-                style={{ color: '#aaaaaa' }}
+                style={{ color: theme.muted }}
               >
                 Account Number
                 <input
                   value={wForm.accountNumber}
                   onChange={(e) => setWForm((f) => ({ ...f, accountNumber: e.target.value }))}
                   className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                 />
               </label>
               <label
                 className="flex flex-col gap-1.5 text-xs font-medium"
-                style={{ color: '#aaaaaa' }}
+                style={{ color: theme.muted }}
               >
                 Account Name
                 <input
                   value={wForm.accountName}
                   onChange={(e) => setWForm((f) => ({ ...f, accountName: e.target.value }))}
                   className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                 />
               </label>
               <button
@@ -334,7 +335,7 @@ export default function ReferralsPage() {
                 }}
                 disabled={wSaving}
                 className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50"
-                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                style={{ backgroundColor: theme.green, color: theme.bg }}
               >
                 {wSaving ? 'Submitting…' : 'Submit Request'}
               </button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface Vendor {
   status: string;
@@ -78,7 +79,7 @@ export default function SubscriptionPage() {
   if (pageLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: '#22c55e', borderTopColor: 'transparent' }} />
+        <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: theme.green, borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -90,21 +91,21 @@ export default function SubscriptionPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>Subscription</h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>Manage your Vendly plan and activation.</p>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>Subscription</h1>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>Manage your Vendly plan and activation.</p>
       </div>
 
       {/* Trial banner */}
       {isTrial && (
-        <div className="p-5 rounded-xl border mb-6 flex items-start gap-4" style={{ backgroundColor: '#1a1a1a', borderColor: '#f59e0b50' }}>
+        <div className="p-5 rounded-xl border mb-6 flex items-start gap-4" style={{ backgroundColor: theme.surface, borderColor: '#f59e0b50' }}>
           <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f59e0b15' }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" style={{ color: '#f59e0b' }}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" style={{ color: theme.orange }}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-semibold mb-0.5" style={{ color: '#f5f5f5' }}>
+            <p className="text-sm font-semibold mb-0.5" style={{ color: theme.ink }}>
               Free Trial — {trialDays} day{trialDays !== 1 ? 's' : ''} left
             </p>
-            <p className="text-xs" style={{ color: '#888' }}>
+            <p className="text-xs" style={{ color: theme.muted }}>
               Trial expires {fmtDate(subscription!.trialEnd || subscription!.endDate)}. Activate a plan to keep your store running.
             </p>
           </div>
@@ -113,28 +114,28 @@ export default function SubscriptionPage() {
 
       {/* Active paid subscription */}
       {isPaid && (
-        <div className="p-6 rounded-xl border mb-6" style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e30' }}>
+        <div className="p-6 rounded-xl border mb-6" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
           <div className="flex items-center gap-2 mb-4">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#22c55e' }} />
-            <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>Active Subscription</span>
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.green }} />
+            <span className="text-sm font-semibold" style={{ color: theme.green }}>Active Subscription</span>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs" style={{ color: '#888888' }}>Plan</p>
-              <p className="text-sm font-semibold capitalize mt-1" style={{ color: '#f5f5f5' }}>{subscription!.plan}</p>
+              <p className="text-xs" style={{ color: theme.muted }}>Plan</p>
+              <p className="text-sm font-semibold capitalize mt-1" style={{ color: theme.ink }}>{subscription!.plan}</p>
             </div>
             <div>
-              <p className="text-xs" style={{ color: '#888888' }}>Status</p>
-              <p className="text-sm font-semibold capitalize mt-1" style={{ color: '#f5f5f5' }}>{subscription!.status}</p>
+              <p className="text-xs" style={{ color: theme.muted }}>Status</p>
+              <p className="text-sm font-semibold capitalize mt-1" style={{ color: theme.ink }}>{subscription!.status}</p>
             </div>
             <div>
-              <p className="text-xs" style={{ color: '#888888' }}>Started</p>
-              <p className="text-sm font-semibold mt-1" style={{ color: '#f5f5f5' }}>{fmtDate(subscription!.startDate)}</p>
+              <p className="text-xs" style={{ color: theme.muted }}>Started</p>
+              <p className="text-sm font-semibold mt-1" style={{ color: theme.ink }}>{fmtDate(subscription!.startDate)}</p>
             </div>
             {subscription!.endDate && (
               <div>
-                <p className="text-xs" style={{ color: '#888888' }}>Renews</p>
-                <p className="text-sm font-semibold mt-1" style={{ color: '#f5f5f5' }}>{fmtDate(subscription!.endDate)}</p>
+                <p className="text-xs" style={{ color: theme.muted }}>Renews</p>
+                <p className="text-sm font-semibold mt-1" style={{ color: theme.ink }}>{fmtDate(subscription!.endDate)}</p>
               </div>
             )}
           </div>
@@ -145,52 +146,52 @@ export default function SubscriptionPage() {
       {!isPaid && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="p-6 rounded-xl border" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
-              <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: '#888888' }}>Monthly</p>
+            <div className="p-6 rounded-xl border" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+              <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: theme.muted }}>Monthly</p>
               <div className="flex items-end gap-1 mb-1">
-                <span className="text-3xl font-semibold" style={{ color: '#f5f5f5' }}>₦{monthlyPrice.toLocaleString()}</span>
-                <span className="text-xs mb-1.5" style={{ color: '#888888' }}>/month</span>
+                <span className="text-3xl font-semibold" style={{ color: theme.ink }}>₦{monthlyPrice.toLocaleString()}</span>
+                <span className="text-xs mb-1.5" style={{ color: theme.muted }}>/month</span>
               </div>
               <div className="mb-4" />
               <ul className="space-y-2 mb-6">
                 {['Full store access', 'Unlimited products', 'Order management', 'Referral system'].map((f) => (
-                  <li key={f} className="text-xs flex gap-2" style={{ color: '#aaaaaa' }}>
-                    <span style={{ color: '#22c55e' }}>–</span> {f}
+                  <li key={f} className="text-xs flex gap-2" style={{ color: theme.muted }}>
+                    <span style={{ color: theme.green }}>–</span> {f}
                   </li>
                 ))}
               </ul>
               <button
                 onClick={() => handleWhatsApp('monthly')}
                 className="w-full py-2.5 rounded-lg text-sm font-semibold border transition-colors"
-                style={{ borderColor: '#22c55e', color: '#22c55e' }}
+                style={{ borderColor: theme.green, color: theme.green }}
               >
                 Activate → WhatsApp
               </button>
             </div>
 
-            <div className="p-6 rounded-xl border relative" style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e' }}>
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full" style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}>
+            <div className="p-6 rounded-xl border relative" style={{ backgroundColor: theme.surface, borderColor: theme.green }}>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full" style={{ backgroundColor: theme.green, color: theme.bg }}>
                 Best Value
               </div>
-              <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: '#888888' }}>Yearly</p>
+              <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: theme.muted }}>Yearly</p>
               <div className="flex items-end gap-1 mb-1">
-                <span className="text-3xl font-semibold" style={{ color: '#f5f5f5' }}>₦{yearlyPrice.toLocaleString()}</span>
-                <span className="text-xs mb-1.5" style={{ color: '#888888' }}>/year</span>
+                <span className="text-3xl font-semibold" style={{ color: theme.ink }}>₦{yearlyPrice.toLocaleString()}</span>
+                <span className="text-xs mb-1.5" style={{ color: theme.muted }}>/year</span>
               </div>
-              <p className="text-xs mb-5" style={{ color: '#22c55e' }}>
+              <p className="text-xs mb-5" style={{ color: theme.green }}>
                 Save ₦8,000
               </p>
               <ul className="space-y-2 mb-6">
                 {['Full store access', 'Unlimited products', 'Order management', 'Referral system'].map((f) => (
-                  <li key={f} className="text-xs flex gap-2" style={{ color: '#aaaaaa' }}>
-                    <span style={{ color: '#22c55e' }}>–</span> {f}
+                  <li key={f} className="text-xs flex gap-2" style={{ color: theme.muted }}>
+                    <span style={{ color: theme.green }}>–</span> {f}
                   </li>
                 ))}
               </ul>
               <button
                 onClick={() => handleWhatsApp('yearly')}
                 className="w-full py-2.5 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90"
-                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                style={{ backgroundColor: theme.green, color: theme.bg }}
               >
                 Activate → WhatsApp
               </button>
@@ -198,9 +199,9 @@ export default function SubscriptionPage() {
           </div>
 
           {/* Code activation */}
-          <div className="p-6 rounded-xl border" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
-            <h2 className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>Have an activation code?</h2>
-            <p className="text-xs mb-4" style={{ color: '#888888' }}>Enter your code below to instantly activate your store.</p>
+          <div className="p-6 rounded-xl border" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+            <h2 className="text-sm font-semibold mb-1" style={{ color: theme.ink }}>Have an activation code?</h2>
+            <p className="text-xs mb-4" style={{ color: theme.muted }}>Enter your code below to instantly activate your store.</p>
             <div className="flex gap-3">
               <input
                 type="text"
@@ -208,19 +209,19 @@ export default function SubscriptionPage() {
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 placeholder="VDLY-2026-XXXX"
                 className="flex-1 rounded-lg border px-4 py-2.5 text-sm font-mono outline-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               />
               <button
                 onClick={() => { void handleActivateCode(); }}
                 disabled={loading || !code.trim()}
                 className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                style={{ backgroundColor: theme.green, color: theme.bg }}
               >
                 {loading ? '…' : 'Activate'}
               </button>
             </div>
             {message && (
-              <p className="text-xs mt-3" style={{ color: message.type === 'success' ? '#22c55e' : '#ef4444' }}>
+              <p className="text-xs mt-3" style={{ color: message.type === 'success' ? theme.green : '#ef4444' }}>
                 {message.text}
               </p>
             )}

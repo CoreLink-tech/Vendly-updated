@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface SettingDef {
   key: string;
@@ -52,26 +53,26 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="p-6 max-w-2xl">
-      <h1 className="text-xl font-semibold mb-1" style={{ color: '#f5f5f5' }}>Platform Settings</h1>
-      <p className="text-sm mb-6" style={{ color: '#888888' }}>
+      <h1 className="text-xl font-semibold mb-1" style={{ color: theme.ink }}>Platform Settings</h1>
+      <p className="text-sm mb-6" style={{ color: theme.muted }}>
         Platform-wide switches. These override individual vendor settings when turned off.
       </p>
 
       {error && <p className="text-xs mb-4" style={{ color: '#ef4444' }}>{error}</p>}
 
       {loading ? (
-        <p className="text-sm" style={{ color: '#888888' }}>Loading…</p>
+        <p className="text-sm" style={{ color: theme.muted }}>Loading…</p>
       ) : (
-        <div className="rounded-xl border divide-y" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
+        <div className="rounded-xl border divide-y" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
           {SETTINGS.map((s) => {
             const on = values[s.key] ?? true;
             return (
-              <div key={s.key} className="flex items-center justify-between gap-4 p-5" style={{ borderColor: '#2a2a2a' }}>
+              <div key={s.key} className="flex items-center justify-between gap-4 p-5" style={{ borderColor: theme.line }}>
                 <div>
-                  <p className="text-sm font-medium" style={{ color: '#f5f5f5' }}>{s.label}</p>
-                  <p className="text-xs mt-1" style={{ color: '#888888' }}>{s.description}</p>
+                  <p className="text-sm font-medium" style={{ color: theme.ink }}>{s.label}</p>
+                  <p className="text-xs mt-1" style={{ color: theme.muted }}>{s.description}</p>
                   {savingKey === s.key && (
-                    <p className="text-xs mt-1" style={{ color: '#22c55e' }}>Saving…</p>
+                    <p className="text-xs mt-1" style={{ color: theme.green }}>Saving…</p>
                   )}
                 </div>
                 <button
@@ -79,7 +80,7 @@ export default function AdminSettingsPage() {
                   onClick={() => void toggle(s.key, on)}
                   disabled={savingKey === s.key}
                   className="shrink-0 w-11 h-6 rounded-full relative transition-colors disabled:opacity-60"
-                  style={{ backgroundColor: on ? '#22c55e' : '#2a2a2a' }}
+                  style={{ backgroundColor: on ? theme.green : theme.line }}
                 >
                   <span
                     className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"

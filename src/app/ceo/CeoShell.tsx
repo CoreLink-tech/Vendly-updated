@@ -4,6 +4,7 @@ import { NavIcon, IconName } from '@/components/NavIcon';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
+import { theme } from '@/lib/theme';
 
 const NAV_ITEMS = [
   { href: '#overview', label: 'Business Overview', icon: 'dashboard' as IconName },
@@ -39,30 +40,30 @@ export default function CeoShell({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#0d0d0d' }}>
-        <div className="text-sm" style={{ color: '#22c55e' }}>Loading…</div>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: theme.bg }}>
+        <div className="text-sm" style={{ color: theme.green }}>Loading…</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: '#0d0d0d', fontFamily: 'Inter, sans-serif' }}>
+    <div className="min-h-screen flex" style={{ backgroundColor: theme.bg, fontFamily: 'Inter, sans-serif' }}>
       {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ width: 240, backgroundColor: '#111111', borderColor: '#2a2a2a' }}
+        style={{ width: 240, backgroundColor: theme.surface, borderColor: theme.line }}
       >
-        <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: '#2a2a2a' }}>
+        <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: theme.line }}>
           <div>
-            <span className="text-xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>Vendly</span>
+            <span className="text-xl font-semibold tracking-tight" style={{ color: theme.green }}>Vendly</span>
             <span
               className="ml-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
-              style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
+              style={{ backgroundColor: theme.greenSoft, color: theme.green }}
             >
               CEO
             </span>
           </div>
-          <button onClick={() => setSidebarOpen(false)} className="md:hidden" style={{ color: '#888888' }}>
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden" style={{ color: theme.muted }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
@@ -74,7 +75,7 @@ export default function CeoShell({ children }: { children: React.ReactNode }) {
               href={item.href}
               onClick={() => setSidebarOpen(false)}
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-sm transition-colors"
-              style={{ color: '#888888' }}
+              style={{ color: theme.muted }}
             >
               <NavIcon name={item.icon} />
               {item.label}
@@ -82,15 +83,15 @@ export default function CeoShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
 
-        <div className="px-4 py-4 border-t" style={{ borderColor: '#2a2a2a' }}>
+        <div className="px-4 py-4 border-t" style={{ borderColor: theme.line }}>
           <div className="mb-3">
-            <p className="text-xs font-medium truncate" style={{ color: '#f5f5f5' }}>{user.name}</p>
-            <p className="text-[10px] truncate" style={{ color: '#555555' }}>{user.email}</p>
+            <p className="text-xs font-medium truncate" style={{ color: theme.ink }}>{user.name}</p>
+            <p className="text-[10px] truncate" style={{ color: theme.faint }}>{user.email}</p>
           </div>
           <button
             onClick={() => { void handleSignOut(); }}
             className="w-full text-left text-xs px-3 py-2 rounded-lg"
-            style={{ color: '#888888' }}
+            style={{ color: theme.muted }}
           >
             Sign out →
           </button>
@@ -107,12 +108,12 @@ export default function CeoShell({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <header
           className="flex items-center justify-between px-4 py-4 border-b md:hidden"
-          style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}
+          style={{ borderColor: theme.line, backgroundColor: theme.surface }}
         >
-          <button onClick={() => setSidebarOpen(true)} className="text-lg" style={{ color: '#f5f5f5' }}>
+          <button onClick={() => setSidebarOpen(true)} className="text-lg" style={{ color: theme.ink }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <span className="text-base font-semibold" style={{ color: '#22c55e' }}>CEO</span>
+          <span className="text-base font-semibold" style={{ color: theme.green }}>CEO</span>
           <div className="w-6" />
         </header>
         <main className="flex-1 p-4 md:p-8">{children}</main>

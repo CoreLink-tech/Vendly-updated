@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface Withdrawal {
   id: string;
@@ -55,10 +56,10 @@ export default function WithdrawalsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Withdrawals
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Review and process withdrawal requests.
         </p>
       </div>
@@ -75,9 +76,9 @@ export default function WithdrawalsPage() {
             onClick={() => setStatusFilter(f.v)}
             className="text-xs px-3 py-1.5 rounded-full border"
             style={{
-              borderColor: statusFilter === f.v ? '#22c55e' : '#2a2a2a',
-              color: statusFilter === f.v ? '#22c55e' : '#888888',
-              backgroundColor: statusFilter === f.v ? '#22c55e10' : 'transparent',
+              borderColor: statusFilter === f.v ? theme.green : theme.line,
+              color: statusFilter === f.v ? theme.green : theme.muted,
+              backgroundColor: statusFilter === f.v ? theme.greenSoft : 'transparent',
             }}
           >
             {f.l}
@@ -87,14 +88,14 @@ export default function WithdrawalsPage() {
 
       <div
         className="rounded-xl border overflow-hidden"
-        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
       >
         {loading ? (
           <div className="flex items-center justify-center h-24">
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#22c55e',
+                borderColor: theme.green,
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -109,39 +110,39 @@ export default function WithdrawalsPage() {
           </div>
         ) : withdrawals.length === 0 ? (
           <div className="text-center py-10">
-            <p className="text-sm" style={{ color: '#555555' }}>
+            <p className="text-sm" style={{ color: theme.faint }}>
               No withdrawals found.
             </p>
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: '#2a2a2a' }}>
+          <div className="divide-y" style={{ borderColor: theme.line }}>
             {withdrawals.map((w) => (
               <div key={w.id} className="px-4 md:px-6 py-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">
-                      <span className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+                      <span className="text-sm font-semibold" style={{ color: theme.ink }}>
                         ₦{Number(w.amount).toLocaleString()}
                       </span>
                       <span
                         className="text-xs px-2 py-0.5 rounded-full border capitalize"
-                        style={{ borderColor: '#2a2a2a', color: '#888888' }}
+                        style={{ borderColor: theme.line, color: theme.muted }}
                       >
                         {w.type}
                       </span>
                     </div>
-                    <div className="text-xs space-y-0.5" style={{ color: '#888888' }}>
+                    <div className="text-xs space-y-0.5" style={{ color: theme.muted }}>
                       <p>
-                        <span style={{ color: '#555555' }}>Bank:</span> {w.bankName}
+                        <span style={{ color: theme.faint }}>Bank:</span> {w.bankName}
                       </p>
                       <p>
-                        <span style={{ color: '#555555' }}>Account:</span> {w.accountNumber}
+                        <span style={{ color: theme.faint }}>Account:</span> {w.accountNumber}
                       </p>
                       <p>
-                        <span style={{ color: '#555555' }}>Name:</span> {w.accountName}
+                        <span style={{ color: theme.faint }}>Name:</span> {w.accountName}
                       </p>
                       <p>
-                        <span style={{ color: '#555555' }}>Date:</span> {fmtDate(w.createdAt)}
+                        <span style={{ color: theme.faint }}>Date:</span> {fmtDate(w.createdAt)}
                       </p>
                     </div>
                   </div>
@@ -153,7 +154,7 @@ export default function WithdrawalsPage() {
                         }}
                         disabled={processing === w.id}
                         className="text-xs px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
-                        style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                        style={{ backgroundColor: theme.green, color: theme.bg }}
                       >
                         Approve
                       </button>
@@ -172,7 +173,7 @@ export default function WithdrawalsPage() {
                   {w.status !== 'pending' && (
                     <span
                       className="text-xs font-semibold capitalize"
-                      style={{ color: w.status === 'completed' ? '#22c55e' : '#ef4444' }}
+                      style={{ color: w.status === 'completed' ? theme.green : '#ef4444' }}
                     >
                       {w.status}
                     </span>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface Vendor {
   id: string;
@@ -25,10 +26,10 @@ const ACCOUNT_TYPE_LABELS: Record<Vendor['accountType'], string> = {
 };
 
 const ACCOUNT_TYPE_COLORS: Record<Vendor['accountType'], string> = {
-  paid: '#22c55e',
+  paid: theme.green,
   trial: '#3b82f6',
-  trial_expired: '#f59e0b',
-  pending: '#888888',
+  trial_expired: theme.orange,
+  pending: theme.muted,
   suspended: '#ef4444',
 };
 
@@ -106,10 +107,10 @@ export default function AdminVendorsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Vendors
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           {vendors.length} total vendors
         </p>
       </div>
@@ -122,13 +123,13 @@ export default function AdminVendorsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1 rounded-lg border px-4 py-2.5 text-sm outline-none"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line, color: theme.ink }}
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           className="rounded-lg border px-4 py-2.5 text-sm outline-none"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line, color: theme.ink }}
         >
           <option value="">All statuses</option>
           <option value="pending">Pending</option>
@@ -139,7 +140,7 @@ export default function AdminVendorsPage() {
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
           className="rounded-lg border px-4 py-2.5 text-sm outline-none"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line, color: theme.ink }}
         >
           <option value="">All account types</option>
           <option value="paid">Paid</option>
@@ -153,14 +154,14 @@ export default function AdminVendorsPage() {
       {/* Table */}
       <div
         className="rounded-xl border overflow-hidden"
-        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
       >
         {loading ? (
           <div className="flex items-center justify-center h-32">
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#22c55e',
+                borderColor: theme.green,
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -175,12 +176,12 @@ export default function AdminVendorsPage() {
           </div>
         ) : vendors.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-sm" style={{ color: '#555555' }}>
+            <p className="text-sm" style={{ color: theme.faint }}>
               No vendors found.
             </p>
           </div>
         ) : (
-          <div className="divide-y overflow-x-auto" style={{ borderColor: '#2a2a2a' }}>
+          <div className="divide-y overflow-x-auto" style={{ borderColor: theme.line }}>
             {vendors.map((v) => (
               <div
                 key={v.id}
@@ -189,21 +190,21 @@ export default function AdminVendorsPage() {
               >
                 <div
                   className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs font-bold"
-                  style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
+                  style={{ backgroundColor: theme.greenSoft, color: theme.green }}
                 >
                   {(v.businessName || v.userName || 'V')[0]?.toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold truncate" style={{ color: '#f5f5f5' }}>
+                  <p className="text-sm font-semibold truncate" style={{ color: theme.ink }}>
                     {v.businessName || '—'}
                   </p>
-                  <p className="text-xs truncate" style={{ color: '#888888' }}>
+                  <p className="text-xs truncate" style={{ color: theme.muted }}>
                     {v.email}
                   </p>
                 </div>
                 <div
                   className="hidden md:flex items-center gap-4 text-xs"
-                  style={{ color: '#888888' }}
+                  style={{ color: theme.muted }}
                 >
                   <span>{v.productCount} products</span>
                   <span>{v.orderCount} orders</span>
@@ -211,7 +212,7 @@ export default function AdminVendorsPage() {
                 </div>
                 <div
                   className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs shrink-0"
-                  style={{ borderColor: '#2a2a2a' }}
+                  style={{ borderColor: theme.line }}
                 >
                   <span
                     className="w-1.5 h-1.5 rounded-full"
@@ -228,7 +229,7 @@ export default function AdminVendorsPage() {
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
                     className="hidden md:flex shrink-0 text-xs px-2.5 py-1 rounded-lg border font-semibold"
-                    style={{ borderColor: '#22c55e30', backgroundColor: '#22c55e10', color: '#22c55e' }}
+                    style={{ borderColor: theme.line, backgroundColor: theme.greenSoft, color: theme.green }}
                   >
                     View Store ↗
                   </a>
@@ -247,16 +248,16 @@ export default function AdminVendorsPage() {
         >
           <div
             className="w-full max-w-md rounded-xl border"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
             <div
               className="flex items-center justify-between px-6 py-4 border-b"
-              style={{ borderColor: '#2a2a2a' }}
+              style={{ borderColor: theme.line }}
             >
-              <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+              <p className="text-sm font-semibold" style={{ color: theme.ink }}>
                 {selected.businessName || 'Vendor'}
               </p>
-              <button onClick={() => setSelected(null)} style={{ color: '#888888' }}>
+              <button onClick={() => setSelected(null)} style={{ color: theme.muted }}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
@@ -278,12 +279,12 @@ export default function AdminVendorsPage() {
                   ],
                 ].map(([k, v]) => (
                   <div key={k}>
-                    <p className="text-xs" style={{ color: '#888888' }}>
+                    <p className="text-xs" style={{ color: theme.muted }}>
                       {k}
                     </p>
                     <p
                       className="text-sm font-medium capitalize mt-0.5"
-                      style={{ color: '#f5f5f5' }}
+                      style={{ color: theme.ink }}
                     >
                       {v}
                     </p>
@@ -293,7 +294,7 @@ export default function AdminVendorsPage() {
 
               {selected.status !== 'active' && (
                 <div>
-                  <p className="text-xs font-medium mb-2" style={{ color: '#aaaaaa' }}>
+                  <p className="text-xs font-medium mb-2" style={{ color: theme.muted }}>
                     Activate with plan:
                   </p>
                   <div className="flex gap-2 mb-3">
@@ -303,9 +304,9 @@ export default function AdminVendorsPage() {
                         onClick={() => setPlan(p)}
                         className="flex-1 py-2 rounded-lg border text-xs font-semibold transition-colors"
                         style={{
-                          borderColor: plan === p ? '#22c55e' : '#2a2a2a',
-                          color: plan === p ? '#22c55e' : '#888888',
-                          backgroundColor: plan === p ? '#22c55e10' : 'transparent',
+                          borderColor: plan === p ? theme.green : theme.line,
+                          color: plan === p ? theme.green : theme.muted,
+                          backgroundColor: plan === p ? theme.greenSoft : 'transparent',
                         }}
                       >
                         {p === 'monthly' ? `Monthly ₦${monthlyPrice.toLocaleString()}` : `Yearly ₦${yearlyPrice.toLocaleString()}`}
@@ -318,7 +319,7 @@ export default function AdminVendorsPage() {
                     }}
                     disabled={actionLoading}
                     className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50"
-                    style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                    style={{ backgroundColor: theme.green, color: theme.bg }}
                   >
                     {actionLoading ? 'Activating…' : 'Activate Vendor'}
                   </button>
@@ -343,14 +344,14 @@ export default function AdminVendorsPage() {
                   href={`/store/${selected.slug}`}
                   target="_blank"
                   className="block text-center text-xs py-2 rounded-lg border"
-                  style={{ borderColor: '#2a2a2a', color: '#22c55e' }}
+                  style={{ borderColor: theme.line, color: theme.green }}
                 >
                   View Store →
                 </a>
               )}
 
               {/* Permanent delete */}
-              <div className="border-t pt-3 mt-1" style={{ borderColor: '#2a2a2a' }}>
+              <div className="border-t pt-3 mt-1" style={{ borderColor: theme.line }}>
                 {!deleteConfirmVisible ? (
                   <button
                     onClick={() => { setDeleteConfirmVisible(true); setDeleteConfirmText(''); setDeleteError(null); }}
@@ -370,7 +371,7 @@ export default function AdminVendorsPage() {
                       onChange={(e) => setDeleteConfirmText(e.target.value)}
                       placeholder={selected.businessName}
                       className="w-full rounded-lg border px-3 py-2 text-sm outline-none font-mono"
-                      style={{ backgroundColor: '#0d0d0d', borderColor: '#ef444460', color: '#f5f5f5' }}
+                      style={{ backgroundColor: theme.bg, borderColor: '#ef444460', color: theme.ink }}
                     />
                     {deleteError && <p className="text-xs" style={{ color: '#ef4444' }}>{deleteError}</p>}
                     <div className="flex gap-2">
@@ -385,7 +386,7 @@ export default function AdminVendorsPage() {
                       <button
                         onClick={() => { setDeleteConfirmVisible(false); setDeleteConfirmText(''); setDeleteError(null); }}
                         className="px-4 py-2 rounded-lg text-sm"
-                        style={{ backgroundColor: '#2a2a2a', color: '#888888' }}
+                        style={{ backgroundColor: theme.line, color: theme.muted }}
                       >
                         Cancel
                       </button>

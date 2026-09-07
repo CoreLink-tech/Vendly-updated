@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 type CeoStats = {
   overview: {
@@ -40,10 +41,10 @@ function naira(n: number): string {
 
 function Card({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-lg border p-5" style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}>
-      <div className="text-xs mb-1" style={{ color: '#888888' }}>{label}</div>
-      <div className="text-2xl font-semibold" style={{ color: '#f5f5f5' }}>{value}</div>
-      {sub && <div className="text-xs mt-1" style={{ color: '#22c55e' }}>{sub}</div>}
+    <div className="rounded-lg border p-5" style={{ borderColor: theme.line, backgroundColor: theme.surface }}>
+      <div className="text-xs mb-1" style={{ color: theme.muted }}>{label}</div>
+      <div className="text-2xl font-semibold" style={{ color: theme.ink }}>{value}</div>
+      {sub && <div className="text-xs mt-1" style={{ color: theme.green }}>{sub}</div>}
     </div>
   );
 }
@@ -51,7 +52,7 @@ function Card({ label, value, sub }: { label: string; value: string; sub?: strin
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <div id={id} className="mb-8 scroll-mt-4">
-      <h2 className="text-sm font-semibold mb-3 tracking-wide" style={{ color: '#888888' }}>
+      <h2 className="text-sm font-semibold mb-3 tracking-wide" style={{ color: theme.muted }}>
         {title.toUpperCase()}
       </h2>
       {children}
@@ -78,7 +79,7 @@ export default function CeoDashboard() {
   }
 
   if (!stats) {
-    return <div className="text-sm" style={{ color: '#888888' }}>Loading business data…</div>;
+    return <div className="text-sm" style={{ color: theme.muted }}>Loading business data…</div>;
   }
 
   const { overview, revenue, funnel, subscriptions, planPerformance, financial } = stats;
@@ -116,7 +117,7 @@ export default function CeoDashboard() {
       </Section>
 
       <Section id="funnel" title="Customer Funnel">
-        <div className="rounded-lg border p-5 space-y-3" style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}>
+        <div className="rounded-lg border p-5 space-y-3" style={{ borderColor: theme.line, backgroundColor: theme.surface }}>
           {[
             { label: 'Registered', value: funnel.registered },
             { label: 'Activated', value: funnel.activated },
@@ -124,8 +125,8 @@ export default function CeoDashboard() {
             { label: 'Retained (renewed)', value: funnel.retained },
           ].map((row, i) => (
             <div key={row.label} className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: i === 0 ? '#f5f5f5' : '#cccccc' }}>{row.label}</span>
-              <span className="text-lg font-semibold" style={{ color: '#f5f5f5' }}>
+              <span className="text-sm" style={{ color: i === 0 ? theme.ink : '#cccccc' }}>{row.label}</span>
+              <span className="text-lg font-semibold" style={{ color: theme.ink }}>
                 {row.value.toLocaleString()}
               </span>
             </div>
@@ -143,23 +144,23 @@ export default function CeoDashboard() {
           <Card label="Cancelled" value={subscriptions.cancelled.toLocaleString()} />
         </div>
 
-        <div className="rounded-lg border overflow-hidden" style={{ borderColor: '#2a2a2a' }}>
+        <div className="rounded-lg border overflow-hidden" style={{ borderColor: theme.line }}>
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ backgroundColor: '#111111' }}>
-                <th className="text-left px-4 py-3 font-medium" style={{ color: '#888888' }}>Plan</th>
-                <th className="text-left px-4 py-3 font-medium" style={{ color: '#888888' }}>Active Customers</th>
-                <th className="text-left px-4 py-3 font-medium" style={{ color: '#888888' }}>Total Sales</th>
-                <th className="text-left px-4 py-3 font-medium" style={{ color: '#888888' }}>Revenue</th>
+              <tr style={{ backgroundColor: theme.surface }}>
+                <th className="text-left px-4 py-3 font-medium" style={{ color: theme.muted }}>Plan</th>
+                <th className="text-left px-4 py-3 font-medium" style={{ color: theme.muted }}>Active Customers</th>
+                <th className="text-left px-4 py-3 font-medium" style={{ color: theme.muted }}>Total Sales</th>
+                <th className="text-left px-4 py-3 font-medium" style={{ color: theme.muted }}>Revenue</th>
               </tr>
             </thead>
             <tbody>
               {planPerformance.map((p) => (
-                <tr key={p.plan} className="border-t" style={{ borderColor: '#2a2a2a' }}>
-                  <td className="px-4 py-3 capitalize" style={{ color: '#f5f5f5' }}>{p.plan}</td>
+                <tr key={p.plan} className="border-t" style={{ borderColor: theme.line }}>
+                  <td className="px-4 py-3 capitalize" style={{ color: theme.ink }}>{p.plan}</td>
                   <td className="px-4 py-3" style={{ color: '#cccccc' }}>{p.customers}</td>
                   <td className="px-4 py-3" style={{ color: '#cccccc' }}>{p.totalSales}</td>
-                  <td className="px-4 py-3" style={{ color: '#22c55e' }}>{naira(p.revenue)}</td>
+                  <td className="px-4 py-3" style={{ color: theme.green }}>{naira(p.revenue)}</td>
                 </tr>
               ))}
             </tbody>
@@ -173,7 +174,7 @@ export default function CeoDashboard() {
         </div>
       </Section>
 
-      <div className="text-xs mt-6 pt-4 border-t" style={{ borderColor: '#2a2a2a', color: '#666666' }}>
+      <div className="text-xs mt-6 pt-4 border-t" style={{ borderColor: theme.line, color: '#666666' }}>
         {stats.dataNote}
       </div>
     </div>

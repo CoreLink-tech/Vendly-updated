@@ -1,9 +1,11 @@
 'use client';
 import { NavIcon, IconName } from '@/components/NavIcon';
+import { theme } from '@/lib/theme';
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { authClient } from '@/lib/auth-client';
 
 const NAV_ITEMS = [
@@ -48,34 +50,29 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <div
-      className="min-h-screen flex"
-      style={{ backgroundColor: '#0d0d0d', fontFamily: 'Inter, sans-serif' }}
-    >
-      {/* Sidebar */}
+    <div className="min-h-screen flex" style={{ backgroundColor: theme.bg, color: theme.ink }}>
       <aside
         className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ width: 240, backgroundColor: '#111111', borderColor: '#2a2a2a' }}
+        style={{ width: 260, backgroundColor: theme.surface, borderColor: theme.line }}
       >
         <div
-          className="flex items-center justify-between px-6 py-5 border-b"
-          style={{ borderColor: '#2a2a2a' }}
+          className="flex items-center justify-between px-5 py-4 border-b"
+          style={{ borderColor: theme.line }}
         >
-          <div>
-            <span className="text-xl font-semibold tracking-tight" style={{ color: '#22c55e' }}>
-              Vendly
-            </span>
+          <div className="flex items-center gap-2">
+            <Image src="/logo-full.png" alt="Vendly" width={100} height={32} className="h-8 w-auto" priority />
             <span
-              className="ml-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
-              style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
+              className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: theme.greenSoft, color: theme.green }}
             >
               ADMIN
             </span>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="md:hidden"
-            style={{ color: '#888888' }}
+            className="md:hidden p-1.5 rounded-lg"
+            style={{ color: theme.muted }}
+            aria-label="Close menu"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
@@ -89,11 +86,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-sm transition-colors"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5 text-sm transition-colors"
                 style={{
-                  backgroundColor: isActive ? '#22c55e15' : 'transparent',
-                  color: isActive ? '#22c55e' : '#888888',
-                  fontWeight: isActive ? 600 : 400,
+                  backgroundColor: isActive ? theme.greenSoft : 'transparent',
+                  color: isActive ? theme.green : theme.muted,
+                  fontWeight: isActive ? 600 : 500,
                 }}
               >
                 <NavIcon name={item.icon} />
@@ -103,13 +100,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           })}
         </nav>
 
-        <div className="px-4 py-4 border-t" style={{ borderColor: '#2a2a2a' }}>
+        <div className="px-4 py-4 border-t" style={{ borderColor: theme.line }}>
           {user && (
             <div className="mb-3">
-              <p className="text-xs font-medium truncate" style={{ color: '#f5f5f5' }}>
+              <p className="text-sm font-medium truncate" style={{ color: theme.ink }}>
                 {user.name}
               </p>
-              <p className="text-[10px] truncate" style={{ color: '#555555' }}>
+              <p className="text-[11px] truncate" style={{ color: theme.faint }}>
                 {user.email}
               </p>
             </div>
@@ -118,8 +115,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             onClick={() => {
               void handleSignOut();
             }}
-            className="w-full text-left text-xs px-3 py-2 rounded-lg"
-            style={{ color: '#888888' }}
+            className="w-full text-left text-sm px-3 py-2 rounded-xl transition-colors hover:bg-black/[0.03]"
+            style={{ color: theme.muted }}
           >
             Sign out →
           </button>
@@ -127,28 +124,26 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       </aside>
 
       {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-black bg-opacity-60 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
+        <div className="fixed inset-0 z-30 bg-black/30 md:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       <div className="flex-1 flex flex-col min-w-0">
         <header
-          className="flex items-center justify-between px-4 py-4 border-b md:hidden"
-          style={{ borderColor: '#2a2a2a', backgroundColor: '#111111' }}
+          className="flex items-center justify-between px-4 py-3 border-b md:hidden"
+          style={{ borderColor: theme.line, backgroundColor: theme.surface }}
         >
           <button
             onClick={() => setSidebarOpen(true)}
-            className="text-lg"
-            style={{ color: '#f5f5f5' }}
+            className="p-1.5 rounded-lg"
+            style={{ color: theme.ink }}
+            aria-label="Open menu"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <span className="text-base font-semibold" style={{ color: '#22c55e' }}>
+          <span className="text-sm font-semibold" style={{ color: theme.green }}>
             Admin
           </span>
-          <div className="w-6" />
+          <div className="w-8" />
         </header>
         <main className="flex-1 p-4 md:p-8">{children}</main>
       </div>

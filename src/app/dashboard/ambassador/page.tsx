@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { SITE_URL } from '@/lib/site';
+import { theme } from '@/lib/theme';
 
 interface AmbassadorData {
   status: string | null; // null = not applied, 'pending', 'approved', 'declined'
@@ -109,7 +110,7 @@ export default function AmbassadorPage() {
         <div
           className="w-5 h-5 border-2 rounded-full"
           style={{
-            borderColor: '#22c55e',
+            borderColor: theme.green,
             borderTopColor: 'transparent',
             animation: 'spin 0.8s linear infinite',
           }}
@@ -128,10 +129,10 @@ export default function AmbassadorPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Ambassador
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Earn recurring monthly commissions by bringing vendors to Vendly.
         </p>
       </div>
@@ -141,21 +142,21 @@ export default function AmbassadorPage() {
           {/* Ambassador portal */}
           <div
             className="p-6 rounded-xl border mb-6"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e30' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
             <div className="flex items-center gap-2 mb-4">
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#22c55e' }} />
-              <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.green }} />
+              <span className="text-sm font-semibold" style={{ color: theme.green }}>
                 Active Ambassador
               </span>
             </div>
-            <p className="text-xs font-medium mb-2" style={{ color: '#aaaaaa' }}>
+            <p className="text-xs font-medium mb-2" style={{ color: theme.muted }}>
               Your Ambassador Link
             </p>
             <div className="flex items-center gap-3">
               <code
                 className="flex-1 text-xs font-mono truncate px-3 py-2 rounded-lg"
-                style={{ backgroundColor: '#0d0d0d', color: '#22c55e' }}
+                style={{ backgroundColor: theme.bg, color: theme.green }}
               >
                 {ambassadorLink}
               </code>
@@ -163,8 +164,8 @@ export default function AmbassadorPage() {
                 onClick={copyLink}
                 className="shrink-0 text-xs px-4 py-2 rounded-lg"
                 style={{
-                  backgroundColor: copied ? '#22c55e' : '#22c55e20',
-                  color: copied ? '#0d0d0d' : '#22c55e',
+                  backgroundColor: copied ? theme.green : theme.greenSoft,
+                  color: copied ? theme.bg : theme.green,
                 }}
               >
                 {copied ? 'Copied!' : 'Copy'}
@@ -188,12 +189,12 @@ export default function AmbassadorPage() {
               <div
                 key={s.label}
                 className="p-4 rounded-xl border"
-                style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+                style={{ backgroundColor: theme.surface, borderColor: theme.line }}
               >
-                <p className="text-xs mb-1" style={{ color: '#888888' }}>
+                <p className="text-xs mb-1" style={{ color: theme.muted }}>
                   {s.label}
                 </p>
-                <p className="text-xl font-semibold" style={{ color: '#f5f5f5' }}>
+                <p className="text-xl font-semibold" style={{ color: theme.ink }}>
                   {s.value}
                 </p>
               </div>
@@ -202,18 +203,18 @@ export default function AmbassadorPage() {
 
           {/* Withdrawal */}
           {(data.withdrawableBalance ?? 0) > 0 && (
-            <div className="mb-6 p-4 rounded-xl border" style={{ backgroundColor: '#1a1a1a', borderColor: '#22c55e30' }}>
+            <div className="mb-6 p-4 rounded-xl border" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>Request Withdrawal</p>
-                  <p className="text-xs mt-0.5" style={{ color: '#888888' }}>
+                  <p className="text-sm font-semibold" style={{ color: theme.ink }}>Request Withdrawal</p>
+                  <p className="text-xs mt-0.5" style={{ color: theme.muted }}>
                     Available: ₦{Number(data.withdrawableBalance).toLocaleString()}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowWithdraw(!showWithdraw)}
                   className="text-xs font-semibold px-4 py-2 rounded-lg"
-                  style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                  style={{ backgroundColor: theme.green, color: theme.bg }}
                 >
                   Withdraw
                 </button>
@@ -226,18 +227,18 @@ export default function AmbassadorPage() {
                     { key: 'accountNumber', label: 'Account Number', placeholder: '10-digit account number' },
                     { key: 'accountName', label: 'Account Name', placeholder: 'Name on account' },
                   ].map(({ key, label, placeholder }) => (
-                    <label key={key} className="flex flex-col gap-1 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+                    <label key={key} className="flex flex-col gap-1 text-xs font-medium" style={{ color: theme.muted }}>
                       {label}
                       <input
                         value={wForm[key as keyof typeof wForm]}
                         onChange={(e) => setWForm((f) => ({ ...f, [key]: e.target.value }))}
                         placeholder={placeholder}
                         className="rounded-lg border px-3 py-2 text-sm outline-none"
-                        style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                        style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                       />
                     </label>
                   ))}
-                  <label className="flex flex-col gap-1 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+                  <label className="flex flex-col gap-1 text-xs font-medium" style={{ color: theme.muted }}>
                     Amount (₦) — max ₦{Number(data.withdrawableBalance).toLocaleString()}
                     <input
                       type="number"
@@ -247,25 +248,25 @@ export default function AmbassadorPage() {
                       onChange={(e) => setWAmount(e.target.value)}
                       placeholder="Enter amount"
                       className="rounded-lg border px-3 py-2 text-sm outline-none"
-                      style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                      style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                     />
                   </label>
                   {wMsg && (
-                    <p className="text-xs" style={{ color: wMsg.includes('submitted') ? '#22c55e' : '#f87171' }}>{wMsg}</p>
+                    <p className="text-xs" style={{ color: wMsg.includes('submitted') ? theme.green : '#f87171' }}>{wMsg}</p>
                   )}
                   <div className="flex gap-2">
                     <button
                       onClick={() => void submitWithdrawal()}
                       disabled={wSaving}
                       className="flex-1 py-2 rounded-lg text-sm font-semibold disabled:opacity-50"
-                      style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                      style={{ backgroundColor: theme.green, color: theme.bg }}
                     >
                       {wSaving ? 'Submitting…' : 'Submit Request'}
                     </button>
                     <button
                       onClick={() => setShowWithdraw(false)}
                       className="px-4 py-2 rounded-lg text-sm"
-                      style={{ backgroundColor: '#2a2a2a', color: '#888888' }}
+                      style={{ backgroundColor: theme.line, color: theme.muted }}
                     >
                       Cancel
                     </button>
@@ -277,9 +278,9 @@ export default function AmbassadorPage() {
 
           <div
             className="p-4 rounded-xl border"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
-            <p className="text-xs font-semibold mb-2" style={{ color: '#aaaaaa' }}>
+            <p className="text-xs font-semibold mb-2" style={{ color: theme.muted }}>
               How It Works
             </p>
             <ul className="space-y-1.5">
@@ -288,8 +289,8 @@ export default function AmbassadorPage() {
                 'Vendor activates a subscription',
                 'You earn ₦1,000/month (monthly) or ₦10,000 recurring (yearly) for every renewal',
               ].map((s) => (
-                <li key={s} className="text-xs flex gap-2" style={{ color: '#888888' }}>
-                  <span style={{ color: '#22c55e' }}>-</span> {s}
+                <li key={s} className="text-xs flex gap-2" style={{ color: theme.muted }}>
+                  <span style={{ color: theme.green }}>-</span> {s}
                 </li>
               ))}
             </ul>
@@ -298,15 +299,15 @@ export default function AmbassadorPage() {
       ) : data?.status === 'pending' ? (
         <div
           className="p-6 rounded-xl border"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#f59e0b30' }}
+          style={{ backgroundColor: theme.surface, borderColor: '#f59e0b30' }}
         >
           <div className="flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#f59e0b' }} />
-            <span className="text-sm font-semibold" style={{ color: '#f59e0b' }}>
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.orange }} />
+            <span className="text-sm font-semibold" style={{ color: theme.orange }}>
               Application Under Review
             </span>
           </div>
-          <p className="text-sm" style={{ color: '#888888' }}>
+          <p className="text-sm" style={{ color: theme.muted }}>
             Your ambassador application has been submitted and is under review. We&apos;ll notify
             you once approved.
           </p>
@@ -314,7 +315,7 @@ export default function AmbassadorPage() {
       ) : data?.status === 'declined' ? (
         <div
           className="p-6 rounded-xl border mb-6"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#ef444430' }}
+          style={{ backgroundColor: theme.surface, borderColor: '#ef444430' }}
         >
           <p className="text-sm" style={{ color: '#ef4444' }}>
             Your application was not approved. You may re-apply below.
@@ -332,15 +333,15 @@ export default function AmbassadorPage() {
               <div
                 key={s.label}
                 className="p-4 rounded-xl border text-center"
-                style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+                style={{ backgroundColor: theme.surface, borderColor: theme.line }}
               >
-                <p className="text-xs mb-2" style={{ color: '#888888' }}>
+                <p className="text-xs mb-2" style={{ color: theme.muted }}>
                   {s.label}
                 </p>
-                <p className="text-2xl font-semibold" style={{ color: '#22c55e' }}>
+                <p className="text-2xl font-semibold" style={{ color: theme.green }}>
                   {s.value}
                 </p>
-                <p className="text-[10px] mt-1" style={{ color: '#555555' }}>
+                <p className="text-[10px] mt-1" style={{ color: theme.faint }}>
                   {s.sub}
                 </p>
               </div>
@@ -350,12 +351,12 @@ export default function AmbassadorPage() {
           {/* Application form */}
           <div
             className="rounded-xl border p-6"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
-            <h2 className="text-base font-semibold mb-1" style={{ color: '#f5f5f5' }}>
+            <h2 className="text-base font-semibold mb-1" style={{ color: theme.ink }}>
               Become An Ambassador
             </h2>
-            <p className="text-xs mb-5" style={{ color: '#888888' }}>
+            <p className="text-xs mb-5" style={{ color: theme.muted }}>
               Tell us about yourself. Our team reviews all applications.
             </p>
 
@@ -363,19 +364,19 @@ export default function AmbassadorPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label
                   className="flex flex-col gap-1.5 text-xs font-medium"
-                  style={{ color: '#aaaaaa' }}
+                  style={{ color: theme.muted }}
                 >
                   Full Name
                   <input
                     value={form.fullName}
                     onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))}
                     className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                    style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                    style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                   />
                 </label>
                 <label
                   className="flex flex-col gap-1.5 text-xs font-medium"
-                  style={{ color: '#aaaaaa' }}
+                  style={{ color: theme.muted }}
                 >
                   Email
                   <input
@@ -383,53 +384,53 @@ export default function AmbassadorPage() {
                     value={form.email}
                     onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                     className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                    style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                    style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                   />
                 </label>
                 <label
                   className="flex flex-col gap-1.5 text-xs font-medium"
-                  style={{ color: '#aaaaaa' }}
+                  style={{ color: theme.muted }}
                 >
                   Phone
                   <input
                     value={form.phone}
                     onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                     className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                    style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                    style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                   />
                 </label>
                 <label
                   className="flex flex-col gap-1.5 text-xs font-medium"
-                  style={{ color: '#aaaaaa' }}
+                  style={{ color: theme.muted }}
                 >
                   Business Name
                   <input
                     value={form.businessName}
                     onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))}
                     className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                    style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                    style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                   />
                 </label>
               </div>
               <label
                 className="flex flex-col gap-1.5 text-xs font-medium"
-                style={{ color: '#aaaaaa' }}
+                style={{ color: theme.muted }}
               >
                 Why do you want to be an ambassador?{' '}
-                <span style={{ color: '#555555', fontWeight: 400 }}>(optional)</span>
+                <span style={{ color: theme.faint, fontWeight: 400 }}>(optional)</span>
                 <textarea
                   value={form.reason}
                   onChange={(e) => setForm((f) => ({ ...f, reason: e.target.value }))}
                   rows={4}
                   className="rounded-lg border px-3 py-2.5 text-sm outline-none resize-none"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                   placeholder="Tell us a bit about yourself and your network (optional)"
                 />
               </label>
               {msg && (
                 <p
                   className="text-xs"
-                  style={{ color: msg.type === 'success' ? '#22c55e' : '#ef4444' }}
+                  style={{ color: msg.type === 'success' ? theme.green : '#ef4444' }}
                 >
                   {msg.text}
                 </p>
@@ -440,7 +441,7 @@ export default function AmbassadorPage() {
                 }}
                 disabled={saving}
                 className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-                style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                style={{ backgroundColor: theme.green, color: theme.bg }}
               >
                 {saving ? 'Submitting…' : 'Submit Application'}
               </button>

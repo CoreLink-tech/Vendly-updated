@@ -1,11 +1,12 @@
 export default function SupportPage() {
+import { theme } from '@/lib/theme';
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Support
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Get help with your Vendly store.
         </p>
       </div>
@@ -16,20 +17,20 @@ export default function SupportPage() {
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-5 p-5 rounded-xl border transition-colors"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
           <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
           <div className="flex-1">
-            <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+            <p className="text-sm font-semibold" style={{ color: theme.ink }}>
               WhatsApp Support
             </p>
-            <p className="text-xs mt-0.5" style={{ color: '#888888' }}>
+            <p className="text-xs mt-0.5" style={{ color: theme.muted }}>
               Chat with our team on WhatsApp
             </p>
           </div>
           <span
             className="text-xs px-3 py-1.5 rounded-full font-semibold"
-            style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}
+            style={{ backgroundColor: theme.greenSoft, color: theme.green }}
           >
             Open Chat →
           </span>
@@ -37,9 +38,9 @@ export default function SupportPage() {
 
         <div
           className="p-5 rounded-xl border"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
-          <h2 className="text-sm font-semibold mb-4" style={{ color: '#f5f5f5' }}>
+          <h2 className="text-sm font-semibold mb-4" style={{ color: theme.ink }}>
             Frequently Asked Questions
           </h2>
           <div className="space-y-4">
@@ -68,12 +69,12 @@ export default function SupportPage() {
               <div
                 key={faq.q}
                 className="border-b pb-4 last:border-0 last:pb-0"
-                style={{ borderColor: '#2a2a2a' }}
+                style={{ borderColor: theme.line }}
               >
-                <p className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>
+                <p className="text-sm font-semibold mb-1" style={{ color: theme.ink }}>
                   {faq.q}
                 </p>
-                <p className="text-xs leading-relaxed" style={{ color: '#888888' }}>
+                <p className="text-xs leading-relaxed" style={{ color: theme.muted }}>
                   {faq.a}
                 </p>
               </div>
@@ -83,9 +84,9 @@ export default function SupportPage() {
 
         <div
           className="p-5 rounded-xl border"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
-          <h2 className="text-sm font-semibold mb-2" style={{ color: '#f5f5f5' }}>
+          <h2 className="text-sm font-semibold mb-2" style={{ color: theme.ink }}>
             Quick Links
           </h2>
           <div className="grid grid-cols-2 gap-3">
@@ -99,7 +100,7 @@ export default function SupportPage() {
                 key={l.href}
                 href={l.href}
                 className="text-xs py-2 px-3 rounded-lg border transition-colors text-center"
-                style={{ borderColor: '#2a2a2a', color: '#888888' }}
+                style={{ borderColor: theme.line, color: theme.muted }}
               >
                 {l.label}
               </a>

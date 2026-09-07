@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface Referral {
   id: string;
@@ -37,25 +38,25 @@ export default function AdminReferralsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Referrals
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Total commissions paid:{' '}
-          <span style={{ color: '#22c55e' }}>₦{totalCommissions.toLocaleString()}</span>
+          <span style={{ color: theme.green }}>₦{totalCommissions.toLocaleString()}</span>
         </p>
       </div>
 
       <div
         className="rounded-xl border overflow-hidden"
-        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
       >
         {loading ? (
           <div className="flex items-center justify-center h-24">
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#22c55e',
+                borderColor: theme.green,
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -70,15 +71,15 @@ export default function AdminReferralsPage() {
           </div>
         ) : referrals.length === 0 ? (
           <div className="text-center py-10">
-            <p className="text-sm" style={{ color: '#555555' }}>
+            <p className="text-sm" style={{ color: theme.faint }}>
               No referrals yet.
             </p>
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: '#2a2a2a' }}>
+          <div className="divide-y" style={{ borderColor: theme.line }}>
             <div
               className="hidden md:grid grid-cols-5 px-6 py-2 text-[10px] font-semibold uppercase tracking-wider"
-              style={{ color: '#555555' }}
+              style={{ color: theme.faint }}
             >
               <span>Referrer</span>
               <span>Referred</span>
@@ -91,19 +92,19 @@ export default function AdminReferralsPage() {
                 key={r.id}
                 className="grid grid-cols-2 md:grid-cols-5 px-4 md:px-6 py-3 items-center gap-2"
               >
-                <span className="text-sm" style={{ color: '#f5f5f5' }}>
+                <span className="text-sm" style={{ color: theme.ink }}>
                   {r.referrerName || '—'}
                 </span>
-                <span className="text-xs" style={{ color: '#888888' }}>
+                <span className="text-xs" style={{ color: theme.muted }}>
                   {r.referredName || '—'}
                 </span>
-                <span className="text-xs capitalize" style={{ color: '#aaaaaa' }}>
+                <span className="text-xs capitalize" style={{ color: theme.muted }}>
                   {r.plan || '—'}
                 </span>
-                <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>
+                <span className="text-sm font-semibold" style={{ color: theme.green }}>
                   ₦{Number(r.commission).toLocaleString()}
                 </span>
-                <span className="text-xs" style={{ color: '#555555' }}>
+                <span className="text-xs" style={{ color: theme.faint }}>
                   {fmtDate(r.createdAt)}
                 </span>
               </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import useUpload from '@/utils/useUpload';
+import { theme } from '@/lib/theme';
 
 interface Product {
   id: string;
@@ -149,17 +150,17 @@ export default function ProductsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+          <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
             Products
           </h1>
-          <p className="text-sm mt-1" style={{ color: '#888888' }}>
+          <p className="text-sm mt-1" style={{ color: theme.muted }}>
             {products.length} product{products.length !== 1 ? 's' : ''} in your catalogue
           </p>
         </div>
         <button
           onClick={openAdd}
           className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-opacity hover:opacity-90"
-          style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+          style={{ backgroundColor: theme.green, color: theme.bg }}
         >
           + Add Product
         </button>
@@ -171,7 +172,7 @@ export default function ProductsPage() {
           <div
             className="w-5 h-5 border-2 rounded-full"
             style={{
-              borderColor: '#22c55e',
+              borderColor: theme.green,
               borderTopColor: 'transparent',
               animation: 'spin 0.8s linear infinite',
             }}
@@ -187,19 +188,19 @@ export default function ProductsPage() {
       ) : products.length === 0 ? (
         <div
           className="text-center py-20 rounded-xl border"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
           <p className="flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></p>
-          <p className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>
+          <p className="text-sm font-semibold mb-1" style={{ color: theme.ink }}>
             No products yet
           </p>
-          <p className="text-xs mb-5" style={{ color: '#888888' }}>
+          <p className="text-xs mb-5" style={{ color: theme.muted }}>
             Add your first product to start selling.
           </p>
           <button
             onClick={openAdd}
             className="text-sm font-semibold px-5 py-2.5 rounded-lg"
-            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+            style={{ backgroundColor: theme.green, color: theme.bg }}
           >
             Add Product
           </button>
@@ -210,12 +211,12 @@ export default function ProductsPage() {
             <div
               key={p.id}
               className="rounded-xl border overflow-hidden"
-              style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+              style={{ backgroundColor: theme.surface, borderColor: theme.line }}
             >
               {/* Image */}
               <div
                 className="aspect-video relative overflow-hidden"
-                style={{ backgroundColor: '#0d0d0d' }}
+                style={{ backgroundColor: theme.bg }}
               >
                 {p.images?.[0] ? (
                   <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
@@ -226,25 +227,25 @@ export default function ProductsPage() {
                   className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full border"
                   style={{
                     borderColor: p.status === 'active' ? '#22c55e40' : '#ef444440',
-                    color: p.status === 'active' ? '#22c55e' : '#ef4444',
-                    backgroundColor: p.status === 'active' ? '#22c55e10' : '#ef444410',
+                    color: p.status === 'active' ? theme.green : '#ef4444',
+                    backgroundColor: p.status === 'active' ? theme.greenSoft : '#ef444410',
                   }}
                 >
                   {p.status}
                 </div>
               </div>
               <div className="p-4">
-                <p className="text-sm font-semibold truncate" style={{ color: '#f5f5f5' }}>
+                <p className="text-sm font-semibold truncate" style={{ color: theme.ink }}>
                   {p.name}
                 </p>
-                <p className="text-xs mt-0.5 truncate" style={{ color: '#888888' }}>
+                <p className="text-xs mt-0.5 truncate" style={{ color: theme.muted }}>
                   {p.category || 'Uncategorized'}
                 </p>
                 <div className="flex items-center justify-between mt-3">
-                  <span className="text-base font-semibold" style={{ color: '#22c55e' }}>
+                  <span className="text-base font-semibold" style={{ color: theme.green }}>
                     ₦{Number(p.price).toLocaleString()}
                   </span>
-                  <span className="text-xs" style={{ color: '#888888' }}>
+                  <span className="text-xs" style={{ color: theme.muted }}>
                     Stock: {p.stock}
                   </span>
                 </div>
@@ -252,7 +253,7 @@ export default function ProductsPage() {
                   <button
                     onClick={() => openEdit(p)}
                     className="flex-1 text-xs py-1.5 rounded-lg border transition-colors"
-                    style={{ borderColor: '#2a2a2a', color: '#aaaaaa' }}
+                    style={{ borderColor: theme.line, color: theme.muted }}
                   >
                     Edit
                   </button>
@@ -280,13 +281,13 @@ export default function ProductsPage() {
         >
           <div
             className="w-full max-w-lg rounded-xl border p-6"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-base font-semibold" style={{ color: '#f5f5f5' }}>
+              <h2 className="text-base font-semibold" style={{ color: theme.ink }}>
                 {editProduct ? 'Edit Product' : 'Add Product'}
               </h2>
-              <button onClick={() => setShowForm(false)} style={{ color: '#888888' }}>
+              <button onClick={() => setShowForm(false)} style={{ color: theme.muted }}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
@@ -294,20 +295,20 @@ export default function ProductsPage() {
             <div className="flex flex-col gap-4">
               <label
                 className="flex flex-col gap-1.5 text-xs font-medium"
-                style={{ color: '#aaaaaa' }}
+                style={{ color: theme.muted }}
               >
                 Product Name *
                 <input
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                   className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                 />
               </label>
 
               <label
                 className="flex flex-col gap-1.5 text-xs font-medium"
-                style={{ color: '#aaaaaa' }}
+                style={{ color: theme.muted }}
               >
                 Description
                 <textarea
@@ -315,14 +316,14 @@ export default function ProductsPage() {
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                   rows={3}
                   className="rounded-lg border px-3 py-2.5 text-sm outline-none resize-none"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                 />
               </label>
 
               <div className="grid grid-cols-2 gap-4">
                 <label
                   className="flex flex-col gap-1.5 text-xs font-medium"
-                  style={{ color: '#aaaaaa' }}
+                  style={{ color: theme.muted }}
                 >
                   Price (₦) *
                   <input
@@ -330,12 +331,12 @@ export default function ProductsPage() {
                     value={form.price}
                     onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
                     className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                    style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                    style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                   />
                 </label>
                 <label
                   className="flex flex-col gap-1.5 text-xs font-medium"
-                  style={{ color: '#aaaaaa' }}
+                  style={{ color: theme.muted }}
                 >
                   Stock
                   <input
@@ -343,21 +344,21 @@ export default function ProductsPage() {
                     value={form.stock}
                     onChange={(e) => setForm((f) => ({ ...f, stock: e.target.value }))}
                     className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                    style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                    style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                   />
                 </label>
               </div>
 
               <label
                 className="flex flex-col gap-1.5 text-xs font-medium"
-                style={{ color: '#aaaaaa' }}
+                style={{ color: theme.muted }}
               >
                 Category
                 <select
                   value={form.category}
                   onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
                   className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                 >
                   <option value="">Select category</option>
                   {CATEGORIES.map((c) => (
@@ -370,7 +371,7 @@ export default function ProductsPage() {
 
               {/* Images */}
               <div>
-                <p className="text-xs font-medium mb-2" style={{ color: '#aaaaaa' }}>
+                <p className="text-xs font-medium mb-2" style={{ color: theme.muted }}>
                   Product Images
                 </p>
                 <div className="flex flex-wrap gap-2 mb-2">
@@ -378,13 +379,13 @@ export default function ProductsPage() {
                     <div
                       key={i}
                       className="relative w-16 h-16 rounded-lg overflow-hidden border"
-                      style={{ borderColor: '#2a2a2a' }}
+                      style={{ borderColor: theme.line }}
                     >
                       <img src={url} alt="" className="w-full h-full object-cover" />
                       <button
                         onClick={() => removeImage(i)}
                         className="absolute top-0 right-0 w-5 h-5 flex items-center justify-center text-xs rounded-bl-lg"
-                        style={{ backgroundColor: '#0d0d0d', color: '#ef4444' }}
+                        style={{ backgroundColor: theme.bg, color: '#ef4444' }}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                       </button>
@@ -394,7 +395,7 @@ export default function ProductsPage() {
                     onClick={() => fileRef.current?.click()}
                     disabled={uploading}
                     className="w-16 h-16 rounded-lg border-2 border-dashed flex items-center justify-center text-xs transition-colors"
-                    style={{ borderColor: '#2a2a2a', color: '#888888' }}
+                    style={{ borderColor: theme.line, color: theme.muted }}
                   >
                     {uploading ? '…' : '+'}
                   </button>
@@ -408,7 +409,7 @@ export default function ProductsPage() {
                     }}
                   />
                 </div>
-                <p className="text-[10px]" style={{ color: '#555555' }}>
+                <p className="text-[10px]" style={{ color: theme.faint }}>
                   Images are automatically compressed and optimised.
                 </p>
               </div>
@@ -423,7 +424,7 @@ export default function ProductsPage() {
                 <button
                   onClick={() => setShowForm(false)}
                   className="flex-1 py-2.5 rounded-lg text-sm border"
-                  style={{ borderColor: '#2a2a2a', color: '#888888' }}
+                  style={{ borderColor: theme.line, color: theme.muted }}
                 >
                   Cancel
                 </button>
@@ -433,7 +434,7 @@ export default function ProductsPage() {
                   }}
                   disabled={saving}
                   className="flex-1 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                  style={{ backgroundColor: theme.green, color: theme.bg }}
                 >
                   {saving ? 'Saving…' : editProduct ? 'Update' : 'Add Product'}
                 </button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface Ambassador {
   id: string;
@@ -55,10 +56,10 @@ export default function AmbassadorsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Ambassadors
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Review and manage ambassador applications.
         </p>
       </div>
@@ -75,9 +76,9 @@ export default function AmbassadorsPage() {
             onClick={() => setStatusFilter(f.v)}
             className="text-xs px-3 py-1.5 rounded-full border"
             style={{
-              borderColor: statusFilter === f.v ? '#22c55e' : '#2a2a2a',
-              color: statusFilter === f.v ? '#22c55e' : '#888888',
-              backgroundColor: statusFilter === f.v ? '#22c55e10' : 'transparent',
+              borderColor: statusFilter === f.v ? theme.green : theme.line,
+              color: statusFilter === f.v ? theme.green : theme.muted,
+              backgroundColor: statusFilter === f.v ? theme.greenSoft : 'transparent',
             }}
           >
             {f.l}
@@ -91,7 +92,7 @@ export default function AmbassadorsPage() {
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#22c55e',
+                borderColor: theme.green,
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -107,9 +108,9 @@ export default function AmbassadorsPage() {
         ) : ambassadors.length === 0 ? (
           <div
             className="text-center py-12 rounded-xl border"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
-            <p className="text-sm" style={{ color: '#555555' }}>
+            <p className="text-sm" style={{ color: theme.faint }}>
               No ambassador applications found.
             </p>
           </div>
@@ -118,12 +119,12 @@ export default function AmbassadorsPage() {
             <div
               key={a.id}
               className="rounded-xl border p-5"
-              style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+              style={{ backgroundColor: theme.surface, borderColor: theme.line }}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+                    <p className="text-sm font-semibold" style={{ color: theme.ink }}>
                       {a.fullName}
                     </p>
                     <span
@@ -137,9 +138,9 @@ export default function AmbassadorsPage() {
                               : '#ef444440',
                         color:
                           a.status === 'approved'
-                            ? '#22c55e'
+                            ? theme.green
                             : a.status === 'pending'
-                              ? '#f59e0b'
+                              ? theme.orange
                               : '#ef4444',
                       }}
                     >
@@ -154,20 +155,20 @@ export default function AmbassadorsPage() {
                       ['Applied', fmtDate(a.createdAt)],
                     ].map(([k, v]) => (
                       <div key={k}>
-                        <p style={{ color: '#555555' }}>{k}</p>
-                        <p style={{ color: '#aaaaaa' }}>{v}</p>
+                        <p style={{ color: theme.faint }}>{k}</p>
+                        <p style={{ color: theme.muted }}>{v}</p>
                       </div>
                     ))}
                   </div>
-                  <div className="p-3 rounded-lg" style={{ backgroundColor: '#0d0d0d' }}>
-                    <p className="text-xs" style={{ color: '#888888' }}>
-                      <span style={{ color: '#555555' }}>Reason: </span>
+                  <div className="p-3 rounded-lg" style={{ backgroundColor: theme.bg }}>
+                    <p className="text-xs" style={{ color: theme.muted }}>
+                      <span style={{ color: theme.faint }}>Reason: </span>
                       {a.reason}
                     </p>
                   </div>
                   {a.ambassadorCode && (
-                    <p className="text-xs mt-2" style={{ color: '#888888' }}>
-                      Code: <code style={{ color: '#22c55e' }}>{a.ambassadorCode}</code>
+                    <p className="text-xs mt-2" style={{ color: theme.muted }}>
+                      Code: <code style={{ color: theme.green }}>{a.ambassadorCode}</code>
                     </p>
                   )}
                 </div>
@@ -179,7 +180,7 @@ export default function AmbassadorsPage() {
                       }}
                       disabled={processing === a.id}
                       className="text-xs px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
-                      style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                      style={{ backgroundColor: theme.green, color: theme.bg }}
                     >
                       Approve
                     </button>

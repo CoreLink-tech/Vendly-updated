@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface Rate {
   id: string;
@@ -55,7 +56,7 @@ export default function LogisticsRatesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-40">
-        <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: '#22c55e', borderTopColor: 'transparent' }} />
+        <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: theme.green, borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -64,8 +65,8 @@ export default function LogisticsRatesPage() {
     <div>
       <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>Delivery Rates</h1>
-          <p className="text-sm mt-1" style={{ color: '#888888' }}>
+          <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>Delivery Rates</h1>
+          <p className="text-sm mt-1" style={{ color: theme.muted }}>
             Set the delivery price per state. This is what gets added to a buyer&apos;s order
             at checkout for vendors using Vendly Logistics.
           </p>
@@ -74,36 +75,36 @@ export default function LogisticsRatesPage() {
           onClick={() => { void handleSaveAll(); }}
           disabled={!hasChanges || saving}
           className="text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-40 transition-opacity"
-          style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+          style={{ backgroundColor: theme.green, color: theme.bg }}
         >
           {saving ? 'Saving…' : 'Save Changes'}
         </button>
       </div>
 
       {saved && (
-        <div className="mb-4 px-4 py-2.5 rounded-lg text-sm" style={{ backgroundColor: '#22c55e15', color: '#22c55e' }}>
+        <div className="mb-4 px-4 py-2.5 rounded-lg text-sm" style={{ backgroundColor: theme.greenSoft, color: theme.green }}>
           Rates saved.
         </div>
       )}
 
-      <div className="rounded-xl border overflow-hidden" style={{ backgroundColor: '#111111', borderColor: '#2a2a2a' }}>
-        <div className="grid grid-cols-2 divide-x" style={{ borderColor: '#2a2a2a' }}>
+      <div className="rounded-xl border overflow-hidden" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+        <div className="grid grid-cols-2 divide-x" style={{ borderColor: theme.line }}>
           {[0, 1].map((col) => (
-            <div key={col} className="divide-y" style={{ borderColor: '#2a2a2a' }}>
+            <div key={col} className="divide-y" style={{ borderColor: theme.line }}>
               {rates
                 .filter((_, i) => i % 2 === col)
                 .map((r) => (
                   <div key={r.state} className="flex items-center justify-between gap-3 px-4 py-3">
-                    <span className="text-sm" style={{ color: '#f5f5f5' }}>{r.state}</span>
+                    <span className="text-sm" style={{ color: theme.ink }}>{r.state}</span>
                     <div className="flex items-center gap-1 shrink-0">
-                      <span className="text-xs" style={{ color: '#555555' }}>₦</span>
+                      <span className="text-xs" style={{ color: theme.faint }}>₦</span>
                       <input
                         type="number"
                         min={0}
                         value={edited[r.state] !== undefined ? edited[r.state] : String(r.price)}
                         onChange={(e) => handleChange(r.state, e.target.value)}
                         className="w-24 rounded-lg border px-2 py-1.5 text-sm text-right outline-none"
-                        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                        style={{ backgroundColor: theme.surface, borderColor: theme.line, color: theme.ink }}
                       />
                     </div>
                   </div>

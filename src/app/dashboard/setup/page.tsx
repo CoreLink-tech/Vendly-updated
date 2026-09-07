@@ -3,6 +3,7 @@
 import { type FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NIGERIAN_STATES } from '@/lib/states';
+import { theme } from '@/lib/theme';
 
 export default function VendorSetupPage() {
   const router = useRouter();
@@ -70,60 +71,60 @@ export default function VendorSetupPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#0d0d0d' }}>
-        <p className="text-sm" style={{ color: '#888888' }}>Loading…</p>
+      <main className="min-h-screen flex items-center justify-center" style={{ backgroundColor: theme.bg }}>
+        <p className="text-sm" style={{ color: theme.muted }}>Loading…</p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#0d0d0d' }}>
+    <main className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: theme.bg }}>
       <div className="w-full max-w-lg">
         <div className="flex justify-center mb-4">
           <img src="/logo-full.png" alt="Vendly" className="h-16 w-auto" />
         </div>
-        <h1 className="text-xl font-semibold text-center mb-1" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-xl font-semibold text-center mb-1" style={{ color: theme.ink }}>
           Set up your store
         </h1>
-        <p className="text-sm text-center mb-8" style={{ color: '#888888' }}>
+        <p className="text-sm text-center mb-8" style={{ color: theme.muted }}>
           A couple of quick details before your dashboard is ready.
         </p>
 
         <form onSubmit={onSubmit} className="space-y-5">
           <div
             className="p-5 rounded-xl border space-y-4"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
-            <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#22c55e' }}>
+            <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.green }}>
               Business details
             </p>
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Business Name
               <input
                 value={form.businessName}
                 onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))}
                 placeholder="e.g. Tesy Fashion Store"
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               />
             </label>
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Phone Number
               <input
                 value={form.phone}
                 onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                 placeholder="e.g. 08012345678"
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               />
             </label>
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               State / Location
               <select
                 value={form.location}
                 onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: form.location ? '#f5f5f5' : '#666666' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: form.location ? theme.ink : '#666666' }}
               >
                 <option value="">Select your state</option>
                 {NIGERIAN_STATES.map((s) => (
@@ -131,7 +132,7 @@ export default function VendorSetupPage() {
                 ))}
               </select>
             </label>
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Business Address
               <textarea
                 value={form.address}
@@ -139,17 +140,17 @@ export default function VendorSetupPage() {
                 placeholder="Street, area, city"
                 rows={2}
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none resize-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               />
             </label>
           </div>
 
           <div
             className="p-5 rounded-xl border space-y-4"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#22c55e' }}>
+              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.green }}>
                 Bank account (optional)
               </p>
               <p className="text-xs mt-1" style={{ color: '#666666' }}>
@@ -158,17 +159,17 @@ export default function VendorSetupPage() {
                 Pay on Delivery, and add it anytime from Store Settings.
               </p>
             </div>
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Bank Name
               <input
                 value={form.bankName}
                 onChange={(e) => setForm((f) => ({ ...f, bankName: e.target.value }))}
                 placeholder="e.g. GTBank"
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               />
             </label>
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Account Number
               <input
                 value={form.accountNumber}
@@ -176,17 +177,17 @@ export default function VendorSetupPage() {
                 placeholder="10-digit account number"
                 inputMode="numeric"
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               />
             </label>
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Account Name
               <input
                 value={form.accountName}
                 onChange={(e) => setForm((f) => ({ ...f, accountName: e.target.value }))}
                 placeholder="Name on the account"
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               />
             </label>
           </div>
@@ -199,7 +200,7 @@ export default function VendorSetupPage() {
             type="submit"
             disabled={saving}
             className="w-full py-3.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+            style={{ backgroundColor: theme.green, color: theme.bg }}
           >
             {saving ? 'Saving…' : 'Continue to Dashboard'}
           </button>

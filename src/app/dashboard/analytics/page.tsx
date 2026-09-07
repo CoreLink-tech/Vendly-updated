@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface ProductAnalytic {
   productId: string;
@@ -45,9 +46,9 @@ export default function AnalyticsPage() {
       onClick={() => setSort(k)}
       className="text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors"
       style={{
-        borderColor: sort === k ? '#22c55e' : '#2a2a2a',
-        color: sort === k ? '#22c55e' : '#888888',
-        backgroundColor: sort === k ? '#22c55e10' : 'transparent',
+        borderColor: sort === k ? theme.green : theme.line,
+        color: sort === k ? theme.green : theme.muted,
+        backgroundColor: sort === k ? theme.greenSoft : 'transparent',
       }}
     >
       {label}
@@ -57,8 +58,8 @@ export default function AnalyticsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>Product Analytics</h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>How your products are performing — views, sales, and revenue.</p>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>Product Analytics</h1>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>How your products are performing — views, sales, and revenue.</p>
       </div>
 
       {/* Summary cards */}
@@ -68,9 +69,9 @@ export default function AnalyticsPage() {
           { label: 'Units Sold', value: totalSold.toLocaleString() },
           { label: 'Product Revenue', value: `₦${Number(totalRevenue).toLocaleString()}` },
         ].map((c) => (
-          <div key={c.label} className="p-5 rounded-xl border" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
-            <p className="text-xs font-medium mb-2" style={{ color: '#888888' }}>{c.label}</p>
-            <p className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>{c.value}</p>
+          <div key={c.label} className="p-5 rounded-xl border" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+            <p className="text-xs font-medium mb-2" style={{ color: theme.muted }}>{c.label}</p>
+            <p className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>{c.value}</p>
           </div>
         ))}
       </div>
@@ -86,17 +87,17 @@ export default function AnalyticsPage() {
 
       {loading ? (
         <div className="flex items-center justify-center h-48">
-          <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: '#22c55e', borderTopColor: 'transparent' }} />
+          <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: theme.green, borderTopColor: 'transparent' }} />
         </div>
       ) : analytics.length === 0 ? (
-        <div className="text-center py-20 rounded-xl border" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
-          <p className="text-sm font-semibold mb-1" style={{ color: '#f5f5f5' }}>No analytics yet</p>
-          <p className="text-xs" style={{ color: '#888888' }}>Analytics will appear once buyers start viewing your products.</p>
+        <div className="text-center py-20 rounded-xl border" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+          <p className="text-sm font-semibold mb-1" style={{ color: theme.ink }}>No analytics yet</p>
+          <p className="text-xs" style={{ color: theme.muted }}>Analytics will appear once buyers start viewing your products.</p>
         </div>
       ) : (
-        <div className="rounded-xl border overflow-hidden" style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}>
+        <div className="rounded-xl border overflow-hidden" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
           {/* Table header */}
-          <div className="grid grid-cols-12 gap-4 px-5 py-3 border-b text-xs font-medium" style={{ borderColor: '#2a2a2a', color: '#555555' }}>
+          <div className="grid grid-cols-12 gap-4 px-5 py-3 border-b text-xs font-medium" style={{ borderColor: theme.line, color: theme.faint }}>
             <div className="col-span-4">Product</div>
             <div className="col-span-2 text-right">Views (total)</div>
             <div className="col-span-2 text-right">Views (7d)</div>
@@ -106,43 +107,43 @@ export default function AnalyticsPage() {
           </div>
 
           {sorted.map((item, idx) => (
-            <div key={item.productId} className="grid grid-cols-12 gap-4 px-5 py-4 border-b items-center" style={{ borderColor: '#2a2a2a' }}>
+            <div key={item.productId} className="grid grid-cols-12 gap-4 px-5 py-4 border-b items-center" style={{ borderColor: theme.line }}>
               {/* Rank + name */}
               <div className="col-span-4 flex items-center gap-3 min-w-0">
                 <span className="text-xs font-mono shrink-0 w-5 text-right" style={{ color: '#555' }}>#{idx + 1}</span>
                 <div className="min-w-0">
-                  <p className="text-sm font-medium truncate" style={{ color: '#f5f5f5' }}>{item.name}</p>
+                  <p className="text-sm font-medium truncate" style={{ color: theme.ink }}>{item.name}</p>
                   <p className="text-xs mt-0.5" style={{ color: '#555' }}>₦{Number(item.price).toLocaleString()} · Stock: {item.stock}</p>
                   {/* View bar */}
-                  <div className="mt-2 h-1 rounded-full overflow-hidden" style={{ backgroundColor: '#2a2a2a', width: '100%' }}>
+                  <div className="mt-2 h-1 rounded-full overflow-hidden" style={{ backgroundColor: theme.line, width: '100%' }}>
                     <div
                       className="h-full rounded-full"
-                      style={{ width: `${(Number(item.totalViews) / maxViews) * 100}%`, backgroundColor: '#22c55e' }}
+                      style={{ width: `${(Number(item.totalViews) / maxViews) * 100}%`, backgroundColor: theme.green }}
                     />
                   </div>
                 </div>
               </div>
 
               <div className="col-span-2 text-right">
-                <span className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>{Number(item.totalViews).toLocaleString()}</span>
+                <span className="text-sm font-semibold" style={{ color: theme.ink }}>{Number(item.totalViews).toLocaleString()}</span>
               </div>
 
               <div className="col-span-2 text-right">
-                <span className="text-sm" style={{ color: Number(item.viewsLast7Days) > 0 ? '#22c55e' : '#555' }}>
+                <span className="text-sm" style={{ color: Number(item.viewsLast7Days) > 0 ? theme.green : '#555' }}>
                   {Number(item.viewsLast7Days).toLocaleString()}
                 </span>
               </div>
 
               <div className="col-span-1 text-right">
-                <span className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>{Number(item.totalUnitsSold).toLocaleString()}</span>
+                <span className="text-sm font-semibold" style={{ color: theme.ink }}>{Number(item.totalUnitsSold).toLocaleString()}</span>
               </div>
 
               <div className="col-span-2 text-right">
-                <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>₦{Number(item.totalRevenue).toLocaleString()}</span>
+                <span className="text-sm font-semibold" style={{ color: theme.green }}>₦{Number(item.totalRevenue).toLocaleString()}</span>
               </div>
 
               <div className="col-span-1 text-right">
-                <span className="text-sm" style={{ color: '#888' }}>{Number(item.totalOrders).toLocaleString()}</span>
+                <span className="text-sm" style={{ color: theme.muted }}>{Number(item.totalOrders).toLocaleString()}</span>
               </div>
             </div>
           ))}

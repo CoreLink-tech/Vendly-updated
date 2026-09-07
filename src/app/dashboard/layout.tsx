@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import DashboardShell from './DashboardShell';
+import { theme } from '@/lib/theme';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -7,9 +8,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       fallback={
         <div
           className="min-h-screen flex items-center justify-center"
-          style={{ backgroundColor: '#0d0d0d' }}
+          style={{ backgroundColor: theme.bg }}
         >
-          <div className="text-sm" style={{ color: '#22c55e' }}>
+          <div className="text-sm" style={{ color: theme.green }}>
             Loading…
           </div>
         </div>

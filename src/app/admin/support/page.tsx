@@ -1,11 +1,12 @@
 export default function AdminSupportPage() {
+import { theme } from '@/lib/theme';
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Support
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Admin support resources and tools.
         </p>
       </div>
@@ -13,9 +14,9 @@ export default function AdminSupportPage() {
       <div className="space-y-4">
         <div
           className="p-6 rounded-xl border"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
-          <h2 className="text-sm font-semibold mb-4" style={{ color: '#f5f5f5' }}>
+          <h2 className="text-sm font-semibold mb-4" style={{ color: theme.ink }}>
             Admin Quick Actions
           </h2>
           <div className="grid grid-cols-2 gap-3">
@@ -31,7 +32,7 @@ export default function AdminSupportPage() {
                 key={a.href}
                 href={a.href}
                 className="text-xs py-2.5 px-3 rounded-lg border text-center transition-colors"
-                style={{ borderColor: '#2a2a2a', color: '#888888' }}
+                style={{ borderColor: theme.line, color: theme.muted }}
               >
                 {a.label}
               </a>
@@ -41,24 +42,24 @@ export default function AdminSupportPage() {
 
         <div
           className="p-6 rounded-xl border"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
-          <h2 className="text-sm font-semibold mb-3" style={{ color: '#f5f5f5' }}>
+          <h2 className="text-sm font-semibold mb-3" style={{ color: theme.ink }}>
             Contact & Notifications
           </h2>
-          <p className="text-xs mb-2" style={{ color: '#888888' }}>
+          <p className="text-xs mb-2" style={{ color: theme.muted }}>
             Ambassador applications and vendor enquiries are sent to:
           </p>
           <div
             className="flex items-center gap-3 p-3 rounded-lg"
-            style={{ backgroundColor: '#0d0d0d' }}
+            style={{ backgroundColor: theme.bg }}
           >
             <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
             <div>
-              <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+              <p className="text-sm font-semibold" style={{ color: theme.ink }}>
                 WhatsApp: 09168311809
               </p>
-              <p className="text-xs" style={{ color: '#888888' }}>
+              <p className="text-xs" style={{ color: theme.muted }}>
                 Admin notification number
               </p>
             </div>
@@ -67,9 +68,9 @@ export default function AdminSupportPage() {
 
         <div
           className="p-6 rounded-xl border"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
-          <h2 className="text-sm font-semibold mb-3" style={{ color: '#f5f5f5' }}>
+          <h2 className="text-sm font-semibold mb-3" style={{ color: theme.ink }}>
             Platform Info
           </h2>
           <div className="space-y-2 text-xs">
@@ -80,9 +81,9 @@ export default function AdminSupportPage() {
               ['Yearly Referral Commission', '₦10,000 (25%)'],
               ['Ambassador Commission', '₦1,000/renewal (monthly)'],
             ].map(([k, v]) => (
-              <div key={k} className="flex justify-between" style={{ color: '#888888' }}>
-                <span style={{ color: '#555555' }}>{k}</span>
-                <span style={{ color: '#f5f5f5' }}>{v}</span>
+              <div key={k} className="flex justify-between" style={{ color: theme.muted }}>
+                <span style={{ color: theme.faint }}>{k}</span>
+                <span style={{ color: theme.ink }}>{v}</span>
               </div>
             ))}
           </div>

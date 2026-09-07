@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface LogisticsRequest {
   id: string;
@@ -25,11 +26,11 @@ function fmtDate(str: string) {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  awaiting_assignment: '#f59e0b',
+  awaiting_assignment: theme.orange,
   rider_assigned: '#3b82f6',
   picked_up: '#8b5cf6',
-  in_transit: '#22c55e',
-  delivered: '#22c55e',
+  in_transit: theme.green,
+  delivered: theme.green,
 };
 
 export default function LogisticsPage() {
@@ -84,10 +85,10 @@ export default function LogisticsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Logistics
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Manage delivery requests and rider assignments.
         </p>
       </div>
@@ -99,9 +100,9 @@ export default function LogisticsPage() {
             onClick={() => setStatusFilter(f.v)}
             className="whitespace-nowrap text-xs px-3 py-1.5 rounded-full border shrink-0"
             style={{
-              borderColor: statusFilter === f.v ? '#22c55e' : '#2a2a2a',
-              color: statusFilter === f.v ? '#22c55e' : '#888888',
-              backgroundColor: statusFilter === f.v ? '#22c55e10' : 'transparent',
+              borderColor: statusFilter === f.v ? theme.green : theme.line,
+              color: statusFilter === f.v ? theme.green : theme.muted,
+              backgroundColor: statusFilter === f.v ? theme.greenSoft : 'transparent',
             }}
           >
             {f.l}
@@ -111,14 +112,14 @@ export default function LogisticsPage() {
 
       <div
         className="rounded-xl border overflow-hidden"
-        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
       >
         {loading ? (
           <div className="flex items-center justify-center h-24">
             <div
               className="w-5 h-5 border-2 rounded-full"
               style={{
-                borderColor: '#22c55e',
+                borderColor: theme.green,
                 borderTopColor: 'transparent',
                 animation: 'spin 0.8s linear infinite',
               }}
@@ -133,12 +134,12 @@ export default function LogisticsPage() {
           </div>
         ) : requests.length === 0 ? (
           <div className="text-center py-10">
-            <p className="text-sm" style={{ color: '#555555' }}>
+            <p className="text-sm" style={{ color: theme.faint }}>
               No logistics requests found.
             </p>
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: '#2a2a2a' }}>
+          <div className="divide-y" style={{ borderColor: theme.line }}>
             {requests.map((r) => (
               <div
                 key={r.id}
@@ -148,36 +149,36 @@ export default function LogisticsPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <span className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+                      <span className="text-sm font-semibold" style={{ color: theme.ink }}>
                         {r.customerName}
                       </span>
                       <div
                         className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-xs"
-                        style={{ borderColor: '#2a2a2a' }}
+                        style={{ borderColor: theme.line }}
                       >
                         <span
                           className="w-1.5 h-1.5 rounded-full"
-                          style={{ backgroundColor: STATUS_COLORS[r.status] || '#888' }}
+                          style={{ backgroundColor: STATUS_COLORS[r.status] || theme.muted }}
                         />
-                        <span className="capitalize" style={{ color: '#aaaaaa' }}>
+                        <span className="capitalize" style={{ color: theme.muted }}>
                           {r.status.replace(/_/g, ' ')}
                         </span>
                       </div>
                     </div>
-                    <p className="text-xs" style={{ color: '#888888' }}>
+                    <p className="text-xs" style={{ color: theme.muted }}>
                       From: {r.vendorName} → {r.customerAddress}
                     </p>
                     {r.riderName && (
-                      <p className="text-xs mt-0.5" style={{ color: '#555555' }}>
+                      <p className="text-xs mt-0.5" style={{ color: theme.faint }}>
                         Rider: {r.riderName} {r.riderPhone}
                       </p>
                     )}
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+                    <p className="text-sm font-semibold" style={{ color: theme.ink }}>
                       ₦{Number(r.amount).toLocaleString()}
                     </p>
-                    <p className="text-xs" style={{ color: '#555555' }}>
+                    <p className="text-xs" style={{ color: theme.faint }}>
                       {fmtDate(r.createdAt)}
                     </p>
                   </div>
@@ -196,48 +197,48 @@ export default function LogisticsPage() {
         >
           <div
             className="w-full max-w-md rounded-xl border"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
             <div
               className="flex items-center justify-between px-6 py-4 border-b"
-              style={{ borderColor: '#2a2a2a' }}
+              style={{ borderColor: theme.line }}
             >
-              <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+              <p className="text-sm font-semibold" style={{ color: theme.ink }}>
                 Delivery Request
               </p>
-              <button onClick={() => setSelected(null)} style={{ color: '#888888' }}>
+              <button onClick={() => setSelected(null)} style={{ color: theme.muted }}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <p style={{ color: '#555555' }}>Vendor</p>
-                  <p style={{ color: '#aaaaaa' }}>{selected.vendorName}</p>
+                  <p style={{ color: theme.faint }}>Vendor</p>
+                  <p style={{ color: theme.muted }}>{selected.vendorName}</p>
                 </div>
                 <div>
-                  <p style={{ color: '#555555' }}>Vendor Phone</p>
-                  <p style={{ color: '#aaaaaa' }}>{selected.vendorPhone}</p>
+                  <p style={{ color: theme.faint }}>Vendor Phone</p>
+                  <p style={{ color: theme.muted }}>{selected.vendorPhone}</p>
                 </div>
                 <div>
-                  <p style={{ color: '#555555' }}>Customer</p>
-                  <p style={{ color: '#aaaaaa' }}>{selected.customerName}</p>
+                  <p style={{ color: theme.faint }}>Customer</p>
+                  <p style={{ color: theme.muted }}>{selected.customerName}</p>
                 </div>
                 <div>
-                  <p style={{ color: '#555555' }}>Customer Phone</p>
-                  <p style={{ color: '#aaaaaa' }}>{selected.customerPhone}</p>
+                  <p style={{ color: theme.faint }}>Customer Phone</p>
+                  <p style={{ color: theme.muted }}>{selected.customerPhone}</p>
                 </div>
                 <div className="col-span-2">
-                  <p style={{ color: '#555555' }}>Delivery To</p>
-                  <p style={{ color: '#aaaaaa' }}>{selected.customerAddress}</p>
+                  <p style={{ color: theme.faint }}>Delivery To</p>
+                  <p style={{ color: theme.muted }}>{selected.customerAddress}</p>
                 </div>
                 <div>
-                  <p style={{ color: '#555555' }}>Amount</p>
-                  <p style={{ color: '#aaaaaa' }}>₦{Number(selected.amount).toLocaleString()}</p>
+                  <p style={{ color: theme.faint }}>Amount</p>
+                  <p style={{ color: theme.muted }}>₦{Number(selected.amount).toLocaleString()}</p>
                 </div>
                 <div>
-                  <p style={{ color: '#555555' }}>Payment</p>
-                  <p className="capitalize" style={{ color: '#aaaaaa' }}>
+                  <p style={{ color: theme.faint }}>Payment</p>
+                  <p className="capitalize" style={{ color: theme.muted }}>
                     {selected.paymentMethod.replace(/_/g, ' ')}
                   </p>
                 </div>
@@ -245,7 +246,7 @@ export default function LogisticsPage() {
 
               {/* Rider assignment */}
               <div>
-                <p className="text-xs font-semibold mb-2" style={{ color: '#aaaaaa' }}>
+                <p className="text-xs font-semibold mb-2" style={{ color: theme.muted }}>
                   Assign Rider
                 </p>
                 <div className="space-y-2">
@@ -254,21 +255,21 @@ export default function LogisticsPage() {
                     onChange={(e) => setRiderName(e.target.value)}
                     placeholder="Rider name"
                     className="w-full rounded-lg border px-3 py-2 text-sm outline-none"
-                    style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                    style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                   />
                   <input
                     value={riderPhone}
                     onChange={(e) => setRiderPhone(e.target.value)}
                     placeholder="Rider phone"
                     className="w-full rounded-lg border px-3 py-2 text-sm outline-none"
-                    style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                    style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                   />
                 </div>
               </div>
 
               {/* Status updates */}
               <div>
-                <p className="text-xs font-semibold mb-2" style={{ color: '#aaaaaa' }}>
+                <p className="text-xs font-semibold mb-2" style={{ color: theme.muted }}>
                   Update Status
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -281,9 +282,9 @@ export default function LogisticsPage() {
                       disabled={updating || selected.status === s.v}
                       className="text-xs py-2 px-3 rounded-lg border transition-colors disabled:opacity-40"
                       style={{
-                        borderColor: selected.status === s.v ? '#22c55e' : '#2a2a2a',
-                        color: selected.status === s.v ? '#22c55e' : '#888888',
-                        backgroundColor: selected.status === s.v ? '#22c55e10' : 'transparent',
+                        borderColor: selected.status === s.v ? theme.green : theme.line,
+                        color: selected.status === s.v ? theme.green : theme.muted,
+                        backgroundColor: selected.status === s.v ? theme.greenSoft : 'transparent',
                       }}
                     >
                       {s.l}

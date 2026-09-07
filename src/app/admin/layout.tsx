@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import AdminShell from './AdminShell';
+import { theme } from '@/lib/theme';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -7,9 +8,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       fallback={
         <div
           className="min-h-screen flex items-center justify-center"
-          style={{ backgroundColor: '#0d0d0d' }}
+          style={{ backgroundColor: theme.bg }}
         >
-          <div className="text-sm" style={{ color: '#22c55e' }}>
+          <div className="text-sm" style={{ color: theme.green }}>
             Loading admin…
           </div>
         </div>

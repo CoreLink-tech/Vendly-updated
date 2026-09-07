@@ -3,6 +3,7 @@ import { NavIcon, IconName } from '@/components/NavIcon';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { theme } from '@/lib/theme';
 
 interface Stats {
   totalVendors: number;
@@ -38,7 +39,7 @@ export default function AdminPage() {
         <div
           className="w-5 h-5 border-2 rounded-full"
           style={{
-            borderColor: '#22c55e',
+            borderColor: theme.green,
             borderTopColor: 'transparent',
             animation: 'spin 0.8s linear infinite',
           }}
@@ -57,10 +58,10 @@ export default function AdminPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Admin Dashboard
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Platform overview
         </p>
       </div>
@@ -87,12 +88,12 @@ export default function AdminPage() {
             key={card.label}
             href={card.href}
             className="p-5 rounded-xl border block transition-colors"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
-            <p className="text-xs font-medium mb-2" style={{ color: '#888888' }}>
+            <p className="text-xs font-medium mb-2" style={{ color: theme.muted }}>
               {card.label}
             </p>
-            <p className="text-xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+            <p className="text-xl font-semibold tracking-tight" style={{ color: theme.ink }}>
               {card.value}
             </p>
           </Link>
@@ -111,10 +112,10 @@ export default function AdminPage() {
             key={a.label}
             href={a.href}
             className="flex flex-col items-center gap-2 p-4 rounded-xl border text-center transition-colors"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
             <NavIcon name={a.icon} />
-            <p className="text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <p className="text-xs font-medium" style={{ color: theme.muted }}>
               {a.label}
             </p>
           </Link>
@@ -124,58 +125,58 @@ export default function AdminPage() {
       {/* Recent vendors */}
       <div
         className="rounded-xl border"
-        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
       >
         <div
           className="flex items-center justify-between px-6 py-4 border-b"
-          style={{ borderColor: '#2a2a2a' }}
+          style={{ borderColor: theme.line }}
         >
-          <h2 className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+          <h2 className="text-sm font-semibold" style={{ color: theme.ink }}>
             Recent Vendors
           </h2>
-          <Link href="/admin/vendors" className="text-xs" style={{ color: '#22c55e' }}>
+          <Link href="/admin/vendors" className="text-xs" style={{ color: theme.green }}>
             View all →
           </Link>
         </div>
         {!stats?.recentVendors?.length ? (
           <div className="text-center py-10">
-            <p className="text-sm" style={{ color: '#555555' }}>
+            <p className="text-sm" style={{ color: theme.faint }}>
               No vendors yet.
             </p>
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: '#2a2a2a' }}>
+          <div className="divide-y" style={{ borderColor: theme.line }}>
             {stats.recentVendors.map((v, i) => (
               <div key={i} className="flex items-center justify-between px-6 py-4">
                 <div>
-                  <p className="text-sm font-medium" style={{ color: '#f5f5f5' }}>
+                  <p className="text-sm font-medium" style={{ color: theme.ink }}>
                     {v.businessName || '—'}
                   </p>
-                  <p className="text-xs" style={{ color: '#888888' }}>
+                  <p className="text-xs" style={{ color: theme.muted }}>
                     {v.email}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div
                     className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs"
-                    style={{ borderColor: '#2a2a2a' }}
+                    style={{ borderColor: theme.line }}
                   >
                     <span
                       className="w-1.5 h-1.5 rounded-full"
                       style={{
                         backgroundColor:
                           v.status === 'active'
-                            ? '#22c55e'
+                            ? theme.green
                             : v.status === 'pending'
-                              ? '#f59e0b'
+                              ? theme.orange
                               : '#ef4444',
                       }}
                     />
-                    <span className="capitalize" style={{ color: '#aaaaaa' }}>
+                    <span className="capitalize" style={{ color: theme.muted }}>
                       {v.status}
                     </span>
                   </div>
-                  <span className="text-xs" style={{ color: '#555555' }}>
+                  <span className="text-xs" style={{ color: theme.faint }}>
                     {fmtDate(v.createdAt)}
                   </span>
                 </div>

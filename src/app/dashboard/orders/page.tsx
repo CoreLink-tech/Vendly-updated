@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface OrderItem {
   id: string;
@@ -43,13 +44,13 @@ const STATUSES = [
 const STATUS_COLOR: Record<string, string> = {
   new: '#3b82f6',
   accepted: '#8b5cf6',
-  preparing_package: '#f59e0b',
+  preparing_package: theme.orange,
   ready_for_pickup: '#f97316',
   logistics_assigned: '#06b6d4',
   picked_up: '#6366f1',
-  in_transit: '#22c55e',
-  delivered: '#22c55e',
-  completed: '#22c55e',
+  in_transit: theme.green,
+  delivered: theme.green,
+  completed: theme.green,
 };
 
 function fmtDate(str: string) {
@@ -123,10 +124,10 @@ export default function OrdersPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+          <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
             Orders
           </h1>
-          <p className="text-sm mt-1" style={{ color: '#888888' }}>
+          <p className="text-sm mt-1" style={{ color: theme.muted }}>
             {orders.length} order{orders.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -140,9 +141,9 @@ export default function OrdersPage() {
             onClick={() => setFilterStatus(s.value)}
             className="whitespace-nowrap text-xs px-3 py-1.5 rounded-full border transition-colors shrink-0"
             style={{
-              borderColor: filterStatus === s.value ? '#22c55e' : '#2a2a2a',
-              color: filterStatus === s.value ? '#22c55e' : '#888888',
-              backgroundColor: filterStatus === s.value ? '#22c55e10' : 'transparent',
+              borderColor: filterStatus === s.value ? theme.green : theme.line,
+              color: filterStatus === s.value ? theme.green : theme.muted,
+              backgroundColor: filterStatus === s.value ? theme.greenSoft : 'transparent',
             }}
           >
             {s.label}
@@ -155,7 +156,7 @@ export default function OrdersPage() {
           <div
             className="w-5 h-5 border-2 rounded-full"
             style={{
-              borderColor: '#22c55e',
+              borderColor: theme.green,
               borderTopColor: 'transparent',
               animation: 'spin 0.8s linear infinite',
             }}
@@ -171,19 +172,19 @@ export default function OrdersPage() {
       ) : orders.length === 0 ? (
         <div
           className="text-center py-20 rounded-xl border"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
           <p className="flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></p>
-          <p className="text-sm" style={{ color: '#555555' }}>
+          <p className="text-sm" style={{ color: theme.faint }}>
             No orders yet.
           </p>
         </div>
       ) : (
         <div
           className="rounded-xl border overflow-hidden"
-          style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
-          <div className="divide-y" style={{ borderColor: '#2a2a2a' }}>
+          <div className="divide-y" style={{ borderColor: theme.line }}>
             {orders.map((order) => (
               <div
                 key={order.id}
@@ -192,31 +193,31 @@ export default function OrdersPage() {
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+                    <span className="text-sm font-semibold" style={{ color: theme.ink }}>
                       {order.orderNumber}
                     </span>
                     <div
                       className="hidden md:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-xs"
-                      style={{ borderColor: '#2a2a2a' }}
+                      style={{ borderColor: theme.line }}
                     >
                       <span
                         className="w-1.5 h-1.5 rounded-full"
-                        style={{ backgroundColor: STATUS_COLOR[order.status] || '#888' }}
+                        style={{ backgroundColor: STATUS_COLOR[order.status] || theme.muted }}
                       />
-                      <span style={{ color: '#aaaaaa' }}>
+                      <span style={{ color: theme.muted }}>
                         {STATUSES.find((s) => s.value === order.status)?.label || order.status}
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs mt-0.5 truncate" style={{ color: '#888888' }}>
+                  <p className="text-xs mt-0.5 truncate" style={{ color: theme.muted }}>
                     {order.customerName} · {fmtDate(order.createdAt)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+                  <p className="text-sm font-semibold" style={{ color: theme.ink }}>
                     ₦{Number(order.total).toLocaleString()}
                   </p>
-                  <p className="text-xs" style={{ color: '#555555' }}>
+                  <p className="text-xs" style={{ color: theme.faint }}>
                     {order.paymentMethod === 'full_payment' ? 'Full' : 'On Delivery'}
                   </p>
                 </div>
@@ -234,14 +235,14 @@ export default function OrdersPage() {
         >
           <div
             className="w-full max-w-lg rounded-xl border"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
           >
             <div
               className="flex items-center justify-between px-6 py-4 border-b"
-              style={{ borderColor: '#2a2a2a' }}
+              style={{ borderColor: theme.line }}
             >
               <div>
-                <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>
+                <p className="text-sm font-semibold" style={{ color: theme.ink }}>
                   {selected.orderNumber}
                 </p>
                 <div className="flex items-center gap-1.5 mt-1">
@@ -249,12 +250,12 @@ export default function OrdersPage() {
                     className="w-1.5 h-1.5 rounded-full"
                     style={{ backgroundColor: STATUS_COLOR[selected.status] }}
                   />
-                  <span className="text-xs" style={{ color: '#888888' }}>
+                  <span className="text-xs" style={{ color: theme.muted }}>
                     {STATUSES.find((s) => s.value === selected.status)?.label}
                   </span>
                 </div>
               </div>
-              <button onClick={() => setSelected(null)} style={{ color: '#888888' }}>
+              <button onClick={() => setSelected(null)} style={{ color: theme.muted }}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
@@ -264,7 +265,7 @@ export default function OrdersPage() {
               <div>
                 <p
                   className="text-xs font-semibold uppercase tracking-wider mb-3"
-                  style={{ color: '#555555' }}
+                  style={{ color: theme.faint }}
                 >
                   Customer
                 </p>
@@ -276,10 +277,10 @@ export default function OrdersPage() {
                     ['Address', selected.customerAddress],
                   ].map(([k, v]) => (
                     <div key={k}>
-                      <p className="text-xs" style={{ color: '#888888' }}>
+                      <p className="text-xs" style={{ color: theme.muted }}>
                         {k}
                       </p>
-                      <p className="text-sm mt-0.5" style={{ color: '#f5f5f5' }}>
+                      <p className="text-sm mt-0.5" style={{ color: theme.ink }}>
                         {v}
                       </p>
                     </div>
@@ -292,27 +293,27 @@ export default function OrdersPage() {
                 <div>
                   <p
                     className="text-xs font-semibold uppercase tracking-wider mb-3"
-                    style={{ color: '#555555' }}
+                    style={{ color: theme.faint }}
                   >
                     Items
                   </p>
                   <div className="space-y-2">
                     {selected.items.map((item) => (
                       <div key={item.id} className="flex justify-between text-sm">
-                        <span style={{ color: '#aaaaaa' }}>
+                        <span style={{ color: theme.muted }}>
                           {item.name} × {item.quantity}
                         </span>
-                        <span style={{ color: '#f5f5f5' }}>
+                        <span style={{ color: theme.ink }}>
                           ₦{Number(item.total).toLocaleString()}
                         </span>
                       </div>
                     ))}
                     <div
                       className="border-t pt-2 flex justify-between text-sm font-semibold"
-                      style={{ borderColor: '#2a2a2a' }}
+                      style={{ borderColor: theme.line }}
                     >
-                      <span style={{ color: '#f5f5f5' }}>Total</span>
-                      <span style={{ color: '#22c55e' }}>
+                      <span style={{ color: theme.ink }}>Total</span>
+                      <span style={{ color: theme.green }}>
                         ₦{Number(selected.total).toLocaleString()}
                       </span>
                     </div>
@@ -324,23 +325,23 @@ export default function OrdersPage() {
               <div className="flex items-center gap-4 text-sm">
                 <div
                   className="flex-1 py-2.5 px-3 rounded-lg"
-                  style={{ backgroundColor: '#0d0d0d' }}
+                  style={{ backgroundColor: theme.bg }}
                 >
-                  <p className="text-xs mb-0.5" style={{ color: '#888888' }}>
+                  <p className="text-xs mb-0.5" style={{ color: theme.muted }}>
                     Payment
                   </p>
-                  <p style={{ color: '#f5f5f5' }}>
+                  <p style={{ color: theme.ink }}>
                     {selected.paymentMethod === 'full_payment' ? 'Full Payment' : 'On Delivery'}
                   </p>
                 </div>
                 <div
                   className="flex-1 py-2.5 px-3 rounded-lg"
-                  style={{ backgroundColor: '#0d0d0d' }}
+                  style={{ backgroundColor: theme.bg }}
                 >
-                  <p className="text-xs mb-0.5" style={{ color: '#888888' }}>
+                  <p className="text-xs mb-0.5" style={{ color: theme.muted }}>
                     Status
                   </p>
-                  <p className="capitalize" style={{ color: '#f5f5f5' }}>
+                  <p className="capitalize" style={{ color: theme.ink }}>
                     {selected.paymentStatus}
                   </p>
                 </div>
@@ -349,12 +350,12 @@ export default function OrdersPage() {
               {selected.paymentMethod === 'full_payment' && selected.payerName && (
                 <div
                   className="p-3 rounded-lg text-sm"
-                  style={{ backgroundColor: '#0d0d0d' }}
+                  style={{ backgroundColor: theme.bg }}
                 >
-                  <p className="text-xs mb-0.5" style={{ color: '#888888' }}>
+                  <p className="text-xs mb-0.5" style={{ color: theme.muted }}>
                     Transfer should show sender name
                   </p>
-                  <p style={{ color: '#f5f5f5' }}>{selected.payerName}</p>
+                  <p style={{ color: theme.ink }}>{selected.payerName}</p>
                   <p className="text-xs mt-1" style={{ color: '#666666' }}>
                     Check your bank alerts for a transfer from this name before confirming.
                   </p>
@@ -366,7 +367,7 @@ export default function OrdersPage() {
                   onClick={() => void markPaid(selected.id)}
                   disabled={updating}
                   className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                  style={{ backgroundColor: theme.green, color: theme.bg }}
                 >
                   {updating ? 'Updating…' : 'Mark Payment Received'}
                 </button>
@@ -376,7 +377,7 @@ export default function OrdersPage() {
               <div>
                 <p
                   className="text-xs font-semibold uppercase tracking-wider mb-3"
-                  style={{ color: '#555555' }}
+                  style={{ color: theme.faint }}
                 >
                   Update Status
                 </p>
@@ -390,9 +391,9 @@ export default function OrdersPage() {
                       disabled={updating || selected.status === s.value}
                       className="text-xs py-2 px-3 rounded-lg border transition-colors disabled:opacity-40 text-left"
                       style={{
-                        borderColor: selected.status === s.value ? '#22c55e' : '#2a2a2a',
-                        color: selected.status === s.value ? '#22c55e' : '#888888',
-                        backgroundColor: selected.status === s.value ? '#22c55e10' : 'transparent',
+                        borderColor: selected.status === s.value ? theme.green : theme.line,
+                        color: selected.status === s.value ? theme.green : theme.muted,
+                        backgroundColor: selected.status === s.value ? theme.greenSoft : 'transparent',
                       }}
                     >
                       {s.label}
@@ -409,7 +410,7 @@ export default function OrdersPage() {
                   }}
                   disabled={updating}
                   className="w-full py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-                  style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+                  style={{ backgroundColor: theme.green, color: theme.bg }}
                 >
                   {updating
                     ? 'Updating…'

@@ -3,20 +3,21 @@
 import { useEffect, useRef, useState } from 'react';
 import useUpload from '@/utils/useUpload';
 import { SITE_URL } from '@/lib/site';
+import { theme } from '@/lib/theme';
 
 // A varied set of accent colors covering the common storefront palette —
 // greens, blues, warm tones, purples/pinks, and neutrals — so vendors have
 // real choices beyond the default green, plus custom hex/picker entry.
 const ACCENT_PRESETS = [
-  '#22c55e', '#16a34a', '#0ea5e9', '#2563eb', '#6366f1',
-  '#a855f7', '#ec4899', '#f43f5e', '#f97316', '#f59e0b',
+  theme.green, '#16a34a', '#0ea5e9', '#2563eb', '#6366f1',
+  '#a855f7', '#ec4899', '#f43f5e', '#f97316', theme.orange,
   '#eab308', '#14b8a6', '#64748b', '#ffffff',
 ];
 
 // Background presets: true dark, warm/cool near-blacks, and a couple of
 // light options for vendors who want a bright storefront instead.
 const BACKGROUND_PRESETS = [
-  '#0d0d0d', '#111827', '#18181b', '#1c1917', '#0f172a',
+  theme.bg, '#111827', '#18181b', '#1c1917', '#0f172a',
   '#171717', '#292524', '#f5f5f4', '#ffffff', '#fafafa',
 ];
 
@@ -28,12 +29,12 @@ function getContrastText(hex: string): string {
   const full = normalized.length === 3
     ? normalized.split('').map((c) => c + c).join('')
     : normalized;
-  if (!/^[0-9a-f]{6}$/i.test(full)) return '#0d0d0d';
+  if (!/^[0-9a-f]{6}$/i.test(full)) return theme.bg;
   const r = parseInt(full.slice(0, 2), 16);
   const g = parseInt(full.slice(2, 4), 16);
   const b = parseInt(full.slice(4, 6), 16);
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.6 ? '#0d0d0d' : '#f5f5f5';
+  return luminance > 0.6 ? theme.bg : theme.ink;
 }
 
 interface Vendor {
@@ -69,8 +70,8 @@ export default function StoreSettingsPage() {
     bankName: '',
     accountNumber: '',
     accountName: '',
-    primaryColor: '#22c55e',
-    backgroundColor: '#0d0d0d',
+    primaryColor: theme.green,
+    backgroundColor: theme.bg,
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -96,8 +97,8 @@ export default function StoreSettingsPage() {
             bankName: data.vendor.bankName || '',
             accountNumber: data.vendor.accountNumber || '',
             accountName: data.vendor.accountName || '',
-            primaryColor: data.vendor.primaryColor || '#22c55e',
-            backgroundColor: data.vendor.backgroundColor || '#0d0d0d',
+            primaryColor: data.vendor.primaryColor || theme.green,
+            backgroundColor: data.vendor.backgroundColor || theme.bg,
           });
         }
       })
@@ -162,10 +163,10 @@ export default function StoreSettingsPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
           Store Settings
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>
           Customize your public storefront.
         </p>
       </div>
@@ -173,16 +174,16 @@ export default function StoreSettingsPage() {
       {storeUrl && (
         <div
           className="flex items-center gap-3 p-3 rounded-lg border mb-6"
-          style={{ backgroundColor: '#111', borderColor: '#2a2a2a' }}
+          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
         >
-          <span className="text-xs" style={{ color: '#888888' }}>
+          <span className="text-xs" style={{ color: theme.muted }}>
             Your store:
           </span>
           <a
             href={storeUrl}
             target="_blank"
             className="text-xs font-mono truncate flex-1"
-            style={{ color: '#22c55e' }}
+            style={{ color: theme.green }}
           >
             {storeUrl}
           </a>
@@ -191,7 +192,7 @@ export default function StoreSettingsPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 text-xs px-2.5 py-1 rounded border font-semibold"
-            style={{ borderColor: '#22c55e30', backgroundColor: '#22c55e10', color: '#22c55e' }}
+            style={{ borderColor: theme.line, backgroundColor: theme.greenSoft, color: theme.green }}
           >
             View Storefront ↗
           </a>
@@ -200,7 +201,7 @@ export default function StoreSettingsPage() {
               if (typeof navigator !== 'undefined') navigator.clipboard.writeText(storeUrl);
             }}
             className="shrink-0 text-xs px-2 py-1 rounded border"
-            style={{ borderColor: '#2a2a2a', color: '#888888' }}
+            style={{ borderColor: theme.line, color: theme.muted }}
           >
             Copy
           </button>
@@ -209,17 +210,17 @@ export default function StoreSettingsPage() {
 
       <div
         className="rounded-xl border p-6 space-y-5"
-        style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a' }}
+        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
       >
         {/* Logo */}
         <div>
-          <p className="text-xs font-medium mb-3" style={{ color: '#aaaaaa' }}>
+          <p className="text-xs font-medium mb-3" style={{ color: theme.muted }}>
             Store Logo
           </p>
           <div className="flex items-center gap-4">
             <div
               className="w-16 h-16 rounded-xl overflow-hidden border flex items-center justify-center"
-              style={{ borderColor: '#2a2a2a', backgroundColor: '#0d0d0d' }}
+              style={{ borderColor: theme.line, backgroundColor: theme.bg }}
             >
               {form.logo ? (
                 <img src={form.logo} alt="Logo" className="w-full h-full object-cover" />
@@ -232,7 +233,7 @@ export default function StoreSettingsPage() {
                 onClick={() => fileRef.current?.click()}
                 disabled={uploading}
                 className="text-xs px-4 py-2 rounded-lg border transition-colors"
-                style={{ borderColor: '#2a2a2a', color: '#aaaaaa' }}
+                style={{ borderColor: theme.line, color: theme.muted }}
               >
                 {uploading ? 'Uploading…' : 'Upload Logo'}
               </button>
@@ -245,32 +246,32 @@ export default function StoreSettingsPage() {
                   void handleLogoUpload(e);
                 }}
               />
-              <p className="text-[10px] mt-1" style={{ color: '#555555' }}>
+              <p className="text-[10px] mt-1" style={{ color: theme.faint }}>
                 Automatically compressed and optimised
               </p>
             </div>
           </div>
         </div>
 
-        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
           Business Name
           <input
             value={form.businessName}
             onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))}
             className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-            style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+            style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
           />
         </label>
 
-        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
           Store URL Slug
           <div
             className="flex items-center gap-0 rounded-lg border overflow-hidden"
-            style={{ borderColor: '#2a2a2a' }}
+            style={{ borderColor: theme.line }}
           >
             <span
               className="px-3 py-2.5 text-xs"
-              style={{ backgroundColor: '#0d0d0d', color: '#555555' }}
+              style={{ backgroundColor: theme.bg, color: theme.faint }}
             >
               vendly.com/store/
             </span>
@@ -283,65 +284,65 @@ export default function StoreSettingsPage() {
                 }))
               }
               className="flex-1 px-3 py-2.5 text-sm outline-none"
-              style={{ backgroundColor: '#0d0d0d', color: '#f5f5f5' }}
+              style={{ backgroundColor: theme.bg, color: theme.ink }}
               placeholder="your-store-name"
             />
           </div>
         </label>
 
-        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
           Description
           <textarea
             value={form.description}
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
             rows={3}
             className="rounded-lg border px-3 py-2.5 text-sm outline-none resize-none"
-            style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+            style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
             placeholder="Tell customers about your business…"
           />
         </label>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
             Location / City
             <input
               value={form.location}
               onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
               className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               placeholder="e.g. Lagos"
             />
           </label>
-          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+          <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
             Phone Number
             <input
               value={form.phone}
               onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
               className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               placeholder="e.g. 08012345678"
             />
           </label>
         </div>
 
-        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+        <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
           Full Address
           <input
             value={form.address}
             onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
             className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-            style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+            style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
             placeholder="Street address for pickup"
           />
         </label>
 
-        <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
-          <p className="text-xs font-semibold mb-1" style={{ color: '#f5f5f5' }}>Store Colors</p>
-          <p className="text-[11px] mb-3" style={{ color: '#888888' }}>
+        <div className="border-t pt-5" style={{ borderColor: theme.line }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: theme.ink }}>Store Colors</p>
+          <p className="text-[11px] mb-3" style={{ color: theme.muted }}>
             Customize the accent color and background of your public storefront. The preview below updates as you type.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Accent Color
               <div className="flex items-center gap-2">
                 <input
@@ -349,14 +350,14 @@ export default function StoreSettingsPage() {
                   value={form.primaryColor}
                   onChange={(e) => setForm((f) => ({ ...f, primaryColor: e.target.value }))}
                   className="w-10 h-10 rounded-lg border cursor-pointer"
-                  style={{ borderColor: '#2a2a2a', backgroundColor: '#0d0d0d', padding: 2 }}
+                  style={{ borderColor: theme.line, backgroundColor: theme.bg, padding: 2 }}
                 />
                 <input
                   value={form.primaryColor}
                   onChange={(e) => setForm((f) => ({ ...f, primaryColor: e.target.value }))}
                   className="flex-1 rounded-lg border px-3 py-2.5 text-sm outline-none font-mono"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
-                  placeholder="#22c55e"
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
+                  placeholder=theme.green
                 />
               </div>
               <div className="flex flex-wrap gap-2 mt-1">
@@ -369,13 +370,13 @@ export default function StoreSettingsPage() {
                     className="w-6 h-6 rounded-full border-2 transition-transform hover:scale-110"
                     style={{
                       backgroundColor: c,
-                      borderColor: form.primaryColor.toLowerCase() === c.toLowerCase() ? '#f5f5f5' : '#2a2a2a',
+                      borderColor: form.primaryColor.toLowerCase() === c.toLowerCase() ? theme.ink : theme.line,
                     }}
                   />
                 ))}
               </div>
             </label>
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Background Color
               <div className="flex items-center gap-2">
                 <input
@@ -383,14 +384,14 @@ export default function StoreSettingsPage() {
                   value={form.backgroundColor}
                   onChange={(e) => setForm((f) => ({ ...f, backgroundColor: e.target.value }))}
                   className="w-10 h-10 rounded-lg border cursor-pointer"
-                  style={{ borderColor: '#2a2a2a', backgroundColor: '#0d0d0d', padding: 2 }}
+                  style={{ borderColor: theme.line, backgroundColor: theme.bg, padding: 2 }}
                 />
                 <input
                   value={form.backgroundColor}
                   onChange={(e) => setForm((f) => ({ ...f, backgroundColor: e.target.value }))}
                   className="flex-1 rounded-lg border px-3 py-2.5 text-sm outline-none font-mono"
-                  style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
-                  placeholder="#0d0d0d"
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
+                  placeholder=theme.bg
                 />
               </div>
               <div className="flex flex-wrap gap-2 mt-1">
@@ -403,7 +404,7 @@ export default function StoreSettingsPage() {
                     className="w-6 h-6 rounded-full border-2 transition-transform hover:scale-110"
                     style={{
                       backgroundColor: c,
-                      borderColor: form.backgroundColor.toLowerCase() === c.toLowerCase() ? '#f5f5f5' : '#2a2a2a',
+                      borderColor: form.backgroundColor.toLowerCase() === c.toLowerCase() ? theme.ink : theme.line,
                     }}
                   />
                 ))}
@@ -414,10 +415,10 @@ export default function StoreSettingsPage() {
           {/* Live storefront preview — mirrors the actual public store layout so
               vendors can see the real effect of their color choices, not just a swatch. */}
           <div className="mt-4">
-            <p className="text-[11px] font-medium mb-2" style={{ color: '#888888' }}>Live Preview</p>
+            <p className="text-[11px] font-medium mb-2" style={{ color: theme.muted }}>Live Preview</p>
             <div
               className="rounded-xl border overflow-hidden"
-              style={{ backgroundColor: form.backgroundColor, borderColor: '#2a2a2a' }}
+              style={{ backgroundColor: form.backgroundColor, borderColor: theme.line }}
             >
               {/* mock header */}
               <div className="flex items-center gap-3 p-4 border-b" style={{ borderColor: '#ffffff15' }}>
@@ -477,13 +478,13 @@ export default function StoreSettingsPage() {
           </div>
         </div>
 
-        <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
-          <p className="text-xs font-semibold mb-3" style={{ color: '#f5f5f5' }}>Delivery &amp; Payment</p>
+        <div className="border-t pt-5" style={{ borderColor: theme.line }}>
+          <p className="text-xs font-semibold mb-3" style={{ color: theme.ink }}>Delivery &amp; Payment</p>
 
           <div className="flex items-center justify-between gap-4 py-2.5">
             <div>
-              <p className="text-xs font-medium" style={{ color: '#f5f5f5' }}>Use Vendly Logistics</p>
-              <p className="text-[11px] mt-0.5" style={{ color: '#888888' }}>
+              <p className="text-xs font-medium" style={{ color: theme.ink }}>Use Vendly Logistics</p>
+              <p className="text-[11px] mt-0.5" style={{ color: theme.muted }}>
                 Off if you handle your own pickup/delivery — your orders won&apos;t go to the logistics dashboard.
                 {toggleSaving === 'useLogistics' && ' Saving…'}
               </p>
@@ -493,7 +494,7 @@ export default function StoreSettingsPage() {
               onClick={() => void saveToggle('useLogistics', !form.useLogistics)}
               disabled={toggleSaving === 'useLogistics'}
               className="shrink-0 w-11 h-6 rounded-full relative transition-colors disabled:opacity-60"
-              style={{ backgroundColor: form.useLogistics ? '#22c55e' : '#2a2a2a' }}
+              style={{ backgroundColor: form.useLogistics ? theme.green : theme.line }}
             >
               <span
                 className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"
@@ -504,8 +505,8 @@ export default function StoreSettingsPage() {
 
           <div className="flex items-center justify-between gap-4 py-2.5">
             <div>
-              <p className="text-xs font-medium" style={{ color: '#f5f5f5' }}>Allow Pay on Delivery</p>
-              <p className="text-[11px] mt-0.5" style={{ color: '#888888' }}>
+              <p className="text-xs font-medium" style={{ color: theme.ink }}>Allow Pay on Delivery</p>
+              <p className="text-[11px] mt-0.5" style={{ color: theme.muted }}>
                 Off to require payment upfront only — buyers will only see &quot;Pay Now&quot;.
                 {toggleSaving === 'allowPayOnDelivery' && ' Saving…'}
               </p>
@@ -515,7 +516,7 @@ export default function StoreSettingsPage() {
               onClick={() => void saveToggle('allowPayOnDelivery', !form.allowPayOnDelivery)}
               disabled={toggleSaving === 'allowPayOnDelivery'}
               className="shrink-0 w-11 h-6 rounded-full relative transition-colors disabled:opacity-60"
-              style={{ backgroundColor: form.allowPayOnDelivery ? '#22c55e' : '#2a2a2a' }}
+              style={{ backgroundColor: form.allowPayOnDelivery ? theme.green : theme.line }}
             >
               <span
                 className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"
@@ -525,41 +526,41 @@ export default function StoreSettingsPage() {
           </div>
         </div>
 
-        <div className="border-t pt-5" style={{ borderColor: '#2a2a2a' }}>
-          <p className="text-xs font-semibold mb-1" style={{ color: '#f5f5f5' }}>Bank Account (for Pay Now)</p>
-          <p className="text-[11px] mb-3" style={{ color: '#888888' }}>
+        <div className="border-t pt-5" style={{ borderColor: theme.line }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: theme.ink }}>Bank Account (for Pay Now)</p>
+          <p className="text-[11px] mb-3" style={{ color: theme.muted }}>
             Shown to buyers who choose &quot;Pay Now&quot; so they can transfer directly to you. Required for Pay Now to appear at checkout.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Bank Name
               <input
                 value={form.bankName}
                 onChange={(e) => setForm((f) => ({ ...f, bankName: e.target.value }))}
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                 placeholder="e.g. GTBank"
               />
             </label>
-            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: '#aaaaaa' }}>
+            <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
               Account Number
               <input
                 value={form.accountNumber}
                 onChange={(e) => setForm((f) => ({ ...f, accountNumber: e.target.value.replace(/[^0-9]/g, '') }))}
                 className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-                style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+                style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
                 placeholder="0123456789"
                 maxLength={10}
               />
             </label>
           </div>
-          <label className="flex flex-col gap-1.5 text-xs font-medium mt-4" style={{ color: '#aaaaaa' }}>
+          <label className="flex flex-col gap-1.5 text-xs font-medium mt-4" style={{ color: theme.muted }}>
             Account Name
             <input
               value={form.accountName}
               onChange={(e) => setForm((f) => ({ ...f, accountName: e.target.value }))}
               className="rounded-lg border px-3 py-2.5 text-sm outline-none"
-              style={{ backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+              style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
               placeholder="Name on the account"
             />
           </label>
@@ -568,7 +569,7 @@ export default function StoreSettingsPage() {
         {message && (
           <p
             className="text-xs"
-            style={{ color: message.type === 'success' ? '#22c55e' : '#ef4444' }}
+            style={{ color: message.type === 'success' ? theme.green : '#ef4444' }}
           >
             {message.text}
           </p>
@@ -580,7 +581,7 @@ export default function StoreSettingsPage() {
           }}
           disabled={saving}
           className="w-full py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-          style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+          style={{ backgroundColor: theme.green, color: theme.bg }}
         >
           {saving ? 'Saving…' : 'Save Settings'}
         </button>
@@ -613,9 +614,9 @@ function DeleteAccountSection() {
   };
 
   return (
-    <div className="border-t pt-6 mt-2" style={{ borderColor: '#2a2a2a' }}>
+    <div className="border-t pt-6 mt-2" style={{ borderColor: theme.line }}>
       <p className="text-xs font-semibold mb-1" style={{ color: '#ef4444' }}>Danger Zone</p>
-      <p className="text-xs mb-3" style={{ color: '#888888' }}>
+      <p className="text-xs mb-3" style={{ color: theme.muted }}>
         Permanently deletes your account, all products, orders, and data. This cannot be undone.
       </p>
       {!open ? (
@@ -637,7 +638,7 @@ function DeleteAccountSection() {
             onChange={(e) => setConfirm(e.target.value)}
             placeholder="DELETE MY ACCOUNT"
             className="w-full rounded-lg border px-3 py-2 text-sm outline-none font-mono"
-            style={{ backgroundColor: '#0d0d0d', borderColor: '#ef444460', color: '#f5f5f5' }}
+            style={{ backgroundColor: theme.bg, borderColor: '#ef444460', color: theme.ink }}
           />
           {error && <p className="text-xs" style={{ color: '#ef4444' }}>{error}</p>}
           <div className="flex gap-2">
@@ -650,7 +651,7 @@ function DeleteAccountSection() {
               {deleting ? 'Deleting…' : 'Permanently Delete'}
             </button>
             <button onClick={() => { setOpen(false); setConfirm(''); setError(null); }}
-              className="px-4 py-2 rounded-lg text-sm" style={{ backgroundColor: '#2a2a2a', color: '#888888' }}>
+              className="px-4 py-2 rounded-lg text-sm" style={{ backgroundColor: theme.line, color: theme.muted }}>
               Cancel
             </button>
           </div>

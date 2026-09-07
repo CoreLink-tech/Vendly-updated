@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { theme } from '@/lib/theme';
 
 interface LogisticsUser {
   id: string;
@@ -54,14 +55,14 @@ export default function AdminLogisticsUsersPage() {
   return (
     <div className="max-w-xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#f5f5f5' }}>Logistics Users</h1>
-        <p className="text-sm mt-1" style={{ color: '#888888' }}>Assign riders and logistics staff dashboard access.</p>
+        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>Logistics Users</h1>
+        <p className="text-sm mt-1" style={{ color: theme.muted }}>Assign riders and logistics staff dashboard access.</p>
       </div>
 
       {/* Assign form */}
-      <div className="rounded-xl border p-5 mb-6" style={{ backgroundColor: '#111111', borderColor: '#2a2a2a' }}>
-        <p className="text-sm font-semibold mb-3" style={{ color: '#f5f5f5' }}>Assign Logistics Role</p>
-        <p className="text-xs mb-3" style={{ color: '#888888' }}>The user must already have a Vendly account.</p>
+      <div className="rounded-xl border p-5 mb-6" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+        <p className="text-sm font-semibold mb-3" style={{ color: theme.ink }}>Assign Logistics Role</p>
+        <p className="text-xs mb-3" style={{ color: theme.muted }}>The user must already have a Vendly account.</p>
         <div className="flex gap-2">
           <input
             type="email"
@@ -69,43 +70,43 @@ export default function AdminLogisticsUsersPage() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="user@email.com"
             className="flex-1 rounded-lg border px-3 py-2.5 text-sm outline-none"
-            style={{ backgroundColor: '#1a1a1a', borderColor: '#2a2a2a', color: '#f5f5f5' }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.line, color: theme.ink }}
             onKeyDown={(e) => e.key === 'Enter' && void assign()}
           />
           <button
             onClick={() => void assign()}
             disabled={assigning || !email.trim()}
             className="px-4 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50"
-            style={{ backgroundColor: '#22c55e', color: '#0d0d0d' }}
+            style={{ backgroundColor: theme.green, color: theme.bg }}
           >
             {assigning ? '…' : 'Assign'}
           </button>
         </div>
         {message && (
-          <p className="text-xs mt-2" style={{ color: message.includes('now') ? '#22c55e' : '#ef4444' }}>{message}</p>
+          <p className="text-xs mt-2" style={{ color: message.includes('now') ? theme.green : '#ef4444' }}>{message}</p>
         )}
       </div>
 
       {/* Current logistics users */}
-      <div className="rounded-xl border overflow-hidden" style={{ backgroundColor: '#111111', borderColor: '#2a2a2a' }}>
-        <div className="px-5 py-4 border-b" style={{ borderColor: '#2a2a2a' }}>
-          <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>Current Logistics Users ({users.length})</p>
+      <div className="rounded-xl border overflow-hidden" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+        <div className="px-5 py-4 border-b" style={{ borderColor: theme.line }}>
+          <p className="text-sm font-semibold" style={{ color: theme.ink }}>Current Logistics Users ({users.length})</p>
         </div>
         {loading ? (
           <div className="flex items-center justify-center h-20">
-            <div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: '#22c55e', borderTopColor: 'transparent' }} />
+            <div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: theme.green, borderTopColor: 'transparent' }} />
           </div>
         ) : users.length === 0 ? (
           <div className="text-center py-10">
-            <p className="text-sm" style={{ color: '#555555' }}>No logistics users yet.</p>
+            <p className="text-sm" style={{ color: theme.faint }}>No logistics users yet.</p>
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: '#2a2a2a' }}>
+          <div className="divide-y" style={{ borderColor: theme.line }}>
             {users.map((u) => (
               <div key={u.id} className="flex items-center justify-between px-5 py-4">
                 <div>
-                  <p className="text-sm font-medium" style={{ color: '#f5f5f5' }}>{u.name}</p>
-                  <p className="text-xs" style={{ color: '#888888' }}>{u.email}</p>
+                  <p className="text-sm font-medium" style={{ color: theme.ink }}>{u.name}</p>
+                  <p className="text-xs" style={{ color: theme.muted }}>{u.email}</p>
                 </div>
                 <button
                   onClick={() => void remove(u.id)}
