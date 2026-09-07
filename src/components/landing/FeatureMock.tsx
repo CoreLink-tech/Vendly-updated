@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import Image from 'next/image';
 import { landing, displayFont } from '@/lib/landing-theme';
 
 const frameStyle = {
@@ -50,8 +51,16 @@ export function StorefrontMock() {
       </div>
       <div className="grid grid-cols-3 gap-2">
         {images.map((src, i) => (
-          <div key={i} className="aspect-square rounded-xl overflow-hidden">
-            <img src={src} alt="" className="w-full h-full object-cover" />
+          <div key={i} className="aspect-square rounded-xl overflow-hidden relative">
+            <Image
+              src={src}
+              alt=""
+              fill
+              sizes="100px"
+              quality={70}
+              loading="lazy"
+              className="object-cover"
+            />
           </div>
         ))}
       </div>
@@ -70,8 +79,16 @@ export function ProductsMock() {
       <div className="space-y-2.5">
         {rows.map((r) => (
           <div key={r.name} className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg shrink-0 overflow-hidden">
-              <img src={r.image} alt="" className="w-full h-full object-cover" />
+            <div className="w-8 h-8 rounded-lg shrink-0 overflow-hidden relative">
+              <Image
+                src={r.image}
+                alt=""
+                fill
+                sizes="32px"
+                quality={65}
+                loading="lazy"
+                className="object-cover"
+              />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-[11px] font-medium truncate" style={{ color: landing.ink }}>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { LandingNav } from '@/components/landing/LandingNav';
 import { HeroMockup } from '@/components/landing/HeroMockup';
 import { HowItWorksSteps } from '@/components/landing/HowItWorksSteps';
@@ -364,7 +365,13 @@ export default function HomePage() {
         style={{ borderTop: `1px solid ${landing.line}` }}
       >
         <a href="/">
-          <img src="/logo-full.png" alt="Vendly" className="h-9 w-auto" />
+          <Image
+            src="/logo-full.png"
+            alt="Vendly"
+            width={140}
+            height={36}
+            className="h-9 w-auto"
+          />
         </a>
         <p className="text-xs" style={{ color: landing.cocoa }}>
           © 2026 Vendly. All rights reserved.

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { landing } from '@/lib/landing-theme';
 
 const LINKS = [
@@ -21,7 +22,14 @@ export function LandingNav() {
       >
         <div className="max-w-6xl mx-auto px-6 md:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
-            <img src="/logo-full.png" alt="Vendly" className="h-9 w-auto" />
+            <Image
+              src="/logo-full.png"
+              alt="Vendly"
+              width={140}
+              height={36}
+              priority
+              className="h-9 w-auto"
+            />
           </Link>
 
           <div className="hidden md:flex items-center gap-9">

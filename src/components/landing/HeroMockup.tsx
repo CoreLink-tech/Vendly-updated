@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { landing, displayFont } from '@/lib/landing-theme';
 
 // The hero visual is Vendly's own product UI: a phone running a live
@@ -67,17 +68,21 @@ export function HeroMockup() {
           </div>
           {/* product grid */}
           <div className="flex-1 bg-[#FFFEFB] rounded-t-[18px] px-2.5 pt-3 grid grid-cols-2 gap-2 content-start overflow-hidden">
-            {PRODUCTS.map((p) => (
+            {PRODUCTS.map((p, index) => (
               <div
                 key={p.name}
                 className="rounded-[14px] overflow-hidden"
                 style={{ border: `1px solid ${landing.line}` }}
               >
                 <div className="h-16 relative overflow-hidden">
-                  <img
+                  <Image
                     src={p.image}
                     alt={p.name}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    fill
+                    sizes="120px"
+                    quality={75}
+                    priority={index < 2}
+                    className="object-cover"
                   />
                 </div>
                 <div className="px-2 py-1.5">
@@ -110,11 +115,15 @@ export function HeroMockup() {
         className="hidden sm:flex absolute left-[-8%] top-[14%] w-[150px] rounded-[20px] p-3 items-start gap-2.5 bg-white shadow-[0_18px_36px_-12px_rgba(22,31,26,0.18)]"
         style={{ border: `1px solid ${landing.line}` }}
       >
-        <div className="w-9 h-9 rounded-lg shrink-0 overflow-hidden">
-          <img
+        <div className="w-9 h-9 rounded-lg shrink-0 overflow-hidden relative">
+          <Image
             src="/products/slides.jpg"
             alt="Ankara Slides"
-            className="w-full h-full object-cover"
+            fill
+            sizes="36px"
+            quality={70}
+            priority
+            className="object-cover"
           />
         </div>
         <div className="min-w-0">
