@@ -1,4 +1,4 @@
-import { landing } from '@/lib/landing-theme';
+import { theme } from '@/lib/theme';
 
 // A thin striped bar echoing the awning on the Vendly logo's shopping-bag
 // icon. Used as a structural device throughout the landing page in place
@@ -9,7 +9,7 @@ export function AwningStripe({ className = '', height = 10 }: { className?: stri
       className={className}
       style={{
         height,
-        backgroundImage: `repeating-linear-gradient(-35deg, ${landing.orange} 0px, ${landing.orange} 16px, ${landing.paper} 16px, ${landing.paper} 20px, ${landing.green} 20px, ${landing.green} 36px, ${landing.paper} 36px, ${landing.paper} 40px)`,
+        backgroundImage: `repeating-linear-gradient(-35deg, ${theme.orange} 0px, ${theme.orange} 16px, ${theme.bg} 16px, ${theme.bg} 20px, ${theme.green} 20px, ${theme.green} 36px, ${theme.bg} 36px, ${theme.bg} 40px)`,
       }}
     />
   );

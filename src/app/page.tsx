@@ -13,7 +13,7 @@ import {
   AnalyticsMock,
   CustomersMock,
 } from '@/components/landing/FeatureMock';
-import { landing, displayFont } from '@/lib/landing-theme';
+import { theme, displayFont } from '@/lib/theme';
 
 // Simple inline icons (no extra deps needed beyond what's already in the project)
 function IconStore() {
@@ -131,7 +131,7 @@ export default function HomePage() {
   return (
     <main
       className="min-h-screen pb-24 md:pb-0"
-      style={{ backgroundColor: landing.paper, color: landing.ink }}
+      style={{ backgroundColor: theme.bg, color: theme.ink }}
     >
       <LandingNav />
 
@@ -148,7 +148,7 @@ export default function HomePage() {
           </h1>
           <p
             className="text-base md:text-lg max-w-md mb-9 leading-relaxed"
-            style={{ color: landing.cocoa }}
+            style={{ color: theme.cocoa }}
           >
             Create your storefront, list products, accept orders, manage payments, and coordinate
             delivery — all from one simple link.
@@ -157,19 +157,19 @@ export default function HomePage() {
             <Link
               href="/account/signup"
               className="text-center text-sm font-semibold px-8 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-8px_rgba(11,94,56,0.4)]"
-              style={{ backgroundColor: landing.green, color: landing.paper }}
+              style={{ backgroundColor: theme.green, color: theme.bg }}
             >
               Create your store
             </Link>
             <a
               href="#how-it-works"
               className="text-center text-sm font-medium px-8 py-3.5 rounded-full transition-colors duration-200 hover:bg-black/[0.03]"
-              style={{ border: `1px solid ${landing.line}`, color: landing.ink }}
+              style={{ border: `1px solid ${theme.line}`, color: theme.ink }}
             >
               See how it works
             </a>
           </div>
-          <p className="text-xs tracking-wide" style={{ color: landing.cocoa }}>
+          <p className="text-xs tracking-wide" style={{ color: theme.cocoa }}>
             3 days free · ₦4,000/month · No commission
           </p>
         </div>
@@ -189,7 +189,7 @@ export default function HomePage() {
             >
               Everything a storefront needs
             </h2>
-            <p className="text-base leading-relaxed" style={{ color: landing.cocoa }}>
+            <p className="text-base leading-relaxed" style={{ color: theme.cocoa }}>
               Six things vendors ask for most, built in from day one.
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function HomePage() {
                 <div className={i % 2 === 1 ? 'lg:order-2' : ''}>
                   <div
                     className="w-11 h-11 rounded-[14px] flex items-center justify-center mb-5"
-                    style={{ backgroundColor: landing.greenSoft, color: landing.green }}
+                    style={{ backgroundColor: theme.greenSoft, color: theme.green }}
                   >
                     <f.Icon />
                   </div>
@@ -215,7 +215,7 @@ export default function HomePage() {
                   </h3>
                   <p
                     className="text-base leading-relaxed max-w-sm"
-                    style={{ color: landing.cocoa }}
+                    style={{ color: theme.cocoa }}
                   >
                     {f.desc}
                   </p>
@@ -233,7 +233,7 @@ export default function HomePage() {
       <section
         id="how-it-works"
         className="px-6 md:px-8 py-20 md:py-28"
-        style={{ backgroundColor: landing.paperDim }}
+        style={{ backgroundColor: theme.bgDim }}
       >
         <div className="max-w-6xl mx-auto">
           <div className="mb-14 md:mb-16 max-w-xl">
@@ -243,7 +243,7 @@ export default function HomePage() {
             >
               From sign-up to your first order
             </h2>
-            <p className="text-base leading-relaxed" style={{ color: landing.cocoa }}>
+            <p className="text-base leading-relaxed" style={{ color: theme.cocoa }}>
               Four steps. Most vendors are live the same day.
             </p>
           </div>
@@ -266,8 +266,8 @@ export default function HomePage() {
                 key={c}
                 className="text-sm font-medium px-5 py-2.5 rounded-full transition-colors duration-200 hover:bg-black/[0.03]"
                 style={{
-                  border: `1px solid ${landing.line}`,
-                  color: landing.ink,
+                  border: `1px solid ${theme.line}`,
+                  color: theme.ink,
                 }}
               >
                 {c}
@@ -286,24 +286,24 @@ export default function HomePage() {
           >
             One price. Everything included.
           </h2>
-          <p className="mb-14 text-base max-w-md mx-auto" style={{ color: landing.cocoa }}>
+          <p className="mb-14 text-base max-w-md mx-auto" style={{ color: theme.cocoa }}>
             No commission, no hidden fees, no separate plan to unlock features.
           </p>
 
           <div
             className="rounded-[24px] p-8 md:p-12 text-left max-w-md mx-auto relative landing-soft-shadow"
-            style={{ backgroundColor: landing.greenDeep }}
+            style={{ backgroundColor: theme.greenDeep }}
           >
             <span
               className="inline-block text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6"
-              style={{ backgroundColor: landing.orange, color: landing.paper }}
+              style={{ backgroundColor: theme.orange, color: theme.bg }}
             >
               3 days free
             </span>
             <div className="flex items-end gap-1.5 mb-8">
               <span
                 className="text-5xl md:text-[3.25rem] font-semibold tracking-tight"
-                style={{ ...displayFont, color: landing.paper }}
+                style={{ ...displayFont, color: theme.bg }}
               >
                 ₦4,000
               </span>
@@ -319,11 +319,11 @@ export default function HomePage() {
                 <li
                   key={f}
                   className="flex items-center gap-3 text-sm"
-                  style={{ color: landing.paper }}
+                  style={{ color: theme.bg }}
                 >
                   <span
                     className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold"
-                    style={{ backgroundColor: landing.orange, color: landing.paper }}
+                    style={{ backgroundColor: theme.orange, color: theme.bg }}
                   >
                     ✓
                   </span>
@@ -334,7 +334,7 @@ export default function HomePage() {
             <Link
               href="/account/signup"
               className="block text-center text-sm font-semibold py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
-              style={{ backgroundColor: landing.paper, color: landing.greenDeep }}
+              style={{ backgroundColor: theme.bg, color: theme.greenDeep }}
             >
               Create your store
             </Link>
@@ -353,7 +353,7 @@ export default function HomePage() {
         <Link
           href="/account/signup"
           className="inline-flex items-center text-sm font-semibold px-9 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-8px_rgba(11,94,56,0.4)]"
-          style={{ backgroundColor: landing.green, color: landing.paper }}
+          style={{ backgroundColor: theme.green, color: theme.bg }}
         >
           Create your store
         </Link>
@@ -363,7 +363,7 @@ export default function HomePage() {
       <AwningStripe height={4} />
       <footer
         className="px-6 md:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4"
-        style={{ borderTop: `1px solid ${landing.line}` }}
+        style={{ borderTop: `1px solid ${theme.line}` }}
       >
         <a href="/">
           <Image
@@ -374,14 +374,14 @@ export default function HomePage() {
             className="h-9 w-auto"
           />
         </a>
-        <p className="text-xs" style={{ color: landing.cocoa }}>
+        <p className="text-xs" style={{ color: theme.cocoa }}>
           © 2026 Vendly. All rights reserved.
         </p>
         <div className="flex items-center gap-6">
-          <Link href="/account/signin" className="text-xs" style={{ color: landing.cocoa }}>
+          <Link href="/account/signin" className="text-xs" style={{ color: theme.cocoa }}>
             Sign in
           </Link>
-          <Link href="/account/signup" className="text-xs" style={{ color: landing.cocoa }}>
+          <Link href="/account/signup" className="text-xs" style={{ color: theme.cocoa }}>
             Sign up
           </Link>
         </div>

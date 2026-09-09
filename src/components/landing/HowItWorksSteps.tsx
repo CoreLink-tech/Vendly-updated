@@ -1,4 +1,4 @@
-import { landing, displayFont } from '@/lib/landing-theme';
+import { theme, displayFont } from '@/lib/theme';
 
 const STEPS = [
   {
@@ -25,7 +25,7 @@ export function HowItWorksSteps() {
       {/* Desktop horizontal connector line */}
       <div
         className="hidden md:block absolute top-5 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-px"
-        style={{ backgroundColor: landing.line }}
+        style={{ backgroundColor: theme.line }}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-10">
@@ -37,9 +37,9 @@ export function HowItWorksSteps() {
                 className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold"
                 style={{
                   ...displayFont,
-                  backgroundColor: landing.green,
-                  color: landing.paper,
-                  boxShadow: '0 0 0 6px ' + landing.paperDim,
+                  backgroundColor: theme.green,
+                  color: theme.bg,
+                  boxShadow: '0 0 0 6px ' + theme.bgDim,
                 }}
               >
                 {i + 1}
@@ -50,15 +50,15 @@ export function HowItWorksSteps() {
             {i < STEPS.length - 1 && (
               <div
                 className="md:hidden absolute left-5 top-10 bottom-[-24px] w-px -translate-x-1/2"
-                style={{ backgroundColor: landing.line }}
+                style={{ backgroundColor: theme.line }}
               />
             )}
 
             <div className="pt-0.5 md:pt-6 md:text-center">
-              <h3 className="text-base font-semibold mb-1.5" style={{ color: landing.ink }}>
+              <h3 className="text-base font-semibold mb-1.5" style={{ color: theme.ink }}>
                 {s.title}
               </h3>
-              <p className="text-sm leading-relaxed max-w-[220px] md:mx-auto" style={{ color: landing.cocoa }}>
+              <p className="text-sm leading-relaxed max-w-[220px] md:mx-auto" style={{ color: theme.cocoa }}>
                 {s.desc}
               </p>
             </div>

@@ -19,10 +19,12 @@ export const theme = {
   ink: '#161F1A',          // primary text
   muted: '#5C6259',        // secondary text
   faint: '#8A9088',        // tertiary / placeholders
+  cocoa: '#5B4B3B',        // warm brown, alt secondary text on paper (landing)
 
   // Borders & lines
   line: '#E7E5DE',
   lineStrong: '#D4D1C7',
+  lineOnDark: 'rgba(255, 254, 251, 0.24)', // hairline border on dark sections
 
   // Status
   success: '#0B5E38',
