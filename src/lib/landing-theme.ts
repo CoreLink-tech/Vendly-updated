@@ -11,9 +11,12 @@ export const landing = {
   orangeDeep: '#C9600A',
   green: '#128A4B',     // storefront green — secondary accent
   greenDeep: '#0B5E38',
+  greenSoft: '#E3F1E8', // soft green tint for badges/bars on paper
+  orangeSoft: '#FCE9D2', // soft orange tint for badges on paper
   sky: '#2AA6E0',       // logo's swoosh blue — used sparingly
   cocoa: '#5B4B3B',     // muted warm brown for secondary text on paper
   line: '#E9DEC7',      // hairline border tone on paper
+  lineOnDark: 'rgba(255, 252, 244, 0.24)', // hairline border tone on dark sections
 } as const;
 
 export const displayFont = { fontFamily: 'var(--font-fraunces), Georgia, serif' };

@@ -70,8 +70,8 @@ export default function StoreSettingsPage() {
     bankName: '',
     accountNumber: '',
     accountName: '',
-    primaryColor: theme.green,
-    backgroundColor: theme.bg,
+    primaryColor: theme.green as string,
+    backgroundColor: theme.bg as string,
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -357,7 +357,7 @@ export default function StoreSettingsPage() {
                   onChange={(e) => setForm((f) => ({ ...f, primaryColor: e.target.value }))}
                   className="flex-1 rounded-lg border px-3 py-2.5 text-sm outline-none font-mono"
                   style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
-                  placeholder=theme.green
+                  placeholder={theme.green}
                 />
               </div>
               <div className="flex flex-wrap gap-2 mt-1">
@@ -391,7 +391,7 @@ export default function StoreSettingsPage() {
                   onChange={(e) => setForm((f) => ({ ...f, backgroundColor: e.target.value }))}
                   className="flex-1 rounded-lg border px-3 py-2.5 text-sm outline-none font-mono"
                   style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
-                  placeholder=theme.bg
+                  placeholder={theme.bg}
                 />
               </div>
               <div className="flex flex-wrap gap-2 mt-1">

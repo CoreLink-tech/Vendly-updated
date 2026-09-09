@@ -1,5 +1,6 @@
-export default function SupportPage() {
 import { theme } from '@/lib/theme';
+
+export default function SupportPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-8">

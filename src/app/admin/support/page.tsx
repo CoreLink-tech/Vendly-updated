@@ -1,5 +1,6 @@
-export default function AdminSupportPage() {
 import { theme } from '@/lib/theme';
+
+export default function AdminSupportPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
