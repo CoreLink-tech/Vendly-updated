@@ -3,7 +3,30 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { SITE_URL } from '@/lib/site';
-import { theme } from '@/lib/theme';
+import { PageHeader } from '@/components/dashboard/PageHeader';
+import { StatCard } from '@/components/dashboard/StatCard';
+import { StatusBadge } from '@/components/dashboard/StatusBadge';
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyMedia,
+} from '@/components/ui/empty';
+import {
+  Package,
+  ShoppingBag,
+  Wallet,
+  Clock,
+  Eye,
+  Plus,
+  Store,
+  Share2,
+  Copy,
+  Check,
+} from 'lucide-react';
 
 interface Stats {
   totalProducts: number;
@@ -22,33 +45,21 @@ interface Order {
   createdAt: string;
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  new: '#3b82f6',
-  accepted: '#8b5cf6',
-  preparing_package: theme.orange,
-  ready_for_pickup: '#f97316',
-  logistics_assigned: '#06b6d4',
-  picked_up: '#6366f1',
-  in_transit: theme.green,
-  delivered: theme.green,
-  completed: theme.green,
-};
+interface ProductAnalytic {
+  productId: string;
+  name: string;
+  stock: number;
+  totalUnitsSold: number;
+  totalRevenue: number;
+}
 
-const STATUS_LABELS: Record<string, string> = {
-  new: 'New Order',
-  accepted: 'Accepted',
-  preparing_package: 'Preparing',
-  ready_for_pickup: 'Ready for Pickup',
-  logistics_assigned: 'Logistics Assigned',
-  picked_up: 'Picked Up',
-  in_transit: 'In Transit',
-  delivered: 'Delivered',
-  completed: 'Completed',
-};
-
+function formatCurrency(n: number) {
+  return `₦${Number(n).toLocaleString('en-NG', { minimumFractionDigits: 0 })}`;
+}
 
 function StoreLinkBanner() {
   const [storeUrl, setStoreUrl] = useState('');
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetch('/api/vendor/profile')
@@ -64,109 +75,157 @@ function StoreLinkBanner() {
   if (!storeUrl) return null;
 
   return (
-    <div
-      className="flex items-center gap-3 p-3 rounded-lg border mb-6"
-      style={{ backgroundColor: theme.surface, borderColor: theme.line }}
-    >
-      <span className="text-xs shrink-0" style={{ color: theme.muted }}>Your store:</span>
+    <Card className="mb-6 flex-row items-center gap-3 p-3">
+      <Store className="size-4 shrink-0 text-muted-foreground" />
+      <span className="shrink-0 text-xs text-muted-foreground">Your store:</span>
       <a
         href={storeUrl}
         target="_blank"
-        className="text-xs font-mono truncate flex-1"
-        style={{ color: theme.green }}
+        rel="noopener noreferrer"
+        className="flex-1 truncate font-mono text-xs text-primary"
       >
         {storeUrl}
       </a>
       <button
-        onClick={() => { void navigator.clipboard.writeText(storeUrl); }}
-        className="shrink-0 text-xs px-2 py-1 rounded border"
-        style={{ borderColor: theme.line, color: theme.muted }}
+        onClick={() => {
+          void navigator.clipboard.writeText(storeUrl);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        }}
+        className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
       >
-        Copy
+        {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
+        {copied ? 'Copied' : 'Copy'}
       </button>
+    </Card>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div>
+      <div className="mb-8">
+        <Skeleton className="h-8 w-40" />
+        <Skeleton className="mt-2 h-4 w-64" />
+      </div>
+      <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-24 rounded-xl" />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <Skeleton className="h-72 rounded-xl lg:col-span-2" />
+        <Skeleton className="h-72 rounded-xl" />
+      </div>
     </div>
   );
 }
 
+const QUICK_ACTIONS = [
+  {
+    href: '/dashboard/products',
+    label: 'Add Product',
+    desc: 'Expand your catalogue',
+    icon: Plus,
+  },
+  {
+    href: '/dashboard/store-settings',
+    label: 'Edit Store',
+    desc: 'Update your store info',
+    icon: Store,
+  },
+  {
+    href: '/dashboard/referrals',
+    label: 'Refer & Earn',
+    desc: 'Share your referral link',
+    icon: Share2,
+  },
+];
+
 export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [analytics, setAnalytics] = useState<ProductAnalytic[]>([]);
   const [loading, setLoading] = useState(true);
   const [storeViews, setStoreViews] = useState<{ today: number; week: number; total: number } | null>(null);
 
   useEffect(() => {
     fetch('/api/vendor/stats')
       .then((r) => r.json())
-      .then((data) => { setStats(data as Stats); setLoading(false); })
+      .then((data) => {
+        setStats(data as Stats);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
 
     fetch('/api/vendor/analytics')
       .then((r) => r.json())
       .then((data) => {
-        const d = data as { storeViews?: { today: number; week: number; total: number } };
+        const d = data as {
+          storeViews?: { today: number; week: number; total: number };
+          analytics?: ProductAnalytic[];
+        };
         if (d.storeViews) setStoreViews(d.storeViews);
+        if (d.analytics) setAnalytics(d.analytics);
       })
       .catch(() => {});
   }, []);
 
-  const formatCurrency = (n: number) =>
-    `₦${Number(n).toLocaleString('en-NG', { minimumFractionDigits: 0 })}`;
+  if (loading) return <DashboardSkeleton />;
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div
-          className="w-5 h-5 border-2 rounded-full animate-spin"
-          style={{ borderColor: theme.green, borderTopColor: 'transparent' }}
-        />
-      </div>
-    );
-  }
+  const topProducts = [...analytics]
+    .sort((a, b) => Number(b.totalRevenue) - Number(a.totalRevenue))
+    .slice(0, 5)
+    .filter((p) => Number(p.totalRevenue) > 0 || Number(p.totalUnitsSold) > 0);
+
+  const lowStock = analytics
+    .filter((p) => Number(p.stock) > 0 && Number(p.stock) <= 5)
+    .sort((a, b) => Number(a.stock) - Number(b.stock))
+    .slice(0, 5);
 
   return (
     <div>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
-          Dashboard
-        </h1>
-        <p className="text-sm mt-1" style={{ color: theme.muted }}>
-          Welcome back — here&apos;s an overview of your store.
-        </p>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        description="Welcome back — here's an overview of your store."
+      />
 
-      {/* Store link */}
       <StoreLinkBanner />
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-        {[
-          { label: 'Total Products', value: stats?.totalProducts ?? 0, unit: '', href: '/dashboard/products' },
-          { label: 'New Orders', value: stats?.pendingOrders ?? 0, unit: '', href: '/dashboard/orders' },
-          { label: 'Total Orders', value: stats?.totalOrders ?? 0, unit: '', href: '/dashboard/orders' },
-          { label: 'Revenue', value: formatCurrency(stats?.revenue ?? 0), unit: '', href: '/dashboard/orders' },
-        ].map((card) => (
-          <Link
-            key={card.label}
-            href={card.href}
-            className="p-5 rounded-xl border block transition-colors"
-            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
-          >
-            <p className="text-xs font-medium mb-2" style={{ color: theme.muted }}>
-              {card.label}
-            </p>
-            <p className="text-2xl font-semibold tracking-tight" style={{ color: theme.ink }}>
-              {card.value}
-            </p>
-          </Link>
-        ))}
+      <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <StatCard
+          label="Revenue"
+          value={formatCurrency(stats?.revenue ?? 0)}
+          href="/dashboard/orders"
+          icon={<Wallet className="size-4" />}
+        />
+        <StatCard
+          label="Total Orders"
+          value={stats?.totalOrders ?? 0}
+          href="/dashboard/orders"
+          icon={<ShoppingBag className="size-4" />}
+        />
+        <StatCard
+          label="New Orders"
+          value={stats?.pendingOrders ?? 0}
+          trend={stats?.pendingOrders ? 'Needs your attention' : undefined}
+          href="/dashboard/orders"
+          icon={<Clock className="size-4" />}
+        />
+        <StatCard
+          label="Products"
+          value={stats?.totalProducts ?? 0}
+          href="/dashboard/products"
+          icon={<Package className="size-4" />}
+        />
       </div>
 
       {/* Store views */}
       {storeViews !== null && (
-        <div className="rounded-xl border p-4 mb-8" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
-          <div className="flex items-center gap-2 mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" style={{ color: theme.green }}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <span className="text-xs font-semibold" style={{ color: theme.ink }}>Store Views</span>
+        <Card className="mb-6 p-4">
+          <div className="mb-3 flex items-center gap-2">
+            <Eye className="size-4 text-primary" />
+            <span className="text-xs font-semibold text-foreground">Store Views</span>
           </div>
           <div className="grid grid-cols-3 gap-3">
             {[
@@ -174,120 +233,132 @@ export default function DashboardPage() {
               { label: 'This Week', value: storeViews.week },
               { label: 'All Time', value: storeViews.total },
             ].map((v) => (
-              <div key={v.label} className="rounded-lg p-3 text-center" style={{ backgroundColor: theme.surface }}>
-                <p className="text-xl font-bold" style={{ color: theme.green }}>{v.value.toLocaleString()}</p>
-                <p className="text-[11px] mt-0.5" style={{ color: theme.muted }}>{v.label}</p>
+              <div key={v.label} className="rounded-lg p-2 text-center">
+                <p className="text-xl font-bold text-primary">{v.value.toLocaleString()}</p>
+                <p className="mt-0.5 text-[11px] text-muted-foreground">{v.label}</p>
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Quick actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <Link
-          href="/dashboard/products"
-          className="flex items-center gap-4 p-4 rounded-xl border transition-colors"
-          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
-        >
-          <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
-          <div>
-            <p className="text-sm font-semibold" style={{ color: theme.ink }}>
-              Add Product
-            </p>
-            <p className="text-xs" style={{ color: theme.muted }}>
-              Expand your catalogue
-            </p>
-          </div>
-        </Link>
-        <Link
-          href="/dashboard/store-settings"
-          className="flex items-center gap-4 p-4 rounded-xl border transition-colors"
-          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
-        >
-          <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
-          <div>
-            <p className="text-sm font-semibold" style={{ color: theme.ink }}>
-              Edit Store
-            </p>
-            <p className="text-xs" style={{ color: theme.muted }}>
-              Update your store info
-            </p>
-          </div>
-        </Link>
-        <Link
-          href="/dashboard/referrals"
-          className="flex items-center gap-4 p-4 rounded-xl border transition-colors"
-          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
-        >
-          <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
-          <div>
-            <p className="text-sm font-semibold" style={{ color: theme.ink }}>
-              Refer & Earn
-            </p>
-            <p className="text-xs" style={{ color: theme.muted }}>
-              Share your referral link
-            </p>
-          </div>
-        </Link>
+      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+        {QUICK_ACTIONS.map(({ href, label, desc, icon: Icon }) => (
+          <Link key={href} href={href}>
+            <Card className="flex-row items-center gap-4 p-4 transition-colors hover:border-primary/40">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-primary">
+                <Icon className="size-4" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-foreground">{label}</p>
+                <p className="text-xs text-muted-foreground">{desc}</p>
+              </div>
+            </Card>
+          </Link>
+        ))}
       </div>
 
-      {/* Recent orders */}
-      <div
-        className="rounded-xl border"
-        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
-      >
-        <div
-          className="flex items-center justify-between px-6 py-4 border-b"
-          style={{ borderColor: theme.line }}
-        >
-          <h2 className="text-sm font-semibold" style={{ color: theme.ink }}>
-            Recent Orders
-          </h2>
-          <Link href="/dashboard/orders" className="text-xs" style={{ color: theme.green }}>
-            View all →
-          </Link>
-        </div>
-        {!stats?.recentOrders?.length ? (
-          <div className="text-center py-12">
-            <p className="text-sm" style={{ color: theme.faint }}>
-              No orders yet. Share your store link to start selling!
-            </p>
+      {/* Top products + Recent orders */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        {/* Top products (real analytics data, sorted by revenue) */}
+        <Card className="gap-0 p-0 lg:col-span-2">
+          <div className="flex items-center justify-between border-b border-border px-6 py-4">
+            <h2 className="text-sm font-semibold text-foreground">Top Products</h2>
+            <Link href="/dashboard/analytics" className="text-xs text-primary">
+              View all →
+            </Link>
           </div>
-        ) : (
-          <div className="divide-y" style={{ borderColor: theme.line }}>
-            {stats.recentOrders.map((order) => (
-              <div key={order.id} className="flex items-center justify-between px-6 py-4">
-                <div>
-                  <p className="text-sm font-medium" style={{ color: theme.ink }}>
-                    {order.orderNumber}
-                  </p>
-                  <p className="text-xs mt-0.5" style={{ color: theme.muted }}>
-                    {order.customerName}
-                  </p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs"
-                    style={{ borderColor: theme.line }}
-                  >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full"
-                      style={{ backgroundColor: STATUS_COLORS[order.status] || theme.muted }}
-                    />
-                    <span style={{ color: theme.muted }}>
-                      {STATUS_LABELS[order.status] || order.status}
-                    </span>
+          {topProducts.length === 0 ? (
+            <Empty className="border-none py-10">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <Package />
+                </EmptyMedia>
+                <EmptyTitle>No sales data yet</EmptyTitle>
+                <EmptyDescription>
+                  Top products by revenue will show up here once you make your first sale.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          ) : (
+            <div className="divide-y divide-border">
+              {topProducts.map((p) => (
+                <div key={p.productId} className="flex items-center justify-between px-6 py-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-foreground">{p.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {p.totalUnitsSold} sold
+                      {Number(p.stock) <= 5 && (
+                        <span className="text-destructive"> · low stock ({p.stock} left)</span>
+                      )}
+                    </p>
                   </div>
-                  <span className="text-sm font-semibold" style={{ color: theme.ink }}>
-                    ₦{Number(order.total).toLocaleString()}
+                  <span className="shrink-0 text-sm font-semibold text-foreground">
+                    {formatCurrency(p.totalRevenue)}
                   </span>
                 </div>
+              ))}
+            </div>
+          )}
+        </Card>
+
+        {/* Recent orders */}
+        <Card className="gap-0 p-0">
+          <div className="flex items-center justify-between border-b border-border px-6 py-4">
+            <h2 className="text-sm font-semibold text-foreground">Recent Orders</h2>
+            <Link href="/dashboard/orders" className="text-xs text-primary">
+              View all →
+            </Link>
+          </div>
+          {!stats?.recentOrders?.length ? (
+            <Empty className="border-none py-10">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <ShoppingBag />
+                </EmptyMedia>
+                <EmptyTitle>No orders yet</EmptyTitle>
+                <EmptyDescription>
+                  Share your store link to start selling.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          ) : (
+            <div className="divide-y divide-border">
+              {stats.recentOrders.map((order) => (
+                <div key={order.id} className="px-6 py-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-foreground">{order.orderNumber}</p>
+                    <span className="text-sm font-semibold text-foreground">
+                      ₦{Number(order.total).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="mt-1 flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground">{order.customerName}</p>
+                    <StatusBadge status={order.status} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {lowStock.length > 0 && (
+        <Card className="mt-4 gap-0 p-0">
+          <div className="border-b border-border px-6 py-4">
+            <h2 className="text-sm font-semibold text-foreground">Low Stock</h2>
+          </div>
+          <div className="divide-y divide-border">
+            {lowStock.map((p) => (
+              <div key={p.productId} className="flex items-center justify-between px-6 py-3">
+                <p className="text-sm font-medium text-foreground">{p.name}</p>
+                <span className="text-xs font-semibold text-destructive">{p.stock} left</span>
               </div>
             ))}
           </div>
-        )}
-      </div>
+        </Card>
+      )}
     </div>
   );
 }
