@@ -45,7 +45,19 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     location?: string;
     address?: string;
   } | null>(null);
+  const [subscription, setSubscription] = useState<{
+    plan: string;
+    status: string;
+    endDate?: string;
+    trialEnd?: string;
+  } | null>(null);
   const [isApprovedAmbassador, setIsApprovedAmbassador] = useState(false);
+
+  function daysRemaining(dateStr?: string) {
+    if (!dateStr) return null;
+    const diff = new Date(dateStr).getTime() - Date.now();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  }
 
   useEffect(() => {
     async function load() {
@@ -57,6 +69,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       const data = (await res.json()) as {
         user: { name: string; email: string; role?: string };
         vendor: { businessName: string; status: string; slug: string; phone?: string; location?: string; address?: string } | null;
+        subscription: { plan: string; status: string; endDate?: string; trialEnd?: string } | null;
         ambassadorStatus: string | null;
       };
 
@@ -77,6 +90,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
       setUser(data.user);
       setVendor(data.vendor);
+      setSubscription(data.subscription);
       setIsApprovedAmbassador(data.ambassadorStatus === 'approved');
 
       let currentVendor = data.vendor;
@@ -92,8 +106,10 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         const res2 = await fetch('/api/user/me');
         const data2 = (await res2.json()) as {
           vendor: { businessName: string; status: string; slug: string; phone?: string; location?: string; address?: string } | null;
+          subscription: { plan: string; status: string; endDate?: string; trialEnd?: string } | null;
         };
         setVendor(data2.vendor);
+        setSubscription(data2.subscription);
         currentVendor = data2.vendor;
       }
 
@@ -166,10 +182,25 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                     className="w-1.5 h-1.5 rounded-full"
                     style={{ backgroundColor: vendor.status === 'active' ? theme.green : theme.orange }}
                   />
-                  <span className="text-[11px] capitalize" style={{ color: theme.muted }}>
-                    {vendor.status}
+                  <span className="text-[11px]" style={{ color: theme.muted }}>
+                    {vendor.status === 'active' ? 'Active' : 'Inactive'}
                   </span>
                 </div>
+                {vendor.status === 'active' && subscription?.status === 'active' && (() => {
+                  const remaining = daysRemaining(subscription.trialEnd || subscription.endDate);
+                  if (remaining === null) return null;
+                  const expiringSoon = remaining <= 3;
+                  return (
+                    <p
+                      className="text-[11px] mt-1"
+                      style={{ color: expiringSoon ? theme.orange : theme.muted }}
+                    >
+                      {remaining > 0
+                        ? `${remaining} day${remaining === 1 ? '' : 's'} left on your ${subscription.plan === 'trial' ? 'free trial' : 'plan'}`
+                        : 'Plan expires today'}
+                    </p>
+                  );
+                })()}
               </div>
             </div>
             {vendor.slug && (
@@ -288,7 +319,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             className="mx-4 mt-4 px-4 py-3 rounded-2xl border flex items-center justify-between gap-3 text-sm"
             style={{ backgroundColor: theme.greenSoft, borderColor: theme.line }}
           >
-            <p style={{ color: theme.muted }}>Your store is pending activation.</p>
+            <p style={{ color: theme.muted }}>Your store is inactive — activate a plan to go live.</p>
             <Link
               href="/dashboard/subscription"
               className="text-xs font-semibold shrink-0"
