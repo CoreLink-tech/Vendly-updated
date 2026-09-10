@@ -35,15 +35,18 @@ export async function POST(request: Request) {
   const vendorId = await getVendorId(session.user.id);
   if (!vendorId) return Response.json({ error: 'Vendor profile not found' }, { status: 404 });
 
-  const body = await request.json() as { name: string; description?: string; price: number; category?: string; stock?: number; images?: string[] };
+  const body = await request.json() as { name: string; description?: string; price: number; compareAtPrice?: number | null; category?: string; stock?: number; images?: string[] };
   if (!body.name || !body.price) return Response.json({ error: 'Name and price are required' }, { status: 400 });
   if (body.images && body.images.length > 8) {
     return Response.json({ error: 'Maximum 8 images per product' }, { status: 400 });
   }
+  if (body.compareAtPrice != null && body.compareAtPrice <= body.price) {
+    return Response.json({ error: 'Compare-at price must be higher than the price' }, { status: 400 });
+  }
 
   const { data: product } = await supabase.from('products').insert({
     vendorId, name: body.name, description: body.description || '',
-    price: body.price, category: body.category || '', stock: body.stock || 0, status: 'active',
+    price: body.price, compareAtPrice: body.compareAtPrice ?? null, category: body.category || '', stock: body.stock || 0, status: 'active',
   }).select().single();
 
   if (body.images?.length && product) {

@@ -8,10 +8,13 @@ interface Product {
   name: string;
   description: string;
   price: number;
+  compareAtPrice: number | null;
   category: string;
   stock: number;
   images: string[];
   createdAt: string;
+  avgRating?: number | null;
+  reviewCount?: number;
 }
 
 interface Vendor {
@@ -26,6 +29,7 @@ interface Vendor {
   payLaterEnabled: boolean;
   primaryColor?: string;
   backgroundColor?: string;
+  bannerImage?: string | null;
 }
 
 interface CartItem {
@@ -123,6 +127,42 @@ async function shareLink(url: string, title: string, text: string) {
 
 // Product grid images fade in once loaded instead of popping in abruptly,
 // with a subtle shimmering placeholder behind them while they load.
+function relativeDate(iso: string): string {
+  const ms = Date.now() - new Date(iso).getTime();
+  const days = Math.floor(ms / (24 * 60 * 60 * 1000));
+  if (days <= 0) return 'today';
+  if (days === 1) return '1 day ago';
+  if (days < 30) return `${days} days ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months === 1 ? '' : 's'} ago`;
+  const years = Math.floor(months / 12);
+  return `${years} year${years === 1 ? '' : 's'} ago`;
+}
+
+function StarRating({ rating, size = 14, color = '#22c55e' }: { rating: number; size?: number; color?: string }) {
+  return (
+    <span className="flex items-center gap-0.5">
+      {Array.from({ length: 5 }, (_, i) => {
+        const filled = i < Math.round(rating);
+        return (
+          <svg
+            key={i}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width={size}
+            height={size}
+            fill={filled ? color : 'none'}
+            stroke={color}
+            strokeWidth="2"
+          >
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        );
+      })}
+    </span>
+  );
+}
+
 function FadeImage({ src, alt, bg }: { src: string; alt: string; bg: string }) {
   const [loaded, setLoaded] = useState(false);
   return (
@@ -151,6 +191,13 @@ export default function StoreClient({ slug }: { slug: string }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedQty, setSelectedQty] = useState(1);
+  const [productReviews, setProductReviews] = useState<{ id: string; customerName: string; rating: number; comment: string; createdAt: string }[]>([]);
+  const [reviewStats, setReviewStats] = useState<{ avgRating: number | null; count: number }>({ avgRating: null, count: 0 });
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewForm, setReviewForm] = useState({ orderNumber: '', customerName: '', rating: 5, comment: '' });
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewError, setReviewError] = useState('');
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [showVendorInfo, setShowVendorInfo] = useState(false);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -220,6 +267,63 @@ export default function StoreClient({ slug }: { slug: string }) {
     }
   }, [products]);
 
+  // Fetch this product's reviews when the detail modal opens — not on
+  // initial page load, since most shoppers never open a product.
+  useEffect(() => {
+    if (!selectedProduct) {
+      setProductReviews([]);
+      setReviewStats({ avgRating: null, count: 0 });
+      setShowReviewForm(false);
+      setReviewForm({ orderNumber: '', customerName: '', rating: 5, comment: '' });
+      setReviewError('');
+      setReviewSubmitted(false);
+      return;
+    }
+    fetch(`/api/store/${slug}/reviews?productId=${selectedProduct.id}`)
+      .then((r) => r.json())
+      .then((d) => {
+        const data = d as { reviews: typeof productReviews; avgRating: number | null; count: number };
+        setProductReviews(data.reviews || []);
+        setReviewStats({ avgRating: data.avgRating ?? null, count: data.count || 0 });
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProduct?.id, slug]);
+
+  const submitReview = async () => {
+    if (!selectedProduct) return;
+    if (!reviewForm.orderNumber.trim() || !reviewForm.customerName.trim()) {
+      setReviewError('Order number and name are required');
+      return;
+    }
+    setReviewSubmitting(true);
+    setReviewError('');
+    try {
+      const res = await fetch(`/api/store/${slug}/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNumber: reviewForm.orderNumber.trim(),
+          productId: selectedProduct.id,
+          customerName: reviewForm.customerName.trim(),
+          rating: reviewForm.rating,
+          comment: reviewForm.comment.trim(),
+        }),
+      });
+      const data = await res.json() as { error?: string };
+      if (!res.ok) {
+        setReviewError(data.error || 'Failed to submit review');
+        setReviewSubmitting(false);
+        return;
+      }
+      setReviewSubmitted(true);
+      setShowReviewForm(false);
+    } catch {
+      setReviewError('Something went wrong');
+    }
+    setReviewSubmitting(false);
+  };
+
   const addToCart = (product: Product, qty = 1) => {
     setCart((prev) => {
       const existing = prev.find((c) => c.product.id === product.id);
@@ -282,6 +386,8 @@ export default function StoreClient({ slug }: { slug: string }) {
 
   const isNew = (p: Product) => Date.now() - new Date(p.createdAt).getTime() < 14 * 24 * 60 * 60 * 1000;
   const isLowStock = (p: Product) => p.stock > 0 && p.stock <= 3;
+  const hasDiscount = (p: Product) => p.compareAtPrice != null && p.compareAtPrice > p.price;
+  const discountPct = (p: Product) => Math.round((1 - p.price / p.compareAtPrice!) * 100);
 
   if (loading) {
     return (
@@ -309,6 +415,12 @@ export default function StoreClient({ slug }: { slug: string }) {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: bg, fontFamily: 'Inter, sans-serif' }}>
+      {/* Hero banner */}
+      {vendor.bannerImage && (
+        <div className="h-40 md:h-56 w-full overflow-hidden" style={{ backgroundColor: t.surfaceHigh }}>
+          <img src={vendor.bannerImage} alt="" className="w-full h-full object-cover" />
+        </div>
+      )}
       {/* Store header */}
       <div className="border-b" style={{ borderColor: t.border, backgroundColor: t.surface }}>
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-5">
@@ -443,11 +555,15 @@ export default function StoreClient({ slug }: { slug: string }) {
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8" style={{ color: t.icon }}><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
                         </div>
                       )}
-                      {isNew(p) && (
+                      {hasDiscount(p) ? (
+                        <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#ef4444', color: '#fff' }}>
+                          -{discountPct(p)}%
+                        </span>
+                      ) : isNew(p) ? (
                         <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: accent, color: accentText }}>
                           NEW
                         </span>
-                      )}
+                      ) : null}
                       {isLowStock(p) && (
                         <span className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(0,0,0,0.65)', color: '#fff' }}>
                           Only {p.stock} left
@@ -457,8 +573,19 @@ export default function StoreClient({ slug }: { slug: string }) {
                     <div className="p-3">
                       <p className="text-sm font-semibold truncate" style={{ color: t.text }}>{p.name}</p>
                       <p className="text-xs mt-0.5" style={{ color: t.textMuted }}>{p.category || 'General'}</p>
+                      {(p.reviewCount ?? 0) > 0 && (
+                        <div className="flex items-center gap-1 mt-1">
+                          <StarRating rating={p.avgRating ?? 0} size={11} color={accent} />
+                          <span className="text-[10px]" style={{ color: t.textMuted }}>({p.reviewCount})</span>
+                        </div>
+                      )}
                       <div className="flex items-center justify-between mt-3">
-                        <span className="text-sm font-semibold" style={{ color: accent }}>₦{Number(p.price).toLocaleString()}</span>
+                        <span className="flex items-baseline gap-1.5">
+                          <span className="text-sm font-semibold" style={{ color: accent }}>₦{Number(p.price).toLocaleString()}</span>
+                          {hasDiscount(p) && (
+                            <span className="text-[11px] line-through" style={{ color: t.textFaint }}>₦{Number(p.compareAtPrice).toLocaleString()}</span>
+                          )}
+                        </span>
                         <button
                           onClick={(e) => { e.stopPropagation(); addToCart(p, 1); }}
                           className="text-xs px-3 py-1.5 rounded-lg font-semibold"
@@ -558,7 +685,15 @@ export default function StoreClient({ slug }: { slug: string }) {
               </div>
               <p className="text-sm mt-3 leading-relaxed" style={{ color: t.textMuted }}>{selectedProduct.description || 'No description available.'}</p>
               <div className="flex items-center justify-between mt-5">
-                <span className="text-2xl font-semibold" style={{ color: accent }}>₦{Number(selectedProduct.price).toLocaleString()}</span>
+                <span className="flex items-baseline gap-2">
+                  <span className="text-2xl font-semibold" style={{ color: accent }}>₦{Number(selectedProduct.price).toLocaleString()}</span>
+                  {hasDiscount(selectedProduct) && (
+                    <>
+                      <span className="text-sm line-through" style={{ color: t.textFaint }}>₦{Number(selectedProduct.compareAtPrice).toLocaleString()}</span>
+                      <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#ef4444', color: '#fff' }}>-{discountPct(selectedProduct)}%</span>
+                    </>
+                  )}
+                </span>
                 <span className="text-xs" style={{ color: t.textFaint }}>{selectedProduct.stock} in stock</span>
               </div>
 
@@ -648,6 +783,137 @@ export default function StoreClient({ slug }: { slug: string }) {
                   </div>
                 );
               })()}
+
+              {/* Reviews */}
+              <div className="mt-6 pt-5 border-t" style={{ borderColor: t.border }}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: t.textMuted }}>
+                      Reviews
+                    </p>
+                    {reviewStats.count > 0 && (
+                      <span className="flex items-center gap-1.5">
+                        <StarRating rating={reviewStats.avgRating || 0} size={12} color={accent} />
+                        <span className="text-xs" style={{ color: t.textMuted }}>
+                          {(reviewStats.avgRating || 0).toFixed(1)} ({reviewStats.count})
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  {!showReviewForm && !reviewSubmitted && (
+                    <button
+                      onClick={() => setShowReviewForm(true)}
+                      className="text-xs font-semibold"
+                      style={{ color: accent }}
+                    >
+                      Write a review
+                    </button>
+                  )}
+                </div>
+
+                {reviewSubmitted && (
+                  <p className="text-xs mb-3 px-3 py-2 rounded-lg" style={{ backgroundColor: accentTint, color: accent }}>
+                    Thanks — your review has been posted.
+                  </p>
+                )}
+
+                {showReviewForm && (
+                  <div className="rounded-lg border p-3 mb-4 flex flex-col gap-2.5" style={{ borderColor: t.border, backgroundColor: t.surface }}>
+                    <label className="flex flex-col gap-1 text-xs font-medium" style={{ color: t.textMuted }}>
+                      Order number
+                      <input
+                        value={reviewForm.orderNumber}
+                        onChange={(e) => setReviewForm((f) => ({ ...f, orderNumber: e.target.value }))}
+                        className="rounded-md border px-2.5 py-2 text-sm outline-none"
+                        style={{ backgroundColor: t.inputBg, borderColor: t.border, color: t.text }}
+                      />
+                    </label>
+                    <label className="flex flex-col gap-1 text-xs font-medium" style={{ color: t.textMuted }}>
+                      Your name
+                      <input
+                        value={reviewForm.customerName}
+                        onChange={(e) => setReviewForm((f) => ({ ...f, customerName: e.target.value }))}
+                        className="rounded-md border px-2.5 py-2 text-sm outline-none"
+                        style={{ backgroundColor: t.inputBg, borderColor: t.border, color: t.text }}
+                      />
+                    </label>
+                    <div className="flex flex-col gap-1 text-xs font-medium" style={{ color: t.textMuted }}>
+                      Rating
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            onClick={() => setReviewForm((f) => ({ ...f, rating: n }))}
+                            aria-label={`${n} star${n === 1 ? '' : 's'}`}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              width={20}
+                              height={20}
+                              fill={n <= reviewForm.rating ? accent : 'none'}
+                              stroke={accent}
+                              strokeWidth="2"
+                            >
+                              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <label className="flex flex-col gap-1 text-xs font-medium" style={{ color: t.textMuted }}>
+                      Comment (optional)
+                      <textarea
+                        value={reviewForm.comment}
+                        onChange={(e) => setReviewForm((f) => ({ ...f, comment: e.target.value }))}
+                        rows={2}
+                        className="rounded-md border px-2.5 py-2 text-sm outline-none resize-none"
+                        style={{ backgroundColor: t.inputBg, borderColor: t.border, color: t.text }}
+                      />
+                    </label>
+                    {reviewError && (
+                      <p className="text-xs" style={{ color: '#ef4444' }}>{reviewError}</p>
+                    )}
+                    <div className="flex gap-2 mt-1">
+                      <button
+                        onClick={() => setShowReviewForm(false)}
+                        className="flex-1 py-2 rounded-lg text-xs border"
+                        style={{ borderColor: t.border, color: t.textMuted }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => { void submitReview(); }}
+                        disabled={reviewSubmitting}
+                        className="flex-1 py-2 rounded-lg text-xs font-semibold disabled:opacity-50"
+                        style={{ backgroundColor: accent, color: accentText }}
+                      >
+                        {reviewSubmitting ? 'Submitting…' : 'Submit review'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {productReviews.length === 0 ? (
+                  <p className="text-xs" style={{ color: t.textFaint }}>No reviews yet for this product.</p>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    {productReviews.map((rv) => (
+                      <div key={rv.id} className="pb-3 border-b last:border-b-0" style={{ borderColor: t.border }}>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-semibold" style={{ color: t.text }}>{rv.customerName}</p>
+                          <StarRating rating={rv.rating} size={11} color={accent} />
+                          <span className="text-[10px]" style={{ color: t.textFaint }}>{relativeDate(rv.createdAt)}</span>
+                        </div>
+                        {rv.comment && (
+                          <p className="text-xs mt-1" style={{ color: t.textMuted }}>{rv.comment}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

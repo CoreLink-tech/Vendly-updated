@@ -21,7 +21,7 @@ export function extractStoragePath(publicUrl: string, bucket: string): string | 
  * no-ops if the URL doesn't match either pattern rather than throwing —
  * callers treat storage cleanup as best-effort, never blocking on it.
  */
-export async function deleteImageByUrl(url: string, supabaseBucket: 'product-images' | 'vendor-logos'): Promise<void> {
+export async function deleteImageByUrl(url: string, supabaseBucket: 'product-images' | 'vendor-logos' | 'vendor-banners'): Promise<void> {
   const { extractR2Key, deleteFromR2 } = await import('@/lib/r2');
   const r2Key = extractR2Key(url);
   if (r2Key) {

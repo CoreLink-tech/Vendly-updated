@@ -43,6 +43,7 @@ interface Vendor {
   slug: string;
   description: string;
   logo: string;
+  bannerImage: string | null;
   location: string;
   phone: string;
   address: string;
@@ -62,6 +63,7 @@ export default function StoreSettingsPage() {
     slug: '',
     description: '',
     logo: '',
+    bannerImage: null as string | null,
     location: '',
     phone: '',
     address: '',
@@ -77,6 +79,7 @@ export default function StoreSettingsPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [upload, { loading: uploading }] = useUpload();
   const fileRef = useRef<HTMLInputElement>(null);
+  const bannerFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch('/api/vendor/profile')
@@ -89,6 +92,7 @@ export default function StoreSettingsPage() {
             slug: data.vendor.slug || '',
             description: data.vendor.description || '',
             logo: data.vendor.logo || '',
+            bannerImage: data.vendor.bannerImage || null,
             location: data.vendor.location || '',
             phone: data.vendor.phone || '',
             address: data.vendor.address || '',
@@ -122,6 +126,24 @@ export default function StoreSettingsPage() {
     const url: string = result.url;
     setForm((f) => ({ ...f, logo: url }));
   };
+
+  const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const result = await upload({ file, bucket: 'vendor-banners' } as any);
+    if ('error' in result) {
+      setMessage({ type: 'error', text: result.error ?? 'Upload failed' });
+      return;
+    }
+    if (!result.url) {
+      setMessage({ type: 'error', text: 'Upload failed' });
+      return;
+    }
+    const url: string = result.url;
+    setForm((f) => ({ ...f, bannerImage: url }));
+  };
+
+  const removeBanner = () => setForm((f) => ({ ...f, bannerImage: null }));
 
   // These two toggles save immediately on click rather than waiting for
   // the main Save button. They flip visually the instant you tap them, so
@@ -251,6 +273,54 @@ export default function StoreSettingsPage() {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Banner */}
+        <div>
+          <p className="text-xs font-medium mb-3" style={{ color: theme.muted }}>
+            Store Banner
+          </p>
+          <div
+            className="aspect-[4/1] rounded-xl overflow-hidden border flex items-center justify-center mb-3"
+            style={{ borderColor: theme.line, backgroundColor: theme.bg }}
+          >
+            {form.bannerImage ? (
+              <img src={form.bannerImage} alt="Banner" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-xs" style={{ color: theme.faint }}>No banner set</span>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => bannerFileRef.current?.click()}
+              disabled={uploading}
+              className="text-xs px-4 py-2 rounded-lg border transition-colors"
+              style={{ borderColor: theme.line, color: theme.muted }}
+            >
+              {uploading ? 'Uploading…' : form.bannerImage ? 'Change Banner' : 'Upload Banner'}
+            </button>
+            {form.bannerImage && (
+              <button
+                onClick={removeBanner}
+                className="text-xs px-4 py-2 rounded-lg border transition-colors"
+                style={{ borderColor: '#ef444430', color: '#ef4444' }}
+              >
+                Remove
+              </button>
+            )}
+            <input
+              ref={bannerFileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                void handleBannerUpload(e);
+              }}
+            />
+          </div>
+          <p className="text-[10px] mt-1.5" style={{ color: theme.faint }}>
+            Shown across the top of your store page. Recommended: 1600×400px or wider, landscape orientation.
+          </p>
         </div>
 
         <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
