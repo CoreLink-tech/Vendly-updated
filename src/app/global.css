@@ -154,3 +154,43 @@
   border: 1px solid #E7E5DE;
   background: #FFFEFB;
 }
+
+/* Welcome loader animation: bounce-in entrance, then a gentle breathing loop */
+@keyframes welcome-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes welcome-breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.welcome-loader-logo {
+  animation:
+    welcome-entrance 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+    welcome-breathe 2.2s ease-in-out 0.65s infinite;
+}
+
+@keyframes welcome-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.welcome-loader-text {
+  animation: welcome-fade-in 0.6s ease-out 0.35s both;
+}

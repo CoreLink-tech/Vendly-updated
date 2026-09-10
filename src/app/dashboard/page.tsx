@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { SITE_URL } from '@/lib/site';
 import { PageHeader } from '@/components/dashboard/PageHeader';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { StatusBadge } from '@/components/dashboard/StatusBadge';
 import { Card } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   Empty,
   EmptyHeader,
@@ -103,20 +103,18 @@ function StoreLinkBanner() {
 
 function DashboardSkeleton() {
   return (
-    <div>
-      <div className="mb-8">
-        <Skeleton className="h-8 w-40" />
-        <Skeleton className="mt-2 h-4 w-64" />
-      </div>
-      <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-24 rounded-xl" />
-        ))}
-      </div>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Skeleton className="h-72 rounded-xl lg:col-span-2" />
-        <Skeleton className="h-72 rounded-xl" />
-      </div>
+    <div className="flex min-h-[70vh] flex-col items-center justify-center gap-4">
+      <Image
+        src="/welcome.png"
+        alt="Welcome"
+        width={280}
+        height={158}
+        priority
+        className="welcome-loader-logo w-56 sm:w-72 h-auto"
+      />
+      <p className="welcome-loader-text text-sm text-muted-foreground">
+        Loading your dashboard…
+      </p>
     </div>
   );
 }
