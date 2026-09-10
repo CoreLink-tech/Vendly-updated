@@ -36,7 +36,56 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
     console.error('[store/[slug]] theme columns unavailable, using defaults:', e instanceof Error ? e.message : e);
   }
 
+  // Same defensive pattern as the theme columns above — a storefront
+  // should never 500 just because this migration hasn't landed yet in a
+  // given environment.
+  let bannerImage: string | null = null;
+  try {
+    const { data: banner, error: bannerError } = await supabase
+      .from('vendors')
+      .select('bannerImage')
+      .eq('id', vendor.id)
+      .single();
+    if (bannerError) throw bannerError;
+    if (banner?.bannerImage) bannerImage = banner.bannerImage;
+  } catch (e) {
+    console.error('[store/[slug]] bannerImage column unavailable, defaulting to none:', e instanceof Error ? e.message : e);
+  }
+
   const { data: products } = await supabase.from('products').select('*, product_images(url, sortOrder)').eq('vendorId', vendor.id).eq('status', 'active').gt('stock', 0).order('createdAt', { ascending: false });
+
+  // Aggregate rating per product in one query rather than one request per
+  // card from the storefront. Defensive like the columns above — a
+  // missing reviews table shouldn't break the storefront.
+  let reviewStats = new Map<string, { avgRating: number; reviewCount: number }>();
+  try {
+    const { data: reviewRows, error: reviewsError } = await supabase
+      .from('reviews')
+      .select('productId, rating')
+      .eq('vendorId', vendor.id)
+      .eq('status', 'published');
+    if (reviewsError) throw reviewsError;
+    const byProduct = new Map<string, number[]>();
+    for (const r of reviewRows || []) {
+      const arr = byProduct.get(r.productId) || [];
+      arr.push(r.rating);
+      byProduct.set(r.productId, arr);
+    }
+    reviewStats = new Map(
+      Array.from(byProduct.entries()).map(([productId, ratings]) => [
+        productId,
+        { avgRating: ratings.reduce((s, n) => s + n, 0) / ratings.length, reviewCount: ratings.length },
+      ])
+    );
+  } catch (e) {
+    console.error('[store/[slug]] reviews table unavailable, skipping ratings:', e instanceof Error ? e.message : e);
+  }
+
+  const productsWithReviews = withImagesList(products).map((p: any) => ({
+    ...p,
+    avgRating: reviewStats.get(p.id)?.avgRating ?? null,
+    reviewCount: reviewStats.get(p.id)?.reviewCount ?? 0,
+  }));
 
   // Platform-wide override — isolated the same way as the theme columns
   // above, so if this table/row is ever missing it fails safe (POD stays
@@ -50,8 +99,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
   }
 
   return Response.json({
-    vendor: { ...vendor, primaryColor, backgroundColor },
-    products: withImagesList(products),
+    vendor: { ...vendor, primaryColor, backgroundColor, bannerImage },
+    products: productsWithReviews,
     platformPayOnDeliveryEnabled,
   });
 }

@@ -9,6 +9,7 @@ interface Product {
   name: string;
   description: string;
   price: number;
+  compareAtPrice: number | null;
   category: string;
   stock: number;
   status: string;
@@ -31,6 +32,7 @@ const EMPTY_FORM = {
   name: '',
   description: '',
   price: '',
+  compareAtPrice: '',
   category: '',
   stock: '',
   images: [] as string[],
@@ -74,6 +76,7 @@ export default function ProductsPage() {
       name: p.name,
       description: p.description,
       price: String(p.price),
+      compareAtPrice: p.compareAtPrice != null ? String(p.compareAtPrice) : '',
       category: p.category,
       stock: String(p.stock),
       images: p.images || [],
@@ -102,9 +105,18 @@ export default function ProductsPage() {
     setForm((f) => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
   };
 
+  const compareAtPriceError =
+    form.compareAtPrice && form.price && parseFloat(form.compareAtPrice) <= parseFloat(form.price)
+      ? 'Compare-at price must be higher than the price'
+      : null;
+
   const handleSave = async () => {
     if (!form.name || !form.price) {
       setError('Name and price are required');
+      return;
+    }
+    if (compareAtPriceError) {
+      setError(compareAtPriceError);
       return;
     }
     setSaving(true);
@@ -113,6 +125,7 @@ export default function ProductsPage() {
       name: form.name,
       description: form.description,
       price: parseFloat(form.price),
+      compareAtPrice: form.compareAtPrice ? parseFloat(form.compareAtPrice) : null,
       category: form.category,
       stock: parseInt(form.stock) || 0,
       images: form.images,
@@ -242,8 +255,15 @@ export default function ProductsPage() {
                   {p.category || 'Uncategorized'}
                 </p>
                 <div className="flex items-center justify-between mt-3">
-                  <span className="text-base font-semibold" style={{ color: theme.green }}>
-                    ₦{Number(p.price).toLocaleString()}
+                  <span className="flex items-baseline gap-1.5">
+                    <span className="text-base font-semibold" style={{ color: theme.green }}>
+                      ₦{Number(p.price).toLocaleString()}
+                    </span>
+                    {p.compareAtPrice != null && p.compareAtPrice > p.price && (
+                      <span className="text-xs line-through" style={{ color: theme.muted }}>
+                        ₦{Number(p.compareAtPrice).toLocaleString()}
+                      </span>
+                    )}
                   </span>
                   <span className="text-xs" style={{ color: theme.muted }}>
                     Stock: {p.stock}
@@ -348,6 +368,25 @@ export default function ProductsPage() {
                   />
                 </label>
               </div>
+
+              <label
+                className="flex flex-col gap-1.5 text-xs font-medium"
+                style={{ color: theme.muted }}
+              >
+                Compare-at price (₦, optional)
+                <input
+                  type="number"
+                  value={form.compareAtPrice}
+                  onChange={(e) => setForm((f) => ({ ...f, compareAtPrice: e.target.value }))}
+                  className="rounded-lg border px-3 py-2.5 text-sm outline-none"
+                  style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
+                />
+                {compareAtPriceError && (
+                  <span className="text-[10px]" style={{ color: '#ef4444' }}>
+                    {compareAtPriceError}
+                  </span>
+                )}
+              </label>
 
               <label
                 className="flex flex-col gap-1.5 text-xs font-medium"

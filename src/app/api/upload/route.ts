@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       }
       const bytes = await file.arrayBuffer();
       fileBuffer = Buffer.from(bytes);
-      bucket = ['product-images', 'vendor-logos'].includes(bucketParam) ? bucketParam : 'product-images';
+      bucket = ['product-images', 'vendor-logos', 'vendor-banners'].includes(bucketParam) ? bucketParam : 'product-images';
     } else if (contentType.includes('application/json')) {
       const body = await request.json() as { url?: string; base64?: string; bucket?: string };
       bucket = body.bucket || 'product-images';

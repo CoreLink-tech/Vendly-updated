@@ -30,7 +30,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   const vendorId = await getVendorId(session.user.id);
   if (!vendorId) return Response.json({ error: 'Not found' }, { status: 404 });
 
-  const body = await request.json() as { name?: string; description?: string; price?: number; category?: string; stock?: number; status?: string; images?: string[] };
+  const body = await request.json() as { name?: string; description?: string; price?: number; compareAtPrice?: number | null; category?: string; stock?: number; status?: string; images?: string[] };
   if (body.images && body.images.length > 8) {
     return Response.json({ error: 'Maximum 8 images per product' }, { status: 400 });
   }
@@ -40,8 +40,15 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   // and just silently affects 0 rows if this vendor doesn't own it, but
   // nothing was stopping the product_images delete/insert further down
   // from running against ANY productId regardless of who owns it.
-  const { data: owned } = await supabase.from('products').select('id').eq('id', id).eq('vendorId', vendorId).single();
+  const { data: owned } = await supabase.from('products').select('id, price, compareAtPrice').eq('id', id).eq('vendorId', vendorId).single();
   if (!owned) return Response.json({ error: 'Product not found' }, { status: 404 });
+
+  if (body.compareAtPrice != null) {
+    const priceForCheck = body.price !== undefined ? body.price : owned.price;
+    if (body.compareAtPrice <= priceForCheck) {
+      return Response.json({ error: 'Compare-at price must be higher than the price' }, { status: 400 });
+    }
+  }
 
   const updates: Record<string, unknown> = { updatedAt: new Date().toISOString() };
   if (body.name !== undefined) updates.name = body.name;
@@ -50,6 +57,15 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   if (body.category !== undefined) updates.category = body.category;
   if (body.stock !== undefined) updates.stock = body.stock;
   if (body.status !== undefined) updates.status = body.status;
+  if (body.compareAtPrice !== undefined) updates.compareAtPrice = body.compareAtPrice;
+
+  // If the price is moving up to meet or pass the compare-at price
+  // (existing or newly-submitted), the discount no longer makes sense —
+  // clear it instead of blocking the price edit.
+  const effectiveCompareAt = body.compareAtPrice !== undefined ? body.compareAtPrice : owned.compareAtPrice;
+  if (body.price !== undefined && effectiveCompareAt != null && body.price >= effectiveCompareAt) {
+    updates.compareAtPrice = null;
+  }
 
   await supabase.from('products').update(updates).eq('id', id).eq('vendorId', vendorId);
 

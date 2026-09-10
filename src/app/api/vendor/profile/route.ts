@@ -20,17 +20,19 @@ export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const body = await request.json() as { businessName?: string; description?: string; logo?: string; location?: string; phone?: string; address?: string; slug?: string; referredBy?: string; ambassadorCode?: string; useLogistics?: boolean; allowPayOnDelivery?: boolean; bankName?: string; accountNumber?: string; accountName?: string; primaryColor?: string; backgroundColor?: string };
+  const body = await request.json() as { businessName?: string; description?: string; logo?: string; bannerImage?: string | null; location?: string; phone?: string; address?: string; slug?: string; referredBy?: string; ambassadorCode?: string; useLogistics?: boolean; allowPayOnDelivery?: boolean; bankName?: string; accountNumber?: string; accountName?: string; primaryColor?: string; backgroundColor?: string };
   const userId = session.user.id;
 
-  const { data: existing } = await supabase.from('vendors').select('id, logo').eq('userId', userId).single();
+  const { data: existing } = await supabase.from('vendors').select('id, logo, bannerImage').eq('userId', userId).single();
 
   if (existing) {
     const oldLogoUrl = existing.logo;
+    const oldBannerUrl = existing.bannerImage;
     const updates: Record<string, unknown> = { updatedAt: new Date().toISOString() };
     if (body.businessName !== undefined) updates.businessName = body.businessName;
     if (body.description !== undefined) updates.description = body.description;
     if (body.logo !== undefined) updates.logo = body.logo;
+    if (body.bannerImage !== undefined) updates.bannerImage = body.bannerImage;
     if (body.location !== undefined) updates.location = body.location;
     if (body.phone !== undefined) updates.phone = body.phone;
     if (body.address !== undefined) updates.address = body.address;
@@ -57,6 +59,9 @@ export async function POST(request: Request) {
 
     if (body.logo !== undefined && oldLogoUrl && oldLogoUrl !== body.logo) {
       await deleteImageByUrl(oldLogoUrl, 'vendor-logos');
+    }
+    if (body.bannerImage !== undefined && oldBannerUrl && oldBannerUrl !== body.bannerImage) {
+      await deleteImageByUrl(oldBannerUrl, 'vendor-banners');
     }
 
     const { data: updated } = await supabase.from('vendors').select('*').eq('id', existing.id).single();
