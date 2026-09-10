@@ -194,3 +194,14 @@
 .welcome-loader-text {
   animation: welcome-fade-in 0.6s ease-out 0.35s both;
 }
+
+/* Storefront product image loading shimmer */
+@keyframes store-img-shimmer {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.08); }
+  100% { filter: brightness(1); }
+}
+
+.store-img-shimmer {
+  animation: store-img-shimmer 1.4s ease-in-out infinite;
+}

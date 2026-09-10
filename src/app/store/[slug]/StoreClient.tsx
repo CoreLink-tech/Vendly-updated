@@ -11,6 +11,7 @@ interface Product {
   category: string;
   stock: number;
   images: string[];
+  createdAt: string;
 }
 
 interface Vendor {
@@ -104,6 +105,42 @@ function buildTheme(bg: string) {
   };
 }
 
+// Uses the native share sheet where available (most mobile browsers);
+// falls back to opening a WhatsApp share link, since that's the primary
+// channel Nigerian shoppers use to pass links around.
+async function shareLink(url: string, title: string, text: string) {
+  if (typeof navigator !== 'undefined' && navigator.share) {
+    try {
+      await navigator.share({ title, text, url });
+      return;
+    } catch {
+      // user cancelled or share failed — fall through to WhatsApp
+    }
+  }
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
+  if (typeof window !== 'undefined') window.open(waUrl, '_blank');
+}
+
+// Product grid images fade in once loaded instead of popping in abruptly,
+// with a subtle shimmering placeholder behind them while they load.
+function FadeImage({ src, alt, bg }: { src: string; alt: string; bg: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className="relative w-full h-full" style={{ backgroundColor: bg }}>
+      {!loaded && (
+        <div className="absolute inset-0 store-img-shimmer" style={{ backgroundColor: bg }} />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        className="w-full h-full object-cover transition-opacity duration-300"
+        style={{ opacity: loaded ? 1 : 0 }}
+      />
+    </div>
+  );
+}
+
 export default function StoreClient({ slug }: { slug: string }) {
   const [vendor, setVendor] = useState<Vendor | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -115,6 +152,9 @@ export default function StoreClient({ slug }: { slug: string }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedQty, setSelectedQty] = useState(1);
   const [showVendorInfo, setShowVendorInfo] = useState(false);
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc'>('newest');
   const [trackOpen, setTrackOpen] = useState(false);
   const [trackId, setTrackId] = useState('');
   const [trackResult, setTrackResult] = useState<{ status: string; orderNumber: string; customerName: string; createdAt: string } | null>(null);
@@ -166,6 +206,20 @@ export default function StoreClient({ slug }: { slug: string }) {
       .catch(() => { setNotFound(true); setLoading(false); });
   }, [slug]);
 
+  // If someone opened a shared product link (?product=<id>), pop that
+  // product's detail modal open once the catalog has loaded.
+  useEffect(() => {
+    if (!products.length || typeof window === 'undefined') return;
+    const productId = new URLSearchParams(window.location.search).get('product');
+    if (!productId) return;
+    const match = products.find((p) => p.id === productId);
+    if (match) {
+      setSelectedProduct(match);
+      setSelectedQty(1);
+      setSelectedImageIndex(0);
+    }
+  }, [products]);
+
   const addToCart = (product: Product, qty = 1) => {
     setCart((prev) => {
       const existing = prev.find((c) => c.product.id === product.id);
@@ -214,6 +268,20 @@ export default function StoreClient({ slug }: { slug: string }) {
 
   const cartCount = cart.reduce((sum, c) => sum + c.quantity, 0);
   const cartTotal = cart.reduce((sum, c) => sum + Number(c.product.price) * c.quantity, 0);
+
+  const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
+
+  const filteredProducts = products
+    .filter((p) => selectedCategory === 'all' || p.category === selectedCategory)
+    .filter((p) => !search.trim() || p.name.toLowerCase().includes(search.trim().toLowerCase()))
+    .sort((a, b) => {
+      if (sortBy === 'price-asc') return Number(a.price) - Number(b.price);
+      if (sortBy === 'price-desc') return Number(b.price) - Number(a.price);
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
+  const isNew = (p: Product) => Date.now() - new Date(p.createdAt).getTime() < 14 * 24 * 60 * 60 * 1000;
+  const isLowStock = (p: Product) => p.stock > 0 && p.stock <= 3;
 
   if (loading) {
     return (
@@ -268,6 +336,14 @@ export default function StoreClient({ slug }: { slug: string }) {
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <button
+                onClick={() => shareLink(typeof window !== 'undefined' ? window.location.href.split('?')[0] : '', vendor.businessName, `Check out ${vendor.businessName} on Vendly!`)}
+                aria-label="Share store"
+                className="p-2 rounded-lg border"
+                style={{ borderColor: t.border, color: t.textMuted, backgroundColor: t.surfaceHigh }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </button>
+              <button
                 onClick={() => setTrackOpen(true)}
                 className="text-xs px-3 py-2 rounded-lg border font-medium"
                 style={{ borderColor: t.border, color: t.textMuted, backgroundColor: t.surfaceHigh }}
@@ -304,43 +380,98 @@ export default function StoreClient({ slug }: { slug: string }) {
           </div>
         ) : (
           <>
-            <p className="text-xs font-medium uppercase tracking-wider mb-6" style={{ color: t.textMuted }}>
-              {products.length} Products
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {products.map((p) => (
-                <div
-                  key={p.id}
-                  className="rounded-xl border overflow-hidden cursor-pointer transition-shadow hover:shadow-lg"
-                  style={{ backgroundColor: t.surface, borderColor: t.border }}
-                  onClick={() => { setSelectedProduct(p); setSelectedQty(1); setSelectedImageIndex(0); if (vendor) trackView(p.id, vendor.id); }}
+            {/* Search, category filter, sort */}
+            <div className="flex flex-col sm:flex-row gap-2 mb-5">
+              <div className="relative flex-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: t.textFaint }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search products..."
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg text-sm outline-none border"
+                  style={{ backgroundColor: t.inputBg, borderColor: t.border, color: t.text }}
+                />
+              </div>
+              {categories.length > 1 && (
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="px-3 py-2.5 rounded-lg text-sm outline-none border"
+                  style={{ backgroundColor: t.inputBg, borderColor: t.border, color: t.text }}
                 >
-                  <div className="aspect-square overflow-hidden" style={{ backgroundColor: t.surfaceHigh }}>
-                    {p.images?.[0] ? (
-                      <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8" style={{ color: t.icon }}><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                  <option value="all">All Categories</option>
+                  {categories.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              )}
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                className="px-3 py-2.5 rounded-lg text-sm outline-none border"
+                style={{ backgroundColor: t.inputBg, borderColor: t.border, color: t.text }}
+              >
+                <option value="newest">Newest</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+              </select>
+            </div>
+
+            <p className="text-xs font-medium uppercase tracking-wider mb-6" style={{ color: t.textMuted }}>
+              {filteredProducts.length} Product{filteredProducts.length === 1 ? '' : 's'}
+            </p>
+
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="text-sm" style={{ color: t.textFaint }}>No products match your search.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {filteredProducts.map((p) => (
+                  <div
+                    key={p.id}
+                    className="rounded-xl border overflow-hidden cursor-pointer transition-shadow hover:shadow-lg"
+                    style={{ backgroundColor: t.surface, borderColor: t.border }}
+                    onClick={() => { setSelectedProduct(p); setSelectedQty(1); setSelectedImageIndex(0); if (vendor) trackView(p.id, vendor.id); }}
+                  >
+                    <div className="relative aspect-square overflow-hidden" style={{ backgroundColor: t.surfaceHigh }}>
+                      {p.images?.[0] ? (
+                        <FadeImage src={p.images[0]} alt={p.name} bg={t.surfaceHigh} />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8" style={{ color: t.icon }}><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                        </div>
+                      )}
+                      {isNew(p) && (
+                        <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: accent, color: accentText }}>
+                          NEW
+                        </span>
+                      )}
+                      {isLowStock(p) && (
+                        <span className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(0,0,0,0.65)', color: '#fff' }}>
+                          Only {p.stock} left
+                        </span>
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <p className="text-sm font-semibold truncate" style={{ color: t.text }}>{p.name}</p>
+                      <p className="text-xs mt-0.5" style={{ color: t.textMuted }}>{p.category || 'General'}</p>
+                      <div className="flex items-center justify-between mt-3">
+                        <span className="text-sm font-semibold" style={{ color: accent }}>₦{Number(p.price).toLocaleString()}</span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); addToCart(p, 1); }}
+                          className="text-xs px-3 py-1.5 rounded-lg font-semibold"
+                          style={{ backgroundColor: accentTint, color: accent }}
+                        >
+                          Add
+                        </button>
                       </div>
-                    )}
-                  </div>
-                  <div className="p-3">
-                    <p className="text-sm font-semibold truncate" style={{ color: t.text }}>{p.name}</p>
-                    <p className="text-xs mt-0.5" style={{ color: t.textMuted }}>{p.category || 'General'}</p>
-                    <div className="flex items-center justify-between mt-3">
-                      <span className="text-sm font-semibold" style={{ color: accent }}>₦{Number(p.price).toLocaleString()}</span>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); addToCart(p, 1); }}
-                        className="text-xs px-3 py-1.5 rounded-lg font-semibold"
-                        style={{ backgroundColor: accentTint, color: accent }}
-                      >
-                        Add
-                      </button>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -412,6 +543,19 @@ export default function StoreClient({ slug }: { slug: string }) {
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
               </div>
+              <div className="flex items-center gap-3 mt-1">
+                <button
+                  onClick={() => {
+                    const base = typeof window !== 'undefined' ? window.location.href.split('?')[0] : '';
+                    shareLink(`${base}?product=${selectedProduct.id}`, selectedProduct.name, `Check out ${selectedProduct.name} on ${vendor.businessName}!`);
+                  }}
+                  className="flex items-center gap-1 text-xs font-medium"
+                  style={{ color: t.textMuted }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  Share
+                </button>
+              </div>
               <p className="text-sm mt-3 leading-relaxed" style={{ color: t.textMuted }}>{selectedProduct.description || 'No description available.'}</p>
               <div className="flex items-center justify-between mt-5">
                 <span className="text-2xl font-semibold" style={{ color: accent }}>₦{Number(selectedProduct.price).toLocaleString()}</span>
@@ -461,6 +605,49 @@ export default function StoreClient({ slug }: { slug: string }) {
               >
                 Add {selectedQty} to Cart
               </button>
+
+              {(() => {
+                const related = products
+                  .filter((p) => p.id !== selectedProduct.id && p.category === selectedProduct.category)
+                  .slice(0, 4);
+                if (related.length === 0) return null;
+                return (
+                  <div className="mt-6 pt-5 border-t" style={{ borderColor: t.border }}>
+                    <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: t.textMuted }}>
+                      You might also like
+                    </p>
+                    <div className="grid grid-cols-2 gap-3">
+                      {related.map((rp) => (
+                        <div
+                          key={rp.id}
+                          className="rounded-lg border overflow-hidden cursor-pointer"
+                          style={{ backgroundColor: t.surface, borderColor: t.border }}
+                          onClick={() => {
+                            setSelectedProduct(rp);
+                            setSelectedQty(1);
+                            setSelectedImageIndex(0);
+                            if (vendor) trackView(rp.id, vendor.id);
+                          }}
+                        >
+                          <div className="aspect-square overflow-hidden" style={{ backgroundColor: t.surfaceHigh }}>
+                            {rp.images?.[0] ? (
+                              <FadeImage src={rp.images[0]} alt={rp.name} bg={t.surfaceHigh} />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" style={{ color: t.icon }}><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-2">
+                            <p className="text-xs font-semibold truncate" style={{ color: t.text }}>{rp.name}</p>
+                            <p className="text-xs font-semibold mt-0.5" style={{ color: accent }}>₦{Number(rp.price).toLocaleString()}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
@@ -593,6 +780,21 @@ export default function StoreClient({ slug }: { slug: string }) {
             )}
           </div>
         </div>
+      )}
+
+      {/* Sticky mobile cart bar */}
+      {cartCount > 0 && !showCart && (
+        <button
+          onClick={() => setShowCart(true)}
+          className="md:hidden fixed bottom-4 left-4 right-4 z-40 flex items-center justify-between px-5 py-3.5 rounded-xl text-sm font-semibold shadow-lg"
+          style={{ backgroundColor: accent, color: accentText }}
+        >
+          <span className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            {cartCount} item{cartCount === 1 ? '' : 's'} in cart
+          </span>
+          <span>₦{cartTotal.toLocaleString()} →</span>
+        </button>
       )}
 
       <div className="border-t mt-12 py-6 text-center" style={{ borderColor: t.border }}>
