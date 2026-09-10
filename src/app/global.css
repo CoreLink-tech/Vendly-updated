@@ -20,7 +20,7 @@
     --accent-foreground: hsl(40 33% 99%);
     --destructive: hsl(4 66% 46%);
     --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(40 15% 90%);               /* #E7E5DE */
+    --border: hsl(40 18% 80%);               /* #D4D1C7 — darker than bg so cards read as distinct */
     --input: hsl(40 15% 90%);
     --ring: hsl(152 79% 20%);
     --radius: 0.875rem;                      /* ~14px base; cards use larger */
