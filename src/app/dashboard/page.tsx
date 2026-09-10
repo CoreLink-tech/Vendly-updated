@@ -225,13 +225,16 @@ export default function DashboardPage() {
             <Eye className="size-4 text-primary" />
             <span className="text-xs font-semibold text-foreground">Store Views</span>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3">
             {[
               { label: 'Today', value: storeViews.today },
               { label: 'This Week', value: storeViews.week },
               { label: 'All Time', value: storeViews.total },
-            ].map((v) => (
-              <div key={v.label} className="rounded-lg p-2 text-center">
+            ].map((v, i) => (
+              <div
+                key={v.label}
+                className={`p-2 text-center${i > 0 ? ' border-l border-border' : ''}`}
+              >
                 <p className="text-xl font-bold text-primary">{v.value.toLocaleString()}</p>
                 <p className="mt-0.5 text-[11px] text-muted-foreground">{v.label}</p>
               </div>
