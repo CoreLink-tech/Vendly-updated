@@ -310,7 +310,21 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
           <Image src="/logo-full.png" alt="Vendly" width={100} height={32} className="h-8 w-auto" />
-          <div className="w-8" />
+          <div className="flex justify-end min-w-8">
+            {vendor?.status === 'active' && subscription?.status === 'active' && (() => {
+              const remaining = daysRemaining(subscription.trialEnd || subscription.endDate);
+              if (remaining === null) return null;
+              const expiringSoon = remaining <= 3;
+              return (
+                <span
+                  className="text-[11px] font-semibold whitespace-nowrap"
+                  style={{ color: expiringSoon ? theme.orange : theme.green }}
+                >
+                  {remaining > 0 ? `${remaining} day${remaining === 1 ? '' : 's'} left` : 'Expires today'}
+                </span>
+              );
+            })()}
+          </div>
         </header>
 
         {/* Pending activation banner */}
