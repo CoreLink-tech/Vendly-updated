@@ -107,10 +107,10 @@ function DashboardSkeleton() {
       <Image
         src="/welcome.png"
         alt="Welcome"
-        width={280}
-        height={158}
+        width={340}
+        height={191}
         priority
-        className="welcome-loader-logo w-56 sm:w-72 h-auto"
+        className="welcome-loader-logo w-72 sm:w-[26rem] h-auto"
       />
       <p className="welcome-loader-text text-sm text-muted-foreground">
         Loading your dashboard…
