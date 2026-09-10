@@ -8,7 +8,7 @@ import { theme } from '@/lib/theme';
 
 function SignUpForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard/setup';
   const [referralCode, setReferralCode] = useState(searchParams.get('ref') || searchParams.get('amb') || '');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
