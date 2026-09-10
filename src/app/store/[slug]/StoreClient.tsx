@@ -15,6 +15,7 @@ interface Product {
   createdAt: string;
   avgRating?: number | null;
   reviewCount?: number;
+  isBestSeller?: boolean;
 }
 
 interface Vendor {
@@ -123,6 +124,16 @@ async function shareLink(url: string, title: string, text: string) {
   }
   const waUrl = `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
   if (typeof window !== 'undefined') window.open(waUrl, '_blank');
+}
+
+// wa.me needs the full international number with no leading zero. The
+// store-settings form is a free-text field (placeholder "08012345678")
+// with no normalization, so vendor.phone may be stored in local Nigerian
+// format (leading 0) or already-international format — handle both.
+function toWhatsAppNumber(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('0')) return `234${digits.slice(1)}`;
+  return digits;
 }
 
 // Product grid images fade in once loaded instead of popping in abruptly,
@@ -434,7 +445,15 @@ export default function StoreClient({ slug }: { slug: string }) {
                 )}
               </div>
               <div className="flex items-center gap-2 min-w-0">
-                <h1 className="text-lg font-semibold truncate" style={{ color: t.text }}>{vendor.businessName}</h1>
+                <div className="min-w-0">
+                  <h1 className="text-lg font-semibold truncate" style={{ color: t.text }}>{vendor.businessName}</h1>
+                  {/* Location shown inline by default now — small trust signal
+                      that costs no extra layout space. The toggle below still
+                      gates the fuller description text. */}
+                  {vendor.location && (
+                    <p className="text-xs truncate" style={{ color: t.textFaint }}>{vendor.location}</p>
+                  )}
+                </div>
                 <button
                   onClick={() => setShowVendorInfo((v) => !v)}
                   aria-label={showVendorInfo ? 'Hide store info' : 'Show store info'}
@@ -447,6 +466,18 @@ export default function StoreClient({ slug }: { slug: string }) {
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
+              {vendor.phone && (
+                <a
+                  href={`https://wa.me/${toWhatsAppNumber(vendor.phone)}?text=${encodeURIComponent(`Hi ${vendor.businessName}, I have a question about your store on Vendly.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg border font-medium"
+                  style={{ borderColor: t.border, color: t.textMuted, backgroundColor: t.surfaceHigh }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                  <span className="hidden sm:inline">Chat</span>
+                </a>
+              )}
               <button
                 onClick={() => shareLink(typeof window !== 'undefined' ? window.location.href.split('?')[0] : '', vendor.businessName, `Check out ${vendor.businessName} on Vendly!`)}
                 aria-label="Share store"
@@ -475,10 +506,11 @@ export default function StoreClient({ slug }: { slug: string }) {
           {showVendorInfo && (
             <div className="mt-3 pl-[60px]">
               <p className="text-sm" style={{ color: t.textMuted }}>{vendor.description || 'Welcome to our store!'}</p>
-              <div className="flex items-center gap-4 mt-2 text-xs" style={{ color: t.textFaint }}>
-                {vendor.location && <span>{vendor.location}</span>}
-                {vendor.phone && <span>{vendor.phone}</span>}
-              </div>
+              {vendor.phone && (
+                <div className="flex items-center gap-4 mt-2 text-xs" style={{ color: t.textFaint }}>
+                  <span>{vendor.phone}</span>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -555,9 +587,15 @@ export default function StoreClient({ slug }: { slug: string }) {
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8" style={{ color: t.icon }}><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
                         </div>
                       )}
+                      {/* At most one badge per corner. Top-left priority: discount
+                          (most actionable) > best-seller > NEW (least urgent). */}
                       {hasDiscount(p) ? (
                         <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#ef4444', color: '#fff' }}>
                           -{discountPct(p)}%
+                        </span>
+                      ) : p.isBestSeller ? (
+                        <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: accent, color: accentText }}>
+                          🔥 Best Seller
                         </span>
                       ) : isNew(p) ? (
                         <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: accent, color: accentText }}>
@@ -682,6 +720,18 @@ export default function StoreClient({ slug }: { slug: string }) {
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                   Share
                 </button>
+                {vendor.phone && (
+                  <a
+                    href={`https://wa.me/${toWhatsAppNumber(vendor.phone)}?text=${encodeURIComponent(`Hi ${vendor.businessName}, is "${selectedProduct.name}" available?`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-xs font-medium"
+                    style={{ color: t.textMuted }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    Ask about this item
+                  </a>
+                )}
               </div>
               <p className="text-sm mt-3 leading-relaxed" style={{ color: t.textMuted }}>{selectedProduct.description || 'No description available.'}</p>
               <div className="flex items-center justify-between mt-5">

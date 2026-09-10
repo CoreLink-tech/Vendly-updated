@@ -1,6 +1,15 @@
 import { supabase } from '@/lib/supabase';
 import { withImagesList } from '@/lib/utils';
 
+// Mirrors ELIGIBLE_STATUSES in api/store/[slug]/reviews/route.ts — a
+// cancelled/unfulfilled sale shouldn't count toward "best seller".
+const ELIGIBLE_ORDER_STATUSES = ['delivered', 'completed'];
+
+// Below this many total eligible orders, a "best seller" tag is more
+// noise than signal (a store with 2 sales showing a "Best Seller" badge
+// looks misleading) — so we skip the badge entirely under this threshold.
+const MIN_ORDERS_FOR_BEST_SELLER = 5;
+
 export async function GET(_request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const normalizedSlug = slug.toLowerCase();
@@ -81,10 +90,52 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
     console.error('[store/[slug]] reviews table unavailable, skipping ratings:', e instanceof Error ? e.message : e);
   }
 
+  // Best-seller badge: top 3 products by units sold across eligible
+  // (delivered/completed) orders, among products currently in this
+  // response only (active, in-stock). Defensive like the other optional
+  // aggregates above — a missing/renamed orders table shouldn't break
+  // the storefront, it should just mean no best-seller badges.
+  let bestSellerIds = new Set<string>();
+  try {
+    const { data: eligibleOrders, error: ordersError } = await supabase
+      .from('orders')
+      .select('id')
+      .eq('vendorId', vendor.id)
+      .in('status', ELIGIBLE_ORDER_STATUSES);
+    if (ordersError) throw ordersError;
+
+    if ((eligibleOrders?.length || 0) >= MIN_ORDERS_FOR_BEST_SELLER) {
+      const orderIds = (eligibleOrders || []).map((o) => o.id);
+      const { data: items, error: itemsError } = await supabase
+        .from('order_items')
+        .select('productId, quantity')
+        .in('orderId', orderIds);
+      if (itemsError) throw itemsError;
+
+      const qtyByProduct = new Map<string, number>();
+      for (const item of items || []) {
+        if (!item.productId) continue;
+        qtyByProduct.set(item.productId, (qtyByProduct.get(item.productId) || 0) + item.quantity);
+      }
+
+      const activeProductIds = new Set((products || []).map((p: any) => p.id));
+      bestSellerIds = new Set(
+        Array.from(qtyByProduct.entries())
+          .filter(([productId]) => activeProductIds.has(productId))
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3)
+          .map(([productId]) => productId)
+      );
+    }
+  } catch (e) {
+    console.error('[store/[slug]] best-seller aggregate unavailable, skipping badges:', e instanceof Error ? e.message : e);
+  }
+
   const productsWithReviews = withImagesList(products).map((p: any) => ({
     ...p,
     avgRating: reviewStats.get(p.id)?.avgRating ?? null,
     reviewCount: reviewStats.get(p.id)?.reviewCount ?? 0,
+    isBestSeller: bestSellerIds.has(p.id),
   }));
 
   // Platform-wide override — isolated the same way as the theme columns
