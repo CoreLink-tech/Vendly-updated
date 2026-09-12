@@ -3,6 +3,14 @@ import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 import { withImagesList } from '@/lib/utils';
 import { sanitizeSearchInput } from '@/lib/sanitize';
+import { randomBytes } from 'crypto';
+
+// products.shareCode is a unique, NOT NULL column in the live DB (short
+// code for shareable product links) with no default and no trigger —
+// every insert must supply one explicitly or Postgres rejects the row.
+function generateShareCode() {
+  return randomBytes(5).toString('base64url');
+}
 
 async function getVendorId(userId: string) {
   const { data } = await supabase.from('vendors').select('id').eq('userId', userId).single();
@@ -50,12 +58,29 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Compare-at price must be higher than the price' }, { status: 400 });
   }
 
-  const { data: product } = await supabase.from('products').insert({
-    vendorId, name: body.name, description: body.description || '',
-    price: body.price, compareAtPrice: body.compareAtPrice ?? null, category: body.category || '', stock: body.stock || 0, status: 'active',
-  }).select().single();
+  // Retry on the (rare) shareCode collision — the column is uniquely
+  // indexed, so a duplicate 7-char code fails the insert with a 23505.
+  // Anything else is a real failure and should surface as an error, not
+  // silently produce an empty product like before.
+  let product = null;
+  let insertError: { code?: string; message: string } | null = null;
+  for (let attempt = 0; attempt < 3 && !product; attempt++) {
+    const { data, error } = await supabase.from('products').insert({
+      vendorId, name: body.name, description: body.description || '',
+      price: body.price, compareAtPrice: body.compareAtPrice ?? null, category: body.category || '', stock: body.stock || 0, status: 'active',
+      shareCode: generateShareCode(),
+    }).select().single();
+    if (data) { product = data; break; }
+    insertError = error;
+    if (error?.code !== '23505') break;
+  }
 
-  if (body.images?.length && product) {
+  if (!product) {
+    console.error('[vendor/products] insert failed:', insertError?.message);
+    return Response.json({ error: 'Failed to create product' }, { status: 500 });
+  }
+
+  if (body.images?.length) {
     await supabase.from('product_images').insert(body.images.map((url, i) => ({ productId: product.id, url, sortOrder: i })));
   }
 
