@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 interface Product {
   id: string;
+  shareCode?: string;
   name: string;
   description: string;
   price: number;
@@ -264,13 +265,14 @@ export default function StoreClient({ slug }: { slug: string }) {
       .catch(() => { setNotFound(true); setLoading(false); });
   }, [slug]);
 
-  // If someone opened a shared product link (?product=<id>), pop that
-  // product's detail modal open once the catalog has loaded.
+  // If someone opened a shared product link (?product=<shareCode>), pop that
+  // product's detail modal open once the catalog has loaded. Falls back to
+  // matching on raw id too, so links shared before shareCode existed still work.
   useEffect(() => {
     if (!products.length || typeof window === 'undefined') return;
-    const productId = new URLSearchParams(window.location.search).get('product');
-    if (!productId) return;
-    const match = products.find((p) => p.id === productId);
+    const code = new URLSearchParams(window.location.search).get('product');
+    if (!code) return;
+    const match = products.find((p) => p.shareCode === code || p.id === code);
     if (match) {
       setSelectedProduct(match);
       setSelectedQty(1);
@@ -712,7 +714,8 @@ export default function StoreClient({ slug }: { slug: string }) {
                 <button
                   onClick={() => {
                     const base = typeof window !== 'undefined' ? window.location.href.split('?')[0] : '';
-                    shareLink(`${base}?product=${selectedProduct.id}`, selectedProduct.name, `Check out ${selectedProduct.name} on ${vendor.businessName}!`);
+                    const code = selectedProduct.shareCode || selectedProduct.id;
+                    shareLink(`${base}?product=${code}`, selectedProduct.name, `Check out ${selectedProduct.name} on ${vendor.businessName}!`);
                   }}
                   className="flex items-center gap-1 text-xs font-medium"
                   style={{ color: t.textMuted }}

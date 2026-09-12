@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { supabase } from '@/lib/supabase';
+import { sanitizeSearchInput } from '@/lib/sanitize';
 import StoreClient from './StoreClient';
 
 // Queried directly against Supabase (same minimal shape as
@@ -11,9 +12,10 @@ import StoreClient from './StoreClient';
 // defaults (from layout.tsx) on any error/missing vendor rather than
 // throwing — a bad OG preview is fine, a broken storefront isn't.
 export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> }
+  { params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ product?: string }> }
 ): Promise<Metadata> {
   const { slug } = await params;
+  const { product: productCode } = await searchParams;
   try {
     const { data: vendor } = await supabase
       .from('vendors')
@@ -41,11 +43,38 @@ export async function generateMetadata(
       // column unavailable in this environment — fall through, logo/default still work
     }
 
-    const title = `${vendor.businessName} — Vendly`;
-    const description = vendor.description?.trim() || `Shop ${vendor.businessName} on Vendly.`;
+    let title = `${vendor.businessName} — Vendly`;
+    let description = vendor.description?.trim() || `Shop ${vendor.businessName} on Vendly.`;
     // Prefer bannerImage (wider, more representative of the store) over
     // logo for the OG image; fall back to the site default if neither is set.
-    const image = bannerImage || vendor.logo || undefined;
+    let image = bannerImage || vendor.logo || undefined;
+
+    // Shared product link (?product=<shareCode>) — swap in that product's
+    // own name/price/photo so the WhatsApp/social preview shows what's
+    // actually being shared instead of generic store branding. Falls back
+    // to raw id too for links shared before shareCode existed. Same
+    // defensive pattern as everything else here: any failure just falls
+    // through to the store-level metadata above rather than breaking the page.
+    const safeProductCode = productCode ? sanitizeSearchInput(productCode) : '';
+    if (safeProductCode) {
+      try {
+        const { data: product, error: productError } = await supabase
+          .from('products')
+          .select('name, description, price, status, product_images(url, sortOrder)')
+          .eq('vendorId', vendor.id)
+          .or(`shareCode.eq.${safeProductCode},id.eq.${safeProductCode}`)
+          .single();
+        if (productError) throw productError;
+        if (product && product.status === 'active') {
+          const images = (product.product_images || []).sort((a: { sortOrder: number }, b: { sortOrder: number }) => a.sortOrder - b.sortOrder);
+          title = `${product.name} — ${vendor.businessName}`;
+          description = `₦${Number(product.price).toLocaleString()} — ${product.description?.trim() || `Available on ${vendor.businessName}'s Vendly store.`}`;
+          if (images[0]?.url) image = images[0].url;
+        }
+      } catch (e) {
+        console.error('[store/[slug]] product metadata unavailable, using store defaults:', e instanceof Error ? e.message : e);
+      }
+    }
 
     return {
       title,
