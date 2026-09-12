@@ -34,7 +34,7 @@ const EMPTY_FORM = {
   price: '',
   compareAtPrice: '',
   category: '',
-  stock: '',
+  stock: '1',
   images: [] as string[],
 };
 
@@ -113,6 +113,10 @@ export default function ProductsPage() {
   const handleSave = async () => {
     if (!form.name || !form.price) {
       setError('Name and price are required');
+      return;
+    }
+    if (!form.stock || parseInt(form.stock) < 1) {
+      setError('Stock is required and must be at least 1 — products with 0 stock won\'t show on your storefront');
       return;
     }
     if (compareAtPriceError) {
@@ -358,9 +362,10 @@ export default function ProductsPage() {
                   className="flex flex-col gap-1.5 text-xs font-medium"
                   style={{ color: theme.muted }}
                 >
-                  Stock
+                  Stock *
                   <input
                     type="number"
+                    min="1"
                     value={form.stock}
                     onChange={(e) => setForm((f) => ({ ...f, stock: e.target.value }))}
                     className="rounded-lg border px-3 py-2.5 text-sm outline-none"
