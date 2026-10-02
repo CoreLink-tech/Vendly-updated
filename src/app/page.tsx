@@ -163,8 +163,8 @@ export default function HomePage() {
             </Link>
             <a
               href="#how-it-works"
-              className="text-center text-sm font-medium px-8 py-3.5 rounded-full transition-colors duration-200 hover:bg-black/[0.03]"
-              style={{ border: `1px solid ${theme.line}`, color: theme.ink }}
+              className="glass text-center text-sm font-medium px-8 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
+              style={{ color: theme.ink }}
             >
               See how it works
             </a>
@@ -202,8 +202,8 @@ export default function HomePage() {
               >
                 <div className={i % 2 === 1 ? 'lg:order-2' : ''}>
                   <div
-                    className="w-11 h-11 rounded-[14px] flex items-center justify-center mb-5"
-                    style={{ backgroundColor: theme.greenSoft, color: theme.green }}
+                    className="glass w-11 h-11 rounded-[14px] flex items-center justify-center mb-5"
+                    style={{ color: theme.green }}
                   >
                     <f.Icon />
                   </div>
@@ -291,8 +291,7 @@ export default function HomePage() {
           </p>
 
           <div
-            className="rounded-[24px] p-8 md:p-12 text-left max-w-md mx-auto relative landing-soft-shadow"
-            style={{ backgroundColor: theme.greenDeep }}
+            className="glass-dark rounded-[24px] p-8 md:p-12 text-left max-w-md mx-auto relative"
           >
             <span
               className="inline-block text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6"
@@ -334,7 +333,7 @@ export default function HomePage() {
             <Link
               href="/account/signup"
               className="block text-center text-sm font-semibold py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
-              style={{ backgroundColor: theme.bg, color: theme.greenDeep }}
+              style={{ backgroundColor: '#FFFEFB', color: theme.greenDeep }}
             >
               Create your store
             </Link>
@@ -362,8 +361,8 @@ export default function HomePage() {
       {/* Footer */}
       <AwningStripe height={4} />
       <footer
-        className="px-6 md:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4"
-        style={{ borderTop: `1px solid ${theme.line}` }}
+        className="glass px-6 md:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4"
+        style={{ borderTop: '1px solid rgba(255,255,255,0.5)' }}
       >
         <a href="/">
           <Image

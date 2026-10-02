@@ -160,13 +160,14 @@
 }
 
 .glass-dark {
-  background: rgba(22, 31, 26, 0.45);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(8, 85, 48, 0.75);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.1) inset,
-    0 8px 32px -8px rgba(0, 0, 0, 0.3);
+    0 1px 0 0 rgba(255, 255, 255, 0.12) inset,
+    0 16px 40px -10px rgba(0, 0, 0, 0.35),
+    0 4px 12px -4px rgba(0, 0, 0, 0.15);
   color: #FFFEFB;
 }
 
@@ -213,12 +214,12 @@
 .landing-delay-3 { animation-delay: 0.24s; }
 .landing-delay-4 { animation-delay: 0.32s; }
 
+/* Light glass card used by feature mocks & similar frames */
 .landing-soft-shadow {
-  /* Glass treatment for landing frames */
-  background: rgba(255, 255, 255, 0.42) !important;
+  background: rgba(255, 255, 255, 0.42);
   backdrop-filter: blur(22px) saturate(180%);
   -webkit-backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow:
     0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
     0 16px 40px -12px rgba(22, 31, 26, 0.14),

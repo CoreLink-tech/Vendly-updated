@@ -67,8 +67,7 @@ export function LandingNav() {
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="md:hidden w-10 h-10 flex items-center justify-center rounded-full"
-            style={{ border: `1px solid ${theme.line}` }}
+            className="glass md:hidden w-10 h-10 flex items-center justify-center rounded-full"
           >
             <span className="relative w-4 h-3 block">
               <span
