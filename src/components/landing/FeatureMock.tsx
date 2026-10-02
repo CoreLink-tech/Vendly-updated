@@ -2,20 +2,12 @@ import type { ReactNode } from 'react';
 import Image from 'next/image';
 import { theme, displayFont } from '@/lib/theme';
 
-const frameStyle = {
-  backgroundColor: theme.bg,
-  border: `1px solid ${theme.line}`,
-};
-
 function Frame({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div
-      className="rounded-[24px] overflow-hidden landing-soft-shadow"
-      style={frameStyle}
-    >
+    <div className="rounded-[24px] overflow-hidden landing-soft-shadow">
       <div
         className="px-4 py-2.5 flex items-center gap-2"
-        style={{ borderBottom: `1px solid ${theme.line}` }}
+        style={{ borderBottom: '1px solid rgba(22, 31, 26, 0.08)' }}
       >
         <span
           className="w-1.5 h-1.5 rounded-full"

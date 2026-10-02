@@ -121,11 +121,12 @@
     body {
         @apply bg-background text-foreground;
         font-family: var(--font-exo2), sans-serif;
-        /* Subtle warm gradients so glass blur has something to refract */
+        /* Stronger warm gradients so glass blur is clearly visible */
         background-image:
-          radial-gradient(ellipse 120% 80% at 10% -20%, rgba(11, 94, 56, 0.06), transparent 50%),
-          radial-gradient(ellipse 100% 60% at 90% 10%, rgba(245, 130, 10, 0.05), transparent 45%),
-          radial-gradient(ellipse 80% 50% at 50% 100%, rgba(11, 94, 56, 0.04), transparent 50%);
+          radial-gradient(ellipse 130% 90% at 5% -10%, rgba(11, 94, 56, 0.14), transparent 55%),
+          radial-gradient(ellipse 110% 70% at 95% 5%, rgba(245, 130, 10, 0.12), transparent 50%),
+          radial-gradient(ellipse 90% 60% at 50% 110%, rgba(11, 94, 56, 0.10), transparent 55%),
+          radial-gradient(ellipse 60% 40% at 70% 60%, rgba(245, 130, 10, 0.06), transparent 50%);
         background-attachment: fixed;
     }
 }
@@ -137,47 +138,47 @@
    ============================================ */
 
 .glass {
-  background: rgba(255, 254, 251, 0.55);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.55);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
-    0 8px 32px -8px rgba(22, 31, 26, 0.10),
-    0 2px 8px -2px rgba(22, 31, 26, 0.04);
+    0 1px 0 0 rgba(255, 255, 255, 0.8) inset,
+    0 8px 32px -6px rgba(22, 31, 26, 0.12),
+    0 2px 8px -2px rgba(22, 31, 26, 0.06);
 }
 
 .glass-strong {
-  background: rgba(255, 254, 251, 0.72);
-  backdrop-filter: blur(20px) saturate(200%);
-  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  background: rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
   border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.8) inset,
-    0 12px 40px -10px rgba(22, 31, 26, 0.12),
-    0 4px 12px -4px rgba(22, 31, 26, 0.05);
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 12px 40px -8px rgba(22, 31, 26, 0.14),
+    0 4px 12px -4px rgba(22, 31, 26, 0.06);
 }
 
 .glass-dark {
-  background: rgba(22, 31, 26, 0.55);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(22, 31, 26, 0.45);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
-    0 8px 32px -8px rgba(0, 0, 0, 0.25);
+    0 1px 0 0 rgba(255, 255, 255, 0.1) inset,
+    0 8px 32px -8px rgba(0, 0, 0, 0.3);
   color: #FFFEFB;
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.58);
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.75) inset,
-    0 10px 28px -8px rgba(22, 31, 26, 0.10),
-    0 3px 10px -3px rgba(22, 31, 26, 0.05);
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 10px 30px -6px rgba(22, 31, 26, 0.12),
+    0 3px 10px -3px rgba(22, 31, 26, 0.06);
 }
 
 /* Dark mode glass variants */
@@ -213,20 +214,27 @@
 .landing-delay-4 { animation-delay: 0.32s; }
 
 .landing-soft-shadow {
-  box-shadow: 0 16px 40px -16px rgba(22, 31, 26, 0.14), 0 4px 12px -4px rgba(22, 31, 26, 0.06);
+  /* Glass treatment for landing frames */
+  background: rgba(255, 255, 255, 0.42) !important;
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 16px 40px -12px rgba(22, 31, 26, 0.14),
+    0 4px 12px -4px rgba(22, 31, 26, 0.06);
 }
 
 .landing-card {
   border-radius: 24px;
-  /* Glassmorphism for landing feature cards */
-  background: rgba(255, 255, 255, 0.58);
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.75) inset,
-    0 10px 28px -8px rgba(22, 31, 26, 0.10),
-    0 3px 10px -3px rgba(22, 31, 26, 0.05);
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 10px 28px -8px rgba(22, 31, 26, 0.12),
+    0 3px 10px -3px rgba(22, 31, 26, 0.06);
 }
 
 /* Welcome loader animation: bounce-in entrance, then a gentle breathing loop */

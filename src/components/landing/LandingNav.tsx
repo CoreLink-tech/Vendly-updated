@@ -17,8 +17,8 @@ export function LandingNav() {
   return (
     <>
       <nav
-        className="sticky top-0 z-50 backdrop-blur"
-        style={{ backgroundColor: 'rgba(255,254,251,0.85)', borderBottom: `1px solid ${theme.line}` }}
+        className="glass sticky top-0 z-50"
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.5)' }}
       >
         <div className="max-w-6xl mx-auto px-6 md:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>

@@ -112,8 +112,7 @@ export function HeroMockup() {
 
       {/* Floating: product page */}
       <div
-        className="hidden sm:flex absolute left-[-8%] top-[14%] w-[150px] rounded-[20px] p-3 items-start gap-2.5 bg-white shadow-[0_18px_36px_-12px_rgba(22,31,26,0.18)]"
-        style={{ border: `1px solid ${theme.line}` }}
+        className="glass-strong hidden sm:flex absolute left-[-8%] top-[14%] w-[150px] rounded-[20px] p-3 items-start gap-2.5"
       >
         <div className="w-9 h-9 rounded-lg shrink-0 overflow-hidden relative">
           <Image
@@ -141,8 +140,7 @@ export function HeroMockup() {
 
       {/* Floating: order dashboard */}
       <div
-        className="absolute right-[-4%] sm:right-[-10%] top-[6%] w-[148px] rounded-[20px] p-3.5 bg-white shadow-[0_18px_36px_-12px_rgba(22,31,26,0.18)]"
-        style={{ border: `1px solid ${theme.line}` }}
+        className="glass-strong absolute right-[-4%] sm:right-[-10%] top-[6%] w-[148px] rounded-[20px] p-3.5"
       >
         <p className="text-[9px]" style={{ color: theme.cocoa }}>
           Today
@@ -172,8 +170,7 @@ export function HeroMockup() {
 
       {/* Floating: checkout */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 bottom-0 sm:bottom-2 w-[210px] rounded-[20px] p-3.5 bg-white shadow-[0_18px_40px_-10px_rgba(22,31,26,0.22)]"
-        style={{ border: `1px solid ${theme.line}` }}
+        className="glass-strong absolute left-1/2 -translate-x-1/2 bottom-0 sm:bottom-2 w-[210px] rounded-[20px] p-3.5"
       >
         <div className="flex items-center justify-between">
           <p className="text-[10px] font-medium" style={{ color: theme.ink }}>
