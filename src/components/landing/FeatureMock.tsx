@@ -4,7 +4,7 @@ import { theme, displayFont } from '@/lib/theme';
 
 function Frame({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="rounded-[24px] overflow-hidden landing-soft-shadow">
+    <div className="rounded-[24px] overflow-hidden landing-soft-shadow transition-transform duration-300 hover:-translate-y-1.5">
       <div
         className="px-4 py-2.5 flex items-center gap-2"
         style={{ borderBottom: '1px solid rgba(22, 31, 26, 0.08)' }}

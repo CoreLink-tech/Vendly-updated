@@ -291,7 +291,7 @@ export default function HomePage() {
           </p>
 
           <div
-            className="glass-dark rounded-[24px] p-8 md:p-12 text-left max-w-md mx-auto relative"
+            className="glass-dark rounded-[24px] p-8 md:p-12 text-left max-w-md mx-auto relative transition-transform duration-300 hover:-translate-y-1.5"
           >
             <span
               className="inline-block text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6"
