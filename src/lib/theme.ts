@@ -31,9 +31,9 @@ export const theme = {
   warning: '#F5820A',
   danger: '#C0392B',
 
-  // Shadows
-  shadowCard: '0 16px 40px -16px rgba(22, 31, 26, 0.12), 0 4px 12px -4px rgba(22, 31, 26, 0.05)',
-  shadowSoft: '0 8px 24px -8px rgba(22, 31, 26, 0.10)',
+  // Shadows (tuned for glassmorphism)
+  shadowCard: '0 1px 0 0 rgba(255,255,255,0.75) inset, 0 10px 28px -8px rgba(22, 31, 26, 0.10), 0 3px 10px -3px rgba(22, 31, 26, 0.05)',
+  shadowSoft: '0 8px 24px -8px rgba(22, 31, 26, 0.08)',
 } as const;
 
 export const displayFont = {
