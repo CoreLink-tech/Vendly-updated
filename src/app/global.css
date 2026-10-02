@@ -138,61 +138,85 @@
    ============================================ */
 
 .glass {
-  background: rgba(255, 255, 255, 0.38);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
-    0 -1px 0 0 rgba(22, 31, 26, 0.04) inset,
-    0 4px 6px -2px rgba(22, 31, 26, 0.06),
-    0 12px 28px -8px rgba(22, 31, 26, 0.14),
-    0 28px 48px -16px rgba(22, 31, 26, 0.12);
+    0 2px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 -2px 4px 0 rgba(22, 31, 26, 0.06) inset,
+    0 2px 4px rgba(22, 31, 26, 0.04),
+    0 8px 16px -4px rgba(22, 31, 26, 0.1),
+    0 20px 40px -10px rgba(22, 31, 26, 0.16),
+    0 40px 72px -20px rgba(22, 31, 26, 0.14);
   transform: translateZ(0);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.52);
-  backdrop-filter: blur(24px) saturate(200%);
-  -webkit-backdrop-filter: blur(24px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(26px) saturate(200%);
+  -webkit-backdrop-filter: blur(26px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow:
-    0 1.5px 0 0 rgba(255, 255, 255, 0.95) inset,
-    0 -1px 0 0 rgba(22, 31, 26, 0.05) inset,
-    0 6px 10px -3px rgba(22, 31, 26, 0.08),
-    0 16px 36px -10px rgba(22, 31, 26, 0.16),
-    0 32px 56px -18px rgba(22, 31, 26, 0.14);
+    0 2px 0 0 rgba(255, 255, 255, 1) inset,
+    0 -2px 6px 0 rgba(22, 31, 26, 0.07) inset,
+    0 3px 6px rgba(22, 31, 26, 0.05),
+    0 10px 20px -4px rgba(22, 31, 26, 0.12),
+    0 24px 48px -12px rgba(22, 31, 26, 0.18),
+    0 48px 80px -24px rgba(22, 31, 26, 0.16);
   transform: translateZ(0);
 }
 
-/* Strong green glass for pricing — rich colour + 3D depth */
+/* Pricing card — dense brand green + strong 3D */
 .glass-dark {
   background:
-    linear-gradient(165deg, rgba(12, 120, 68, 0.92) 0%, rgba(6, 72, 40, 0.95) 100%);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+    linear-gradient(
+      160deg,
+      #0d8a4c 0%,
+      #0a6b3c 40%,
+      #085530 75%,
+      #063f24 100%
+    );
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow:
-    0 1.5px 0 0 rgba(255, 255, 255, 0.2) inset,
-    0 -1px 0 0 rgba(0, 0, 0, 0.2) inset,
-    0 8px 16px -4px rgba(0, 40, 20, 0.35),
-    0 20px 48px -12px rgba(0, 30, 15, 0.45),
-    0 40px 72px -20px rgba(0, 20, 10, 0.35);
+    0 2px 0 0 rgba(255, 255, 255, 0.35) inset,
+    0 12px 24px -8px rgba(255, 255, 255, 0.12) inset,
+    0 -3px 8px 0 rgba(0, 0, 0, 0.25) inset,
+    0 4px 8px rgba(0, 30, 15, 0.25),
+    0 16px 32px -6px rgba(0, 40, 20, 0.4),
+    0 36px 64px -12px rgba(0, 25, 12, 0.5),
+    0 56px 100px -24px rgba(0, 15, 8, 0.4);
   color: #FFFEFB;
   transform: translateZ(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-dark:hover {
+  transform: translateY(-6px) translateZ(0);
+  box-shadow:
+    0 2px 0 0 rgba(255, 255, 255, 0.4) inset,
+    0 12px 24px -8px rgba(255, 255, 255, 0.15) inset,
+    0 -3px 8px 0 rgba(0, 0, 0, 0.25) inset,
+    0 8px 16px rgba(0, 30, 15, 0.3),
+    0 24px 48px -6px rgba(0, 40, 20, 0.45),
+    0 48px 80px -12px rgba(0, 25, 12, 0.55),
+    0 72px 120px -24px rgba(0, 15, 8, 0.45);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(22px) saturate(180%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow:
-    0 1.5px 0 0 rgba(255, 255, 255, 0.95) inset,
-    0 -1px 0 0 rgba(22, 31, 26, 0.05) inset,
-    0 5px 8px -2px rgba(22, 31, 26, 0.07),
-    0 14px 32px -8px rgba(22, 31, 26, 0.15),
-    0 28px 52px -16px rgba(22, 31, 26, 0.12);
+    0 2px 0 0 rgba(255, 255, 255, 1) inset,
+    0 -2px 6px 0 rgba(22, 31, 26, 0.07) inset,
+    0 3px 6px rgba(22, 31, 26, 0.05),
+    0 10px 20px -4px rgba(22, 31, 26, 0.12),
+    0 24px 48px -12px rgba(22, 31, 26, 0.18),
+    0 48px 80px -24px rgba(22, 31, 26, 0.16);
   transform: translateZ(0);
 }
 
@@ -230,31 +254,33 @@
 
 /* Light glass card used by feature mocks & similar frames — 3D depth */
 .landing-soft-shadow {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(22px) saturate(180%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow:
-    0 1.5px 0 0 rgba(255, 255, 255, 0.95) inset,
-    0 -1px 0 0 rgba(22, 31, 26, 0.05) inset,
-    0 6px 10px -3px rgba(22, 31, 26, 0.08),
-    0 18px 40px -12px rgba(22, 31, 26, 0.16),
-    0 36px 64px -20px rgba(22, 31, 26, 0.12);
+    0 2px 0 0 rgba(255, 255, 255, 1) inset,
+    0 -2px 6px 0 rgba(22, 31, 26, 0.07) inset,
+    0 3px 6px rgba(22, 31, 26, 0.05),
+    0 10px 20px -4px rgba(22, 31, 26, 0.12),
+    0 24px 48px -12px rgba(22, 31, 26, 0.18),
+    0 48px 80px -24px rgba(22, 31, 26, 0.16);
   transform: translateZ(0);
 }
 
 .landing-card {
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(22px) saturate(180%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow:
-    0 1.5px 0 0 rgba(255, 255, 255, 0.95) inset,
-    0 -1px 0 0 rgba(22, 31, 26, 0.05) inset,
-    0 5px 8px -2px rgba(22, 31, 26, 0.07),
-    0 14px 32px -8px rgba(22, 31, 26, 0.15),
-    0 28px 52px -16px rgba(22, 31, 26, 0.12);
+    0 2px 0 0 rgba(255, 255, 255, 1) inset,
+    0 -2px 6px 0 rgba(22, 31, 26, 0.07) inset,
+    0 3px 6px rgba(22, 31, 26, 0.05),
+    0 10px 20px -4px rgba(22, 31, 26, 0.12),
+    0 24px 48px -12px rgba(22, 31, 26, 0.18),
+    0 48px 80px -24px rgba(22, 31, 26, 0.16);
   transform: translateZ(0);
 }
 
