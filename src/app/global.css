@@ -10,7 +10,7 @@
     --card-foreground: hsl(150 18% 10%);
     --popover: hsl(0 0% 100%);
     --popover-foreground: hsl(150 18% 10%);
-    --primary: hsl(152 79% 20%);             /* #0B5E38 deep green */
+    --primary: hsl(152 83% 23%);             /* #0A6B3C stronger natural green */
     --primary-foreground: hsl(40 33% 99%);
     --secondary: hsl(40 30% 94%);            /* warm cream */
     --secondary-foreground: hsl(150 18% 10%);
@@ -22,21 +22,21 @@
     --destructive-foreground: hsl(0 0% 98%);
     --border: hsl(40 18% 80%);               /* #D4D1C7 — darker than bg so cards read as distinct */
     --input: hsl(40 15% 90%);
-    --ring: hsl(152 79% 20%);
+    --ring: hsl(152 83% 23%);
     --radius: 0.875rem;                      /* ~14px base; cards use larger */
-    --chart-1: hsl(152 79% 20%);
+    --chart-1: hsl(152 83% 23%);
     --chart-2: hsl(32 95% 50%);
     --chart-3: hsl(173 58% 39%);
     --chart-4: hsl(43 74% 66%);
     --chart-5: hsl(27 87% 67%);
     --sidebar: hsl(40 33% 99%);
     --sidebar-foreground: hsl(150 18% 10%);
-    --sidebar-primary: hsl(152 79% 20%);
+    --sidebar-primary: hsl(152 83% 23%);
     --sidebar-primary-foreground: hsl(40 33% 99%);
-    --sidebar-accent: hsl(145 28% 92%);      /* greenSoft */
-    --sidebar-accent-foreground: hsl(152 79% 20%);
+    --sidebar-accent: hsl(145 40% 85%);      /* richer greenSoft */
+    --sidebar-accent-foreground: hsl(152 83% 23%);
     --sidebar-border: hsl(40 15% 90%);
-    --sidebar-ring: hsl(152 79% 20%);
+    --sidebar-ring: hsl(152 83% 23%);
 }
 
 .dark {
@@ -121,12 +121,12 @@
     body {
         @apply bg-background text-foreground;
         font-family: var(--font-exo2), sans-serif;
-        /* Stronger warm gradients so glass blur is clearly visible */
+        /* Strong green/orange washes so frosted glass is clearly visible */
         background-image:
-          radial-gradient(ellipse 130% 90% at 5% -10%, rgba(11, 94, 56, 0.14), transparent 55%),
-          radial-gradient(ellipse 110% 70% at 95% 5%, rgba(245, 130, 10, 0.12), transparent 50%),
-          radial-gradient(ellipse 90% 60% at 50% 110%, rgba(11, 94, 56, 0.10), transparent 55%),
-          radial-gradient(ellipse 60% 40% at 70% 60%, rgba(245, 130, 10, 0.06), transparent 50%);
+          radial-gradient(ellipse 140% 100% at 0% -15%, rgba(10, 107, 60, 0.22), transparent 55%),
+          radial-gradient(ellipse 120% 80% at 100% 0%, rgba(245, 130, 10, 0.16), transparent 50%),
+          radial-gradient(ellipse 100% 70% at 50% 120%, rgba(10, 107, 60, 0.14), transparent 55%),
+          radial-gradient(ellipse 70% 50% at 75% 55%, rgba(245, 130, 10, 0.08), transparent 50%);
         background-attachment: fixed;
     }
 }

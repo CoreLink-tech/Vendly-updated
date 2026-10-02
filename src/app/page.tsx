@@ -131,7 +131,7 @@ export default function HomePage() {
   return (
     <main
       className="min-h-screen pb-24 md:pb-0"
-      style={{ backgroundColor: theme.bg, color: theme.ink }}
+      style={{ color: theme.ink }}
     >
       <LandingNav />
 

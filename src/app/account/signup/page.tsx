@@ -47,7 +47,6 @@ function SignUpForm() {
   return (
     <main
       className="flex min-h-screen w-full items-center justify-center p-4"
-      style={{ backgroundColor: theme.bg }}
     >
       <div className="w-full max-w-[420px]">
         <div className="flex justify-center mb-3">
@@ -60,8 +59,7 @@ function SignUpForm() {
           onSubmit={(e) => {
             void onSubmit(e);
           }}
-          className="rounded-[24px] border p-8 flex flex-col gap-5"
-          style={{ backgroundColor: theme.surface, borderColor: theme.line, boxShadow: theme.shadowCard }}
+          className="glass-strong rounded-[24px] p-8 flex flex-col gap-5"
         >
           <div>
             <h1 className="text-xl font-semibold" style={{ color: theme.ink }}>

@@ -8,10 +8,10 @@ export const theme = {
   surface: '#FFFFFF',      // cards, panels
   surfaceRaised: '#FFFEFB',
 
-  // Brand
-  green: '#0B5E38',        // primary actions, active states
-  greenDeep: '#093F27',    // pressed / strong emphasis
-  greenSoft: '#E7F0EA',    // icon wells, active bg tint
+  // Brand — richer, more natural greens
+  green: '#0A6B3C',        // primary actions (stronger natural green)
+  greenDeep: '#085530',    // pressed / strong emphasis
+  greenSoft: '#C8E6D5',    // icon wells — more saturated mint
   orange: '#F5820A',       // accent (sparingly)
   orangeSoft: '#FCE9D2',
 
@@ -27,7 +27,7 @@ export const theme = {
   lineOnDark: 'rgba(255, 254, 251, 0.24)', // hairline border on dark sections
 
   // Status
-  success: '#0B5E38',
+  success: '#0A6B3C',
   warning: '#F5820A',
   danger: '#C0392B',
 
