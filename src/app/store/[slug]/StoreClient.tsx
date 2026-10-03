@@ -577,8 +577,11 @@ export default function StoreClient({ slug }: { slug: string }) {
                 {filteredProducts.map((p) => (
                   <div
                     key={p.id}
-                    className="rounded-xl border overflow-hidden cursor-pointer transition-shadow hover:shadow-lg"
-                    style={{ backgroundColor: t.surface, borderColor: t.border }}
+                    className="store-product-card rounded-xl border overflow-hidden cursor-pointer"
+                    style={{
+                      backgroundColor: hexWithAlpha(t.surface, t.dark ? 'A8' : '99'),
+                      borderColor: t.dark ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.55)',
+                    }}
                     onClick={() => { setSelectedProduct(p); setSelectedQty(1); setSelectedImageIndex(0); if (vendor) trackView(p.id, vendor.id); }}
                   >
                     <div className="relative aspect-square overflow-hidden" style={{ backgroundColor: t.surfaceHigh }}>
@@ -646,7 +649,13 @@ export default function StoreClient({ slug }: { slug: string }) {
       {/* Product detail modal with quantity selector */}
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-8 overflow-y-auto" style={{ backgroundColor: 'rgba(0,0,0,0.75)' }}>
-          <div className="w-full max-w-lg rounded-xl border overflow-hidden" style={{ backgroundColor: t.surfaceHigh, borderColor: t.border }}>
+          <div
+            className="store-product-modal w-full max-w-lg rounded-xl border overflow-hidden"
+            style={{
+              backgroundColor: hexWithAlpha(t.surfaceHigh, t.dark ? 'CC' : 'B8'),
+              borderColor: t.dark ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.5)',
+            }}
+          >
             <div className="relative aspect-video overflow-hidden" style={{ backgroundColor: t.surface }}>
               {selectedProduct.images?.length ? (
                 <img
