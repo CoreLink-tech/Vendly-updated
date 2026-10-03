@@ -63,7 +63,7 @@ export default function AdminSettingsPage() {
       {loading ? (
         <p className="text-sm" style={{ color: theme.muted }}>Loading…</p>
       ) : (
-        <div className="rounded-xl border divide-y" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+        <div className="rounded-xl border divide-y admin-panel">
           {SETTINGS.map((s) => {
             const on = values[s.key] ?? true;
             return (

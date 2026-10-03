@@ -87,8 +87,7 @@ export default function WithdrawalsPage() {
       </div>
 
       <div
-        className="rounded-xl border overflow-hidden"
-        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+        className="rounded-xl border overflow-hidden admin-panel"
       >
         {loading ? (
           <div className="flex items-center justify-center h-24">

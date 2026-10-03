@@ -153,8 +153,7 @@ export default function AdminVendorsPage() {
 
       {/* Table */}
       <div
-        className="rounded-xl border overflow-hidden"
-        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+        className="rounded-xl border overflow-hidden admin-panel"
       >
         {loading ? (
           <div className="flex items-center justify-center h-32">
@@ -247,8 +246,7 @@ export default function AdminVendorsPage() {
           style={{ backgroundColor: 'rgba(0,0,0,0.85)' }}
         >
           <div
-            className="w-full max-w-md rounded-xl border"
-            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+            className="w-full max-w-md rounded-xl border admin-panel"
           >
             <div
               className="flex items-center justify-between px-6 py-4 border-b"

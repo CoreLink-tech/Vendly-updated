@@ -86,8 +86,7 @@ export default function ActivationsPage() {
 
       {/* Generator */}
       <div
-        className="p-6 rounded-xl border mb-6"
-        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+        className="p-6 rounded-xl border mb-6 admin-panel"
       >
         <h2 className="text-sm font-semibold mb-4" style={{ color: theme.ink }}>
           Generate Codes
@@ -195,8 +194,7 @@ export default function ActivationsPage() {
 
       {/* Codes table */}
       <div
-        className="rounded-xl border overflow-hidden"
-        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+        className="rounded-xl border overflow-hidden admin-panel"
       >
         {loading ? (
           <div className="flex items-center justify-center h-24">

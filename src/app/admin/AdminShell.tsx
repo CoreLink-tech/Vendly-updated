@@ -74,8 +74,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   return (
     <div className="min-h-screen flex" style={{ color: theme.ink }}>
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 glass-strong ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ width: 260, borderColor: 'rgba(255,255,255,0.45)' }}
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col transition-transform duration-200 md:relative md:translate-x-0 admin-sidebar ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ width: 260 }}
       >
         <div
           className="flex items-center justify-between px-5 py-4 border-b"
@@ -151,8 +151,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
       <div className="flex-1 flex flex-col min-w-0">
         <header
-          className="glass flex items-center justify-between px-4 py-3 border-b md:hidden"
-          style={{ borderColor: 'rgba(255,255,255,0.45)' }}
+          className="flex items-center justify-between px-4 py-3 border-b md:hidden admin-sidebar"
+          style={{ borderColor: '#E7E5DE' }}
         >
           <button
             onClick={() => setSidebarOpen(true)}

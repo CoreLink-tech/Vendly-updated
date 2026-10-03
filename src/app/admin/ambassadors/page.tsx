@@ -107,8 +107,7 @@ export default function AmbassadorsPage() {
           </div>
         ) : ambassadors.length === 0 ? (
           <div
-            className="text-center py-12 rounded-xl border"
-            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+            className="text-center py-12 rounded-xl border admin-panel"
           >
             <p className="text-sm" style={{ color: theme.faint }}>
               No ambassador applications found.
@@ -118,8 +117,7 @@ export default function AmbassadorsPage() {
           ambassadors.map((a) => (
             <div
               key={a.id}
-              className="rounded-xl border p-5"
-              style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+              className="rounded-xl border p-5 admin-panel"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">

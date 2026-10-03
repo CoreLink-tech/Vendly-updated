@@ -79,7 +79,7 @@ export default function LogisticsRoutesPage() {
       </div>
 
       {/* Add route form */}
-      <div className="rounded-xl border p-6 mb-6" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+      <div className="rounded-xl border p-6 mb-6 admin-panel">
         <h2 className="text-sm font-semibold mb-4" style={{ color: theme.ink }}>Add / Update Route</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <label className="flex flex-col gap-1.5 text-xs font-medium" style={{ color: theme.muted }}>
@@ -132,7 +132,7 @@ export default function LogisticsRoutesPage() {
       </div>
 
       {/* Routes table */}
-      <div className="rounded-xl border overflow-hidden" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+      <div className="rounded-xl border overflow-hidden admin-panel">
         <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: theme.line }}>
           <p className="text-sm font-semibold" style={{ color: theme.ink }}>{routes.length} Routes</p>
           <input

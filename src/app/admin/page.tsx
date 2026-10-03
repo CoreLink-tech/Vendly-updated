@@ -87,8 +87,7 @@ export default function AdminPage() {
           <Link
             key={card.label}
             href={card.href}
-            className="p-5 rounded-xl border block transition-colors"
-            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+            className="p-5 admin-panel admin-panel-interactive block"
           >
             <p className="text-xs font-medium mb-2" style={{ color: theme.muted }}>
               {card.label}
@@ -111,8 +110,7 @@ export default function AdminPage() {
           <Link
             key={a.label}
             href={a.href}
-            className="flex flex-col items-center gap-2 p-4 rounded-xl border text-center transition-colors"
-            style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+            className="flex flex-col items-center gap-2 p-4 admin-panel admin-panel-interactive text-center"
           >
             <NavIcon name={a.icon} />
             <p className="text-xs font-medium" style={{ color: theme.muted }}>
@@ -124,8 +122,7 @@ export default function AdminPage() {
 
       {/* Recent vendors */}
       <div
-        className="rounded-xl border"
-        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+        className="rounded-xl border admin-panel"
       >
         <div
           className="flex items-center justify-between px-6 py-4 border-b"

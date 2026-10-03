@@ -56,8 +56,7 @@ export default function AdminOrdersPage() {
       </div>
 
       <div
-        className="rounded-xl border overflow-hidden"
-        style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+        className="rounded-xl border overflow-hidden admin-panel"
       >
         {loading ? (
           <div className="flex items-center justify-center h-32">

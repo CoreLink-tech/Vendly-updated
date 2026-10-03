@@ -60,7 +60,7 @@ export default function AdminLogisticsUsersPage() {
       </div>
 
       {/* Assign form */}
-      <div className="rounded-xl border p-5 mb-6" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+      <div className="rounded-xl border p-5 mb-6 admin-panel">
         <p className="text-sm font-semibold mb-3" style={{ color: theme.ink }}>Assign Logistics Role</p>
         <p className="text-xs mb-3" style={{ color: theme.muted }}>The user must already have a Vendly account.</p>
         <div className="flex gap-2">
@@ -88,7 +88,7 @@ export default function AdminLogisticsUsersPage() {
       </div>
 
       {/* Current logistics users */}
-      <div className="rounded-xl border overflow-hidden" style={{ backgroundColor: theme.surface, borderColor: theme.line }}>
+      <div className="rounded-xl border overflow-hidden admin-panel">
         <div className="px-5 py-4 border-b" style={{ borderColor: theme.line }}>
           <p className="text-sm font-semibold" style={{ color: theme.ink }}>Current Logistics Users ({users.length})</p>
         </div>

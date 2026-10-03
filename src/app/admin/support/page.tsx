@@ -14,8 +14,7 @@ export default function AdminSupportPage() {
 
       <div className="space-y-4">
         <div
-          className="p-6 rounded-xl border"
-          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+          className="p-6 rounded-xl border admin-panel"
         >
           <h2 className="text-sm font-semibold mb-4" style={{ color: theme.ink }}>
             Admin Quick Actions
@@ -42,8 +41,7 @@ export default function AdminSupportPage() {
         </div>
 
         <div
-          className="p-6 rounded-xl border"
-          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+          className="p-6 rounded-xl border admin-panel"
         >
           <h2 className="text-sm font-semibold mb-3" style={{ color: theme.ink }}>
             Contact & Notifications
@@ -68,8 +66,7 @@ export default function AdminSupportPage() {
         </div>
 
         <div
-          className="p-6 rounded-xl border"
-          style={{ backgroundColor: theme.surface, borderColor: theme.line }}
+          className="p-6 rounded-xl border admin-panel"
         >
           <h2 className="text-sm font-semibold mb-3" style={{ color: theme.ink }}>
             Platform Info
