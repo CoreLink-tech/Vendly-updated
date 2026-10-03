@@ -155,6 +155,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-5">
             <Link
+              id="hero-create-store"
               href="/account/signup"
               className="text-center text-sm font-semibold px-8 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-8px_rgba(11,94,56,0.4)]"
               style={{ backgroundColor: theme.green, color: theme.bg }}

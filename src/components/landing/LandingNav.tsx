@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { theme } from '@/lib/theme';
@@ -13,6 +13,26 @@ const LINKS = [
 
 export function LandingNav() {
   const [open, setOpen] = useState(false);
+  /** Sticky bottom CTA only after the hero "Create your store" scrolls out of view */
+  const [showStickyCta, setShowStickyCta] = useState(false);
+
+  useEffect(() => {
+    const heroCta = document.getElementById('hero-create-store');
+    if (!heroCta) {
+      setShowStickyCta(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyCta(!entry.isIntersecting);
+      },
+      { threshold: 0, rootMargin: '0px' }
+    );
+
+    observer.observe(heroCta);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
@@ -72,7 +92,11 @@ export function LandingNav() {
             <span className="relative w-4 h-3 block">
               <span
                 className="absolute left-0 right-0 h-[1.5px] rounded-full transition-transform"
-                style={{ backgroundColor: theme.ink, top: open ? '5px' : '0px', transform: open ? 'rotate(45deg)' : 'none' }}
+                style={{
+                  backgroundColor: theme.ink,
+                  top: open ? '5px' : '0px',
+                  transform: open ? 'rotate(45deg)' : 'none',
+                }}
               />
               <span
                 className="absolute left-0 right-0 h-[1.5px] rounded-full transition-opacity"
@@ -80,14 +104,21 @@ export function LandingNav() {
               />
               <span
                 className="absolute left-0 right-0 h-[1.5px] rounded-full transition-transform"
-                style={{ backgroundColor: theme.ink, top: open ? '5px' : '10px', transform: open ? 'rotate(-45deg)' : 'none' }}
+                style={{
+                  backgroundColor: theme.ink,
+                  top: open ? '5px' : '10px',
+                  transform: open ? 'rotate(-45deg)' : 'none',
+                }}
               />
             </span>
           </button>
         </div>
 
         {open && (
-          <div className="md:hidden px-6 pb-6 flex flex-col gap-1" style={{ borderTop: `1px solid ${theme.line}` }}>
+          <div
+            className="md:hidden px-6 pb-6 flex flex-col gap-1"
+            style={{ borderTop: `1px solid ${theme.line}` }}
+          >
             {LINKS.map((l) => (
               <a
                 key={l.href}
@@ -99,7 +130,12 @@ export function LandingNav() {
                 {l.label}
               </a>
             ))}
-            <Link href="/account/signin" onClick={() => setOpen(false)} className="text-sm font-medium py-3" style={{ color: theme.ink }}>
+            <Link
+              href="/account/signin"
+              onClick={() => setOpen(false)}
+              className="text-sm font-medium py-3"
+              style={{ color: theme.ink }}
+            >
               Sign in
             </Link>
             <Link
@@ -114,15 +150,19 @@ export function LandingNav() {
         )}
       </nav>
 
-      {/* Sticky mobile CTA — stays out of the way once the in-page nav menu is open */}
-      {!open && (
+      {/* Full-bleed sticky mobile CTA — only when hero CTA is off-screen and menu closed */}
+      {!open && showStickyCta && (
         <div
-          className="md:hidden fixed bottom-0 left-0 right-0 z-40 px-4 pb-4 pt-3"
-          style={{ background: 'linear-gradient(to top, rgba(255,254,251,1) 60%, rgba(255,254,251,0))' }}
+          className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full"
+          style={{
+            paddingBottom: 'max(0px, env(safe-area-inset-bottom))',
+            background:
+              'linear-gradient(to top, rgba(255,254,251,0.97) 50%, rgba(255,254,251,0))',
+          }}
         >
           <Link
             href="/account/signup"
-            className="block text-center text-sm font-semibold px-6 py-3.5 rounded-full shadow-[0_12px_24px_-6px_rgba(9,63,39,0.35)]"
+            className="block w-full text-center text-sm font-semibold py-4"
             style={{ backgroundColor: theme.green, color: theme.bg }}
           >
             Create your store

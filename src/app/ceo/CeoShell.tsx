@@ -50,18 +50,18 @@ export default function CeoShell({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: theme.bg }}>
+      <div className="min-h-screen flex items-center justify-center" style={{}}>
         <div className="text-sm" style={{ color: theme.green }}>Loading…</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: theme.bg, fontFamily: 'Inter, sans-serif' }}>
+    <div className="min-h-screen flex" style={{ fontFamily: 'Inter, sans-serif' }}>
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ width: 240, backgroundColor: theme.surface, borderColor: theme.line }}
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r glass-strong transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ width: 240, borderColor: 'rgba(255,255,255,0.45)' }}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: theme.line }}>
           <div>
@@ -118,7 +118,7 @@ export default function CeoShell({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <header
           className="flex items-center justify-between px-4 py-4 border-b md:hidden"
-          style={{ borderColor: theme.line, backgroundColor: theme.surface }}
+          style={{ borderColor: 'rgba(255,255,255,0.45)' }}
         >
           <button onClick={() => setSidebarOpen(true)} className="text-lg" style={{ color: theme.ink }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>

@@ -52,10 +52,10 @@ export default function LogisticsShell({ children }: { children: React.ReactNode
   };
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: theme.bg, color: theme.ink }}>
+    <div className="min-h-screen flex" style={{ color: theme.ink }}>
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ width: 260, backgroundColor: theme.surface, borderColor: theme.line }}
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 glass-strong ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ width: 260, borderColor: 'rgba(255,255,255,0.45)' }}
       >
         <div
           className="flex items-center justify-between px-4 py-4 border-b"
@@ -131,8 +131,8 @@ export default function LogisticsShell({ children }: { children: React.ReactNode
 
       <div className="flex-1 flex flex-col min-w-0">
         <header
-          className="flex items-center justify-between px-4 py-3 border-b md:hidden"
-          style={{ borderColor: theme.line, backgroundColor: theme.surface }}
+          className="glass flex items-center justify-between px-4 py-3 border-b md:hidden"
+          style={{ borderColor: 'rgba(255,255,255,0.45)' }}
         >
           <button
             onClick={() => setSidebarOpen(true)}
