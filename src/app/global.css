@@ -500,3 +500,154 @@
 .store-img-shimmer {
   animation: store-img-shimmer 1.4s ease-in-out infinite;
 }
+
+
+/* ============================================
+   DESIGN SYSTEM — shared interactive patterns
+   ============================================ */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(165deg, #0d8a4c 0%, #0a6b3c 55%, #085530 100%);
+  color: #FFFEFB;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 1.5px 0 0 rgba(255, 255, 255, 0.28) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+    0 4px 10px rgba(0, 40, 20, 0.18),
+    0 12px 28px -6px rgba(0, 50, 25, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1.5px 0 0 rgba(255, 255, 255, 0.32) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+    0 6px 14px rgba(0, 40, 20, 0.22),
+    0 18px 36px -6px rgba(0, 50, 25, 0.35);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+.btn-primary:disabled {
+  opacity: 0.55;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.dark .btn-primary {
+  background: linear-gradient(165deg, #2db56e 0%, #1f8f54 55%, #167a45 100%);
+  box-shadow:
+    0 1.5px 0 0 rgba(255, 255, 255, 0.18) inset,
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    0 14px 32px -8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-on-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFEFB;
+  color: var(--vendly-green-deep, #085530);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+    0 8px 20px -6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-on-dark:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 12px 28px -6px rgba(0, 0, 0, 0.3);
+}
+
+/* Theme-aware subtle hover (works in light + dark) */
+.hover-surface {
+  transition: background-color 0.15s ease;
+}
+.hover-surface:hover {
+  background-color: color-mix(in srgb, var(--vendly-ink) 4%, transparent);
+}
+.dark .hover-surface:hover {
+  background-color: color-mix(in srgb, var(--vendly-ink) 8%, transparent);
+}
+
+/* Consistent form fields */
+.field-input {
+  border-radius: 0.75rem;
+  border: 1px solid var(--vendly-line);
+  background: var(--vendly-bg);
+  color: var(--vendly-ink);
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.field-input::placeholder {
+  color: var(--vendly-faint);
+}
+.field-input:focus {
+  border-color: var(--vendly-green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vendly-green) 22%, transparent);
+}
+
+/* Auth / centered card pages */
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.auth-card {
+  width: 100%;
+  max-width: 26rem;
+  border-radius: 1.25rem;
+  padding: 2rem;
+}
+
+/* Sidebar nav link */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
+  margin-bottom: 0.125rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--vendly-muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.nav-link:hover {
+  background-color: color-mix(in srgb, var(--vendly-ink) 5%, transparent);
+  color: var(--vendly-ink);
+}
+.nav-link-active {
+  background-color: var(--vendly-green-soft);
+  color: var(--vendly-green);
+  font-weight: 600;
+}
+.nav-link-active:hover {
+  background-color: var(--vendly-green-soft);
+  color: var(--vendly-green);
+}
+
+/* Focus visible for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--vendly-green);
+  outline-offset: 2px;
+}
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Smooth selection */
+::selection {
+  background: color-mix(in srgb, var(--vendly-green) 28%, transparent);
+  color: var(--vendly-ink);
+}

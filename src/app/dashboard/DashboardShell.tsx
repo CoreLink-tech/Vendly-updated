@@ -142,7 +142,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 glass-strong ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{
           width: 260,
-          borderColor: 'rgba(255,255,255,0.45)',
+          borderColor: 'var(--vendly-line)',
         }}
       >
         {/* Logo */}
@@ -211,7 +211,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   setLinkCopied(true);
                   setTimeout(() => setLinkCopied(false), 1500);
                 }}
-                className="mt-3 w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border text-left transition-colors hover:bg-black/[0.02]"
+                className="hover-surface mt-3 w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border text-left"
                 style={{ borderColor: theme.line, backgroundColor: theme.bgDim }}
               >
                 <span className="text-[11px] truncate" style={{ color: theme.muted }}>
@@ -248,12 +248,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5 text-sm transition-colors"
-                style={{
-                  backgroundColor: isActive ? theme.greenSoft : 'transparent',
-                  color: isActive ? theme.green : theme.muted,
-                  fontWeight: isActive ? 600 : 500,
-                }}
+                className={`nav-link ${isActive ? 'nav-link-active' : ''}`}
               >
                 <NavIcon name={item.icon} />
                 {item.label}
@@ -278,7 +273,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             onClick={() => {
               void handleSignOut();
             }}
-            className="w-full text-left text-sm px-3 py-2 rounded-xl transition-colors hover:bg-black/[0.03]"
+            className="hover-surface w-full text-left text-sm px-3 py-2 rounded-xl"
             style={{ color: theme.muted }}
           >
             Sign out →
@@ -299,7 +294,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         {/* Top bar (mobile) */}
         <header
           className="glass flex items-center justify-between px-4 py-3 border-b md:hidden"
-          style={{ borderColor: 'rgba(255,255,255,0.45)' }}
+          style={{ borderColor: 'var(--vendly-line)' }}
         >
           <button
             onClick={() => setSidebarOpen(true)}

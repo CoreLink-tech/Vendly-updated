@@ -108,12 +108,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5 text-sm transition-colors"
-                style={{
-                  backgroundColor: isActive ? theme.greenSoft : 'transparent',
-                  color: isActive ? theme.green : theme.muted,
-                  fontWeight: isActive ? 600 : 500,
-                }}
+                className={`nav-link ${isActive ? 'nav-link-active' : ''}`}
               >
                 <NavIcon name={item.icon} />
                 {item.label}
@@ -137,7 +132,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             onClick={() => {
               void handleSignOut();
             }}
-            className="w-full text-left text-sm px-3 py-2 rounded-xl transition-colors hover:bg-black/[0.03]"
+            className="hover-surface w-full text-left text-sm px-3 py-2 rounded-xl"
             style={{ color: theme.muted }}
           >
             Sign out →
@@ -152,7 +147,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <div className="flex-1 flex flex-col min-w-0">
         <header
           className="flex items-center justify-between px-4 py-3 border-b md:hidden admin-sidebar"
-          style={{ borderColor: '#E7E5DE' }}
+          style={{ borderColor: 'var(--vendly-line)' }}
         >
           <button
             onClick={() => setSidebarOpen(true)}

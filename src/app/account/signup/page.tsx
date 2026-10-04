@@ -46,7 +46,7 @@ function SignUpForm() {
 
   return (
     <main
-      className="flex min-h-screen w-full items-center justify-center p-4"
+      className="auth-shell"
     >
       <div className="w-full max-w-[420px]">
         <div className="flex justify-center mb-3">
@@ -59,7 +59,7 @@ function SignUpForm() {
           onSubmit={(e) => {
             void onSubmit(e);
           }}
-          className="glass-strong rounded-[24px] p-8 flex flex-col gap-5"
+          className="auth-card glass-strong flex flex-col gap-5"
         >
           <div>
             <h1 className="text-xl font-semibold" style={{ color: theme.ink }}>
@@ -78,18 +78,7 @@ function SignUpForm() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your business name"
-              className="rounded-xl border p-3 text-sm outline-none transition-colors"
-              style={{
-                backgroundColor: theme.bg,
-                borderColor: theme.line,
-                color: theme.ink,
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = theme.green;
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = theme.line;
-              }}
+              className="field-input"
             />
           </label>
 
@@ -101,18 +90,7 @@ function SignUpForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="rounded-xl border p-3 text-sm outline-none transition-colors"
-              style={{
-                backgroundColor: theme.bg,
-                borderColor: theme.line,
-                color: theme.ink,
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = theme.green;
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = theme.line;
-              }}
+              className="field-input"
             />
           </label>
 
@@ -125,18 +103,7 @@ function SignUpForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Min. 8 characters"
-              className="rounded-xl border p-3 text-sm outline-none transition-colors"
-              style={{
-                backgroundColor: theme.bg,
-                borderColor: theme.line,
-                color: theme.ink,
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = theme.green;
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = theme.line;
-              }}
+              className="field-input"
             />
           </label>
 
@@ -149,8 +116,8 @@ function SignUpForm() {
               placeholder="Have a code? Enter it here"
               className="rounded-lg border px-3 py-2.5 text-sm outline-none"
               style={{ backgroundColor: theme.bg, borderColor: theme.line, color: theme.ink }}
-              onFocus={(e) => { e.target.style.borderColor = theme.green; }}
-              onBlur={(e) => { e.target.style.borderColor = theme.line; }}
+              
+              
             />
           </label>
 
@@ -175,8 +142,7 @@ function SignUpForm() {
           <button
             type="submit"
             disabled={loading}
-            className="py-3 rounded-full text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-            style={{ backgroundColor: theme.green, color: theme.bg }}
+            className="btn-primary py-3.5 rounded-full text-sm font-semibold disabled:opacity-50"
           >
             {loading ? 'Creating account…' : 'Create Account'}
           </button>

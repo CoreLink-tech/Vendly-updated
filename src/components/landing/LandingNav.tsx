@@ -75,8 +75,7 @@ export function LandingNav() {
             </Link>
             <Link
               href="/account/signup"
-              className="text-sm font-semibold px-5 py-2.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_16px_-6px_rgba(11,94,56,0.35)]"
-              style={{ backgroundColor: theme.green, color: theme.bg }}
+              className="btn-primary text-sm font-semibold px-5 py-2.5 rounded-full"
             >
               Create your store
             </Link>
@@ -141,8 +140,7 @@ export function LandingNav() {
             <Link
               href="/account/signup"
               onClick={() => setOpen(false)}
-              className="text-sm font-semibold text-center px-5 py-3 rounded-full mt-2"
-              style={{ backgroundColor: theme.green, color: theme.bg }}
+              className="btn-primary text-sm font-semibold text-center px-5 py-3 rounded-full mt-2"
             >
               Create your store
             </Link>

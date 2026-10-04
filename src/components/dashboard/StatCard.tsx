@@ -20,8 +20,8 @@ export function StatCard({
   const content = (
     <Card
       className={cn(
-        'gap-2 p-5',
-        href && 'transition-colors hover:border-primary/40'
+        'gap-2 p-5 transition-transform duration-200',
+        href && 'hover:-translate-y-0.5 hover:border-primary/40'
       )}
     >
       <div className="flex items-start justify-between">

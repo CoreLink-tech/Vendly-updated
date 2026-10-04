@@ -157,8 +157,7 @@ export default function HomePage() {
             <Link
               id="hero-create-store"
               href="/account/signup"
-              className="text-center text-sm font-semibold px-8 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-8px_rgba(11,94,56,0.4)]"
-              style={{ backgroundColor: theme.green, color: theme.bg }}
+              className="btn-primary text-center text-sm font-semibold px-8 py-3.5 rounded-full"
             >
               Create your store
             </Link>
@@ -265,7 +264,7 @@ export default function HomePage() {
             {CATEGORIES.map((c) => (
               <span
                 key={c}
-                className="text-sm font-medium px-5 py-2.5 rounded-full transition-colors duration-200 hover:bg-black/[0.03]"
+                className="hover-surface text-sm font-medium px-5 py-2.5 rounded-full"
                 style={{
                   border: `1px solid ${theme.line}`,
                   color: theme.ink,
@@ -333,8 +332,7 @@ export default function HomePage() {
             </ul>
             <Link
               href="/account/signup"
-              className="block text-center text-sm font-semibold py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
-              style={{ backgroundColor: '#FFFEFB', color: theme.greenDeep }}
+              className="btn-on-dark block text-center text-sm font-semibold py-3.5 rounded-full"
             >
               Create your store
             </Link>
@@ -352,8 +350,7 @@ export default function HomePage() {
         </h2>
         <Link
           href="/account/signup"
-          className="inline-flex items-center text-sm font-semibold px-9 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-8px_rgba(11,94,56,0.4)]"
-          style={{ backgroundColor: theme.green, color: theme.bg }}
+          className="btn-primary text-sm font-semibold px-9 py-3.5 rounded-full"
         >
           Create your store
         </Link>
