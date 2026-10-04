@@ -75,7 +75,7 @@ export default function LogisticsRatesPage() {
           onClick={() => { void handleSaveAll(); }}
           disabled={!hasChanges || saving}
           className="text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-40 transition-opacity"
-          style={{ backgroundColor: theme.green, color: theme.bg }}
+          style={{ backgroundColor: theme.green, color: theme.onBrand }}
         >
           {saving ? 'Saving…' : 'Save Changes'}
         </button>

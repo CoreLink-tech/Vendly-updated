@@ -77,7 +77,7 @@ export default function AdminLogisticsUsersPage() {
             onClick={() => void assign()}
             disabled={assigning || !email.trim()}
             className="px-4 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50"
-            style={{ backgroundColor: theme.green, color: theme.bg }}
+            style={{ backgroundColor: theme.green, color: theme.onBrand }}
           >
             {assigning ? '…' : 'Assign'}
           </button>

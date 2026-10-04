@@ -651,7 +651,7 @@ export default function StoreSettingsPage() {
           }}
           disabled={saving}
           className="w-full py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-          style={{ backgroundColor: theme.green, color: theme.bg }}
+          style={{ backgroundColor: theme.green, color: theme.onBrand }}
         >
           {saving ? 'Saving…' : 'Save Settings'}
         </button>

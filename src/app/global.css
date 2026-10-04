@@ -60,6 +60,7 @@
     --vendly-success: #0A6B3C;
     --vendly-warning: #F5820A;
     --vendly-danger: #C0392B;
+    --vendly-on-brand: #FFFEFB;
 }
 
 .dark {
@@ -117,6 +118,7 @@
     --vendly-success: #2DB56E;
     --vendly-warning: #F59A2A;
     --vendly-danger: #E85D4C;
+    --vendly-on-brand: #FFFEFB;
 }
 
 @theme inline {
@@ -546,22 +548,26 @@
 }
 
 .btn-on-dark {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   align-items: center;
   justify-content: center;
+  text-align: center;
   background: #FFFEFB;
-  color: var(--vendly-green-deep, #085530);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #085530;
+  border: 1px solid rgba(255, 255, 255, 0.55);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
-    0 8px 20px -6px rgba(0, 0, 0, 0.25);
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    0 10px 24px -6px rgba(0, 0, 0, 0.22);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .btn-on-dark:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
-    0 12px 28px -6px rgba(0, 0, 0, 0.3);
+    0 1px 0 0 rgba(255, 255, 255, 1) inset,
+    0 6px 16px rgba(0, 0, 0, 0.14),
+    0 14px 32px -6px rgba(0, 0, 0, 0.28);
 }
 
 /* Theme-aware subtle hover (works in light + dark) */
@@ -664,4 +670,38 @@ a:focus:not(:focus-visible) {
 .theme-toggle:focus-visible {
   outline: 2px solid var(--vendly-green);
   outline-offset: 2px;
+}
+
+
+/* Dark mode — stronger surface separation & readable secondary text */
+.dark {
+  /* already has tokens; reinforce landing secondary text */
+}
+.dark body {
+  color: var(--vendly-ink);
+}
+.dark .glass,
+.dark .glass-strong,
+.dark .glass-card {
+  background: rgba(28, 36, 31, 0.82);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.dark .glass-strong {
+  background: rgba(32, 40, 35, 0.92);
+}
+.dark .admin-sidebar {
+  background: var(--vendly-surface);
+  border-right-color: var(--vendly-line);
+}
+.dark .admin-panel {
+  background: var(--vendly-surface-raised);
+  border-color: var(--vendly-line);
+}
+.dark .field-input {
+  background: var(--vendly-bg-dim);
+  border-color: var(--vendly-line-strong);
+}
+.dark .nav-link-active {
+  background: var(--vendly-green-soft);
+  color: #7ddea8;
 }

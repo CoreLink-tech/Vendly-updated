@@ -133,7 +133,7 @@ export default function ActivationsPage() {
             }}
             disabled={generating}
             className="px-6 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-            style={{ backgroundColor: theme.green, color: theme.bg }}
+            style={{ backgroundColor: theme.green, color: theme.onBrand }}
           >
             {generating ? 'Generating…' : 'Generate'}
           </button>

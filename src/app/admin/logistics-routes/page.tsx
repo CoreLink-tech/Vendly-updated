@@ -125,7 +125,7 @@ export default function LogisticsRoutesPage() {
           onClick={() => void handleSave()}
           disabled={saving}
           className="px-6 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50"
-          style={{ backgroundColor: theme.green, color: theme.bg }}
+          style={{ backgroundColor: theme.green, color: theme.onBrand }}
         >
           {saving ? 'Saving…' : 'Save Route'}
         </button>

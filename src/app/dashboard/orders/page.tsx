@@ -367,7 +367,7 @@ export default function OrdersPage() {
                   onClick={() => void markPaid(selected.id)}
                   disabled={updating}
                   className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: theme.green, color: theme.bg }}
+                  style={{ backgroundColor: theme.green, color: theme.onBrand }}
                 >
                   {updating ? 'Updating…' : 'Mark Payment Received'}
                 </button>
@@ -410,7 +410,7 @@ export default function OrdersPage() {
                   }}
                   disabled={updating}
                   className="w-full py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-                  style={{ backgroundColor: theme.green, color: theme.bg }}
+                  style={{ backgroundColor: theme.green, color: theme.onBrand }}
                 >
                   {updating
                     ? 'Updating…'

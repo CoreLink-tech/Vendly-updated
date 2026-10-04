@@ -153,7 +153,7 @@ export default function WithdrawalsPage() {
                         }}
                         disabled={processing === w.id}
                         className="text-xs px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
-                        style={{ backgroundColor: theme.green, color: theme.bg }}
+                        style={{ backgroundColor: theme.green, color: theme.onBrand }}
                       >
                         Approve
                       </button>

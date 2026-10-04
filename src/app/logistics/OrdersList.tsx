@@ -193,7 +193,7 @@ export function OrdersList({ statusFilter }: { statusFilter?: string }) {
                   onClick={() => { void updateStatus(selected.id, NEXT_STATUS[selected.status].status); }}
                   disabled={updating}
                   className="w-full py-3.5 rounded-xl text-sm font-semibold disabled:opacity-50"
-                  style={{ backgroundColor: theme.green, color: theme.bg }}
+                  style={{ backgroundColor: theme.green, color: theme.onBrand }}
                 >
                   {updating ? 'Updating…' : NEXT_STATUS[selected.status].label}
                 </button>

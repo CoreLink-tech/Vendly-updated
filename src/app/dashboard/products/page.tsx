@@ -177,7 +177,7 @@ export default function ProductsPage() {
         <button
           onClick={openAdd}
           className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-opacity hover:opacity-90"
-          style={{ backgroundColor: theme.green, color: theme.bg }}
+          style={{ backgroundColor: theme.green, color: theme.onBrand }}
         >
           + Add Product
         </button>
@@ -217,7 +217,7 @@ export default function ProductsPage() {
           <button
             onClick={openAdd}
             className="text-sm font-semibold px-5 py-2.5 rounded-lg"
-            style={{ backgroundColor: theme.green, color: theme.bg }}
+            style={{ backgroundColor: theme.green, color: theme.onBrand }}
           >
             Add Product
           </button>
@@ -478,7 +478,7 @@ export default function ProductsPage() {
                   }}
                   disabled={saving}
                   className="flex-1 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: theme.green, color: theme.bg }}
+                  style={{ backgroundColor: theme.green, color: theme.onBrand }}
                 >
                   {saving ? 'Saving…' : editProduct ? 'Update' : 'Add Product'}
                 </button>

@@ -170,7 +170,7 @@ export default function SubscriptionPage() {
             </div>
 
             <div className="p-6 rounded-xl border relative" style={{ backgroundColor: theme.surface, borderColor: theme.green }}>
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full" style={{ backgroundColor: theme.green, color: theme.bg }}>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full" style={{ backgroundColor: theme.green, color: theme.onBrand }}>
                 Best Value
               </div>
               <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: theme.muted }}>Yearly</p>
@@ -191,7 +191,7 @@ export default function SubscriptionPage() {
               <button
                 onClick={() => handleWhatsApp('yearly')}
                 className="w-full py-2.5 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90"
-                style={{ backgroundColor: theme.green, color: theme.bg }}
+                style={{ backgroundColor: theme.green, color: theme.onBrand }}
               >
                 Activate → WhatsApp
               </button>
@@ -215,7 +215,7 @@ export default function SubscriptionPage() {
                 onClick={() => { void handleActivateCode(); }}
                 disabled={loading || !code.trim()}
                 className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-                style={{ backgroundColor: theme.green, color: theme.bg }}
+                style={{ backgroundColor: theme.green, color: theme.onBrand }}
               >
                 {loading ? '…' : 'Activate'}
               </button>

@@ -200,7 +200,7 @@ export default function VendorSetupPage() {
             type="submit"
             disabled={saving}
             className="w-full py-3.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-            style={{ backgroundColor: theme.green, color: theme.bg }}
+            style={{ backgroundColor: theme.green, color: theme.onBrand }}
           >
             {saving ? 'Saving…' : 'Continue to Dashboard'}
           </button>

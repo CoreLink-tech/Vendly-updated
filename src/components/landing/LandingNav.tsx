@@ -166,7 +166,7 @@ export function LandingNav() {
           <Link
             href="/account/signup"
             className="block w-full text-center text-sm font-semibold py-4"
-            style={{ backgroundColor: theme.green, color: theme.bg }}
+            style={{ backgroundColor: theme.green, color: theme.onBrand }}
           >
             Create your store
           </Link>

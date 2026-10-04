@@ -166,7 +166,7 @@ export default function ReportsPage() {
               <a
                 href={`tel:${selected.customerPhone}`}
                 className="block text-center text-xs py-2.5 rounded-lg font-semibold"
-                style={{ backgroundColor: theme.green, color: theme.bg }}
+                style={{ backgroundColor: theme.green, color: theme.onBrand }}
               >
                 Call {selected.customerName.split(' ')[0]}
               </a>

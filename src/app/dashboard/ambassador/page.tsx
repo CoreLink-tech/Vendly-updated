@@ -214,7 +214,7 @@ export default function AmbassadorPage() {
                 <button
                   onClick={() => setShowWithdraw(!showWithdraw)}
                   className="text-xs font-semibold px-4 py-2 rounded-lg"
-                  style={{ backgroundColor: theme.green, color: theme.bg }}
+                  style={{ backgroundColor: theme.green, color: theme.onBrand }}
                 >
                   Withdraw
                 </button>
@@ -259,7 +259,7 @@ export default function AmbassadorPage() {
                       onClick={() => void submitWithdrawal()}
                       disabled={wSaving}
                       className="flex-1 py-2 rounded-lg text-sm font-semibold disabled:opacity-50"
-                      style={{ backgroundColor: theme.green, color: theme.bg }}
+                      style={{ backgroundColor: theme.green, color: theme.onBrand }}
                     >
                       {wSaving ? 'Submitting…' : 'Submit Request'}
                     </button>
@@ -441,7 +441,7 @@ export default function AmbassadorPage() {
                 }}
                 disabled={saving}
                 className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity hover:opacity-90"
-                style={{ backgroundColor: theme.green, color: theme.bg }}
+                style={{ backgroundColor: theme.green, color: theme.onBrand }}
               >
                 {saving ? 'Submitting…' : 'Submit Application'}
               </button>

@@ -317,7 +317,7 @@ export default function AdminVendorsPage() {
                     }}
                     disabled={actionLoading}
                     className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50"
-                    style={{ backgroundColor: theme.green, color: theme.bg }}
+                    style={{ backgroundColor: theme.green, color: theme.onBrand }}
                   >
                     {actionLoading ? 'Activating…' : 'Activate Vendor'}
                   </button>

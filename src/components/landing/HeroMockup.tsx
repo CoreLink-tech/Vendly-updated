@@ -98,7 +98,7 @@ export function HeroMockup() {
                     </span>
                     <span
                       className="text-[8px] font-semibold px-1.5 py-0.5 rounded-full"
-                      style={{ backgroundColor: theme.greenDeep, color: theme.bg }}
+                      style={{ backgroundColor: theme.greenDeep, color: theme.onBrand }}
                     >
                       Add
                     </span>
@@ -186,7 +186,7 @@ export function HeroMockup() {
         <div className="flex gap-1.5 mt-2.5">
           <span
             className="text-[8.5px] font-semibold px-2.5 py-1.5 rounded-lg flex-1 text-center"
-            style={{ backgroundColor: theme.green, color: theme.bg }}
+            style={{ backgroundColor: theme.green, color: theme.onBrand }}
           >
             Pay now
           </span>

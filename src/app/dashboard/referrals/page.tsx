@@ -175,7 +175,7 @@ export default function ReferralsPage() {
           <button
             onClick={() => setShowWithdraw(true)}
             className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-opacity hover:opacity-90"
-            style={{ backgroundColor: theme.green, color: theme.bg }}
+            style={{ backgroundColor: theme.green, color: theme.onBrand }}
           >
             Request Withdrawal
           </button>
@@ -335,7 +335,7 @@ export default function ReferralsPage() {
                 }}
                 disabled={wSaving}
                 className="w-full py-3 rounded-lg text-sm font-semibold disabled:opacity-50"
-                style={{ backgroundColor: theme.green, color: theme.bg }}
+                style={{ backgroundColor: theme.green, color: theme.onBrand }}
               >
                 {wSaving ? 'Submitting…' : 'Submit Request'}
               </button>

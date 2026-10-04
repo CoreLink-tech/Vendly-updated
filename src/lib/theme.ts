@@ -30,6 +30,8 @@ export const theme = {
   success: 'var(--vendly-success)',
   warning: 'var(--vendly-warning)',
   danger: 'var(--vendly-danger)',
+  /** Always light — text/icons on green buttons & dark green cards */
+  onBrand: 'var(--vendly-on-brand)',
 
   // Shadows (tuned for glassmorphism)
   shadowCard:

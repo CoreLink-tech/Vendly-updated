@@ -295,20 +295,20 @@ export default function HomePage() {
           >
             <span
               className="inline-block text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6"
-              style={{ backgroundColor: theme.orange, color: theme.bg }}
+              style={{ backgroundColor: theme.orange, color: theme.onBrand }}
             >
               3 days free
             </span>
             <div className="flex items-end gap-1.5 mb-8">
               <span
                 className="text-5xl md:text-[3.25rem] font-semibold tracking-tight"
-                style={{ ...displayFont, color: theme.bg }}
+                style={{ ...displayFont, color: theme.onBrand }}
               >
                 ₦4,000
               </span>
               <span
                 className="text-base mb-1.5"
-                style={{ color: 'rgba(255,254,251,0.65)' }}
+                style={{ color: 'rgba(255,254,251,0.7)' }}
               >
                 /month
               </span>
@@ -318,11 +318,11 @@ export default function HomePage() {
                 <li
                   key={f}
                   className="flex items-center gap-3 text-sm"
-                  style={{ color: theme.bg }}
+                  style={{ color: theme.onBrand }}
                 >
                   <span
                     className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold"
-                    style={{ backgroundColor: theme.orange, color: theme.bg }}
+                    style={{ backgroundColor: theme.orange, color: theme.onBrand }}
                   >
                     ✓
                   </span>
@@ -332,7 +332,7 @@ export default function HomePage() {
             </ul>
             <Link
               href="/account/signup"
-              className="btn-on-dark block text-center text-sm font-semibold py-3.5 rounded-full"
+              className="btn-on-dark w-full text-sm font-semibold py-3.5 rounded-full"
             >
               Create your store
             </Link>
