@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				<meta name="color-scheme" content="light dark" />
 				<script
 					dangerouslySetInnerHTML={{
-						__html: `(function(){try{var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=document.documentElement;if(d){r.classList.add('dark');r.style.colorScheme='dark';}else{r.style.colorScheme='light';}}catch(e){}})();`,
+						__html: `(function(){try{var k='vendly-color-scheme';var s=null;try{s=localStorage.getItem(k)}catch(e){}var d=s==='dark'||(s!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches);var r=document.documentElement;if(d){r.classList.add('dark');r.style.colorScheme='dark'}else{r.classList.remove('dark');r.style.colorScheme='light'}}catch(e){}})();`,
 					}}
 				/>
 				<link

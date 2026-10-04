@@ -651,3 +651,17 @@ a:focus:not(:focus-visible) {
   background: color-mix(in srgb, var(--vendly-green) 28%, transparent);
   color: var(--vendly-ink);
 }
+
+
+/* Theme toggle */
+.theme-toggle {
+  color: var(--vendly-ink);
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  color: var(--vendly-green);
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--vendly-green);
+  outline-offset: 2px;
+}

@@ -1,26 +1,29 @@
 'use client';
 
 import { useEffect } from 'react';
+import {
+  applyScheme,
+  getStoredScheme,
+  getSystemScheme,
+  resolveScheme,
+} from '@/lib/color-scheme';
 
 /**
- * Applies `.dark` on <html> when the OS prefers dark mode,
- * and keeps color-scheme in sync for native form controls.
+ * Keeps <html class="dark"> in sync with stored preference or OS setting.
  */
 export function ColorSchemeSync() {
   useEffect(() => {
-    const root = document.documentElement;
+    applyScheme(resolveScheme());
+
     const media = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const apply = (dark: boolean) => {
-      root.classList.toggle('dark', dark);
-      root.style.colorScheme = dark ? 'dark' : 'light';
+    const onSystemChange = () => {
+      // Only follow OS when user has not chosen explicitly
+      if (getStoredScheme() == null) {
+        applyScheme(getSystemScheme());
+      }
     };
-
-    apply(media.matches);
-
-    const onChange = (e: MediaQueryListEvent) => apply(e.matches);
-    media.addEventListener('change', onChange);
-    return () => media.removeEventListener('change', onChange);
+    media.addEventListener('change', onSystemChange);
+    return () => media.removeEventListener('change', onSystemChange);
   }, []);
 
   return null;

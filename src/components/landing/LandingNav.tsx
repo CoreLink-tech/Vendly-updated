@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { theme } from '@/lib/theme';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const LINKS = [
   { href: '#features', label: 'Features' },
@@ -66,6 +67,7 @@ export function LandingNav() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle size="sm" />
             <Link
               href="/account/signin"
               className="text-sm font-medium px-4 py-2 rounded-full transition-opacity hover:opacity-70"
@@ -81,12 +83,14 @@ export function LandingNav() {
             </Link>
           </div>
 
+          <div className="flex md:hidden items-center gap-2">
+            <ThemeToggle size="sm" />
           <button
             type="button"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="glass md:hidden w-10 h-10 flex items-center justify-center rounded-full"
+            className="glass w-10 h-10 flex items-center justify-center rounded-full"
           >
             <span className="relative w-4 h-3 block">
               <span
@@ -111,6 +115,7 @@ export function LandingNav() {
               />
             </span>
           </button>
+          </div>
         </div>
 
         {open && (

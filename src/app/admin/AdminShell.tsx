@@ -1,6 +1,7 @@
 'use client';
 import { NavIcon, IconName } from '@/components/NavIcon';
 import { theme } from '@/lib/theme';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -90,6 +91,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               ADMIN
             </span>
           </div>
+          <div className="flex items-center gap-1">
+            <ThemeToggle size="sm" className="hidden md:inline-flex" />
           <button
             onClick={() => setSidebarOpen(false)}
             className="md:hidden p-1.5 rounded-lg"
@@ -98,6 +101,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
+          </div>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3">
@@ -160,7 +164,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <span className="text-sm font-semibold" style={{ color: theme.green }}>
             Admin
           </span>
-          <div className="w-8" />
+          <ThemeToggle size="sm" />
         </header>
         <main className="flex-1 p-4 md:p-8">{children}</main>
       </div>

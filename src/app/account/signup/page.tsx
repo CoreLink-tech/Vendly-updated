@@ -5,6 +5,7 @@ import { type FormEvent, Suspense, useState } from 'react';
 import Image from 'next/image';
 import { authClient } from '@/lib/auth-client';
 import { theme } from '@/lib/theme';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 function SignUpForm() {
   const searchParams = useSearchParams();
@@ -46,8 +47,11 @@ function SignUpForm() {
 
   return (
     <main
-      className="auth-shell"
+      className="auth-shell relative"
     >
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-[420px]">
         <div className="flex justify-center mb-3">
           <a href="/">

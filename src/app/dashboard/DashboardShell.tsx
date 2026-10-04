@@ -2,6 +2,7 @@
 import { NavIcon, IconName } from '@/components/NavIcon';
 import { SITE_URL } from '@/lib/site';
 import { theme } from '@/lib/theme';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -153,6 +154,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           <Link href="/dashboard" className="flex items-center">
             <Image src="/logo-full.png" alt="Vendly" width={120} height={36} className="h-9 w-auto" priority />
           </Link>
+          <div className="flex items-center gap-1">
+            <ThemeToggle size="sm" className="hidden md:inline-flex" />
           <button
             onClick={() => setSidebarOpen(false)}
             className="md:hidden p-1.5 rounded-lg"
@@ -161,6 +164,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
+          </div>
         </div>
 
         {/* Vendor info */}
@@ -305,7 +309,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
           <Image src="/logo-full.png" alt="Vendly" width={100} height={32} className="h-8 w-auto" />
-          <div className="flex justify-end min-w-8">
+          <div className="flex items-center justify-end gap-2 min-w-8">
+            <ThemeToggle size="sm" />
             {vendor?.status === 'active' && subscription?.status === 'active' && (() => {
               const remaining = daysRemaining(subscription.trialEnd || subscription.endDate);
               if (remaining === null) return null;
