@@ -39,39 +39,84 @@
     --sidebar-ring: hsl(152 83% 23%);
 }
 
+/* Vendly design tokens (used by theme.ts inline styles) */
+:root {
+    --vendly-bg: #FFFEFB;
+    --vendly-bg-dim: #F7F3E9;
+    --vendly-surface: #FFFFFF;
+    --vendly-surface-raised: #FFFEFB;
+    --vendly-green: #0A6B3C;
+    --vendly-green-deep: #085530;
+    --vendly-green-soft: #C8E6D5;
+    --vendly-orange: #F5820A;
+    --vendly-orange-soft: #FCE9D2;
+    --vendly-ink: #161F1A;
+    --vendly-muted: #5C6259;
+    --vendly-faint: #8A9088;
+    --vendly-cocoa: #5B4B3B;
+    --vendly-line: #E7E5DE;
+    --vendly-line-strong: #D4D1C7;
+    --vendly-line-on-dark: rgba(255, 254, 251, 0.24);
+    --vendly-success: #0A6B3C;
+    --vendly-warning: #F5820A;
+    --vendly-danger: #C0392B;
+}
+
 .dark {
-    --background: hsl(240 10% 3.9%);
-    --foreground: hsl(0 0% 98%);
-    --card: hsl(240 10% 3.9%);
-    --card-foreground: hsl(0 0% 98%);
-    --popover: hsl(240 10% 3.9%);
-    --popover-foreground: hsl(0 0% 98%);
-    --primary: hsl(0 0% 98%);
-    --primary-foreground: hsl(240 5.9% 10%);
-    --secondary: hsl(240 3.7% 15.9%);
-    --secondary-foreground: hsl(0 0% 98%);
-    --muted: hsl(240 3.7% 15.9%);
-    --muted-foreground: hsl(240 5% 64.9%);
-    --accent: hsl(240 3.7% 15.9%);
-    --accent-foreground: hsl(0 0% 98%);
-    --destructive: hsl(0 62.8% 30.6%);
+    /* Core shadcn tokens — warm green-tinted dark, not cold gray */
+    --background: hsl(150 12% 7%);
+    --foreground: hsl(40 20% 96%);
+    --card: hsl(150 10% 10%);
+    --card-foreground: hsl(40 20% 96%);
+    --popover: hsl(150 10% 11%);
+    --popover-foreground: hsl(40 20% 96%);
+    --primary: hsl(152 55% 42%);
+    --primary-foreground: hsl(40 33% 99%);
+    --secondary: hsl(150 8% 14%);
+    --secondary-foreground: hsl(40 20% 96%);
+    --muted: hsl(150 8% 14%);
+    --muted-foreground: hsl(140 6% 65%);
+    --accent: hsl(32 90% 52%);
+    --accent-foreground: hsl(40 33% 99%);
+    --destructive: hsl(4 70% 48%);
     --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(240 3.7% 15.9%);
-    --input: hsl(240 3.7% 15.9%);
-    --ring: hsl(240 4.9% 83.9%);
-    --chart-1: hsl(220 70% 50%);
-    --chart-2: hsl(160 60% 45%);
-    --chart-3: hsl(30 80% 55%);
-    --chart-4: hsl(280 65% 60%);
-    --chart-5: hsl(340 75% 55%);
-    --sidebar: hsl(240 5.9% 10%);
-    --sidebar-foreground: hsl(240 4.8% 95.9%);
-    --sidebar-primary: hsl(224.3 76.3% 48%);
-    --sidebar-primary-foreground: hsl(0 0% 100%);
-    --sidebar-accent: hsl(240 3.7% 15.9%);
-    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-    --sidebar-border: hsl(240 3.7% 15.9%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+    --border: hsl(150 8% 18%);
+    --input: hsl(150 8% 16%);
+    --ring: hsl(152 55% 42%);
+    --chart-1: hsl(152 55% 42%);
+    --chart-2: hsl(32 90% 52%);
+    --chart-3: hsl(173 50% 40%);
+    --chart-4: hsl(43 60% 55%);
+    --chart-5: hsl(27 70% 55%);
+    --sidebar: hsl(150 12% 8%);
+    --sidebar-foreground: hsl(40 20% 96%);
+    --sidebar-primary: hsl(152 55% 42%);
+    --sidebar-primary-foreground: hsl(40 33% 99%);
+    --sidebar-accent: hsl(152 25% 16%);
+    --sidebar-accent-foreground: hsl(145 40% 75%);
+    --sidebar-border: hsl(150 8% 16%);
+    --sidebar-ring: hsl(152 55% 42%);
+
+    /* Vendly tokens for inline theme styles */
+    --vendly-bg: #0F1411;
+    --vendly-bg-dim: #151B17;
+    --vendly-surface: #1A211C;
+    --vendly-surface-raised: #1F2722;
+    --vendly-green: #2DB56E;
+    --vendly-green-deep: #1F8F54;
+    --vendly-green-soft: #1A3D2C;
+    --vendly-orange: #F59A2A;
+    --vendly-orange-soft: #3D2E18;
+    --vendly-ink: #F2F5F2;
+    --vendly-muted: #9AA39A;
+    --vendly-faint: #6B746C;
+    --vendly-cocoa: #C4B5A5;
+    --vendly-line: #2A332C;
+    --vendly-line-strong: #3A453C;
+    --vendly-line-on-dark: rgba(255, 254, 251, 0.14);
+    --vendly-success: #2DB56E;
+    --vendly-warning: #F59A2A;
+    --vendly-danger: #E85D4C;
 }
 
 @theme inline {
@@ -121,13 +166,24 @@
     body {
         @apply bg-background text-foreground;
         font-family: var(--font-exo2), sans-serif;
-        /* Strong green/orange washes so frosted glass is clearly visible */
+        background-color: var(--vendly-bg);
+        /* Soft brand washes — light mode */
         background-image:
-          radial-gradient(ellipse 140% 100% at 0% -15%, rgba(10, 107, 60, 0.22), transparent 55%),
-          radial-gradient(ellipse 120% 80% at 100% 0%, rgba(245, 130, 10, 0.16), transparent 50%),
-          radial-gradient(ellipse 100% 70% at 50% 120%, rgba(10, 107, 60, 0.14), transparent 55%),
-          radial-gradient(ellipse 70% 50% at 75% 55%, rgba(245, 130, 10, 0.08), transparent 50%);
+          radial-gradient(ellipse 140% 100% at 0% -15%, rgba(10, 107, 60, 0.18), transparent 55%),
+          radial-gradient(ellipse 120% 80% at 100% 0%, rgba(245, 130, 10, 0.12), transparent 50%),
+          radial-gradient(ellipse 100% 70% at 50% 120%, rgba(10, 107, 60, 0.12), transparent 55%),
+          radial-gradient(ellipse 70% 50% at 75% 55%, rgba(245, 130, 10, 0.06), transparent 50%);
         background-attachment: fixed;
+    }
+
+    .dark body,
+    html.dark body {
+        background-color: var(--vendly-bg);
+        background-image:
+          radial-gradient(ellipse 140% 100% at 0% -15%, rgba(45, 181, 110, 0.12), transparent 55%),
+          radial-gradient(ellipse 120% 80% at 100% 0%, rgba(245, 154, 42, 0.08), transparent 50%),
+          radial-gradient(ellipse 100% 70% at 50% 120%, rgba(45, 181, 110, 0.08), transparent 55%),
+          radial-gradient(ellipse 70% 50% at 75% 55%, rgba(245, 154, 42, 0.05), transparent 50%);
     }
 }
 
@@ -137,28 +193,51 @@
    ============================================ */
 
 .admin-sidebar {
-  background: #FFFEFB;
-  border-right: 1px solid #E7E5DE;
+  background: var(--vendly-surface);
+  border-right: 1px solid var(--vendly-line);
+  box-shadow:
+    1px 0 0 0 rgba(255, 255, 255, 0.06) inset,
+    4px 0 24px -8px rgba(0, 0, 0, 0.12);
+}
+
+.admin-panel {
+  background: var(--vendly-surface);
+  border: 1px solid var(--vendly-line);
+  border-radius: 0.875rem;
+  box-shadow:
+    0 1.5px 0 0 rgba(255, 255, 255, 0.06) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 8px 20px -6px rgba(0, 0, 0, 0.18),
+    0 20px 40px -12px rgba(0, 0, 0, 0.14);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-panel-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1.5px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+    0 4px 8px rgba(0, 0, 0, 0.12),
+    0 14px 28px -8px rgba(0, 0, 0, 0.22),
+    0 28px 52px -14px rgba(0, 0, 0, 0.16);
+}
+
+/* Light-mode inset highlight is brighter */
+:root:not(.dark) .admin-sidebar {
   box-shadow:
     1px 0 0 0 rgba(255, 255, 255, 0.8) inset,
     4px 0 24px -8px rgba(22, 31, 26, 0.08);
 }
-
-.admin-panel {
-  background: #FFFFFF;
-  border: 1px solid #E7E5DE;
-  border-radius: 0.875rem;
+:root:not(.dark) .admin-panel {
   box-shadow:
     0 1.5px 0 0 rgba(255, 255, 255, 0.95) inset,
     0 -1px 0 0 rgba(22, 31, 26, 0.04) inset,
     0 2px 4px rgba(22, 31, 26, 0.04),
     0 8px 20px -6px rgba(22, 31, 26, 0.1),
     0 20px 40px -12px rgba(22, 31, 26, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
-.admin-panel-interactive:hover {
-  transform: translateY(-2px);
+:root:not(.dark) .admin-panel-interactive:hover {
   box-shadow:
     0 1.5px 0 0 rgba(255, 255, 255, 0.95) inset,
     0 -1px 0 0 rgba(22, 31, 26, 0.04) inset,
@@ -256,15 +335,36 @@
   transform: translateZ(0);
 }
 
-/* Dark mode glass variants */
+/* Dark mode glass variants — readable, not washed out */
 .dark .glass,
 .dark .glass-strong,
 .dark .glass-card {
-  background: rgba(30, 30, 35, 0.55);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(26, 33, 28, 0.72);
+  border-color: rgba(255, 255, 255, 0.1);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
-    0 8px 32px -8px rgba(0, 0, 0, 0.4);
+    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.25) inset,
+    0 8px 28px -8px rgba(0, 0, 0, 0.45),
+    0 20px 48px -16px rgba(0, 0, 0, 0.35);
+}
+
+.dark .glass-strong {
+  background: rgba(26, 33, 28, 0.88);
+}
+
+.dark .landing-soft-shadow,
+.dark .landing-card {
+  background: rgba(26, 33, 28, 0.75);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 12px 36px -10px rgba(0, 0, 0, 0.5);
+}
+
+.dark .store-product-card {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.4);
 }
 
 /* Landing page premium animations & utilities */

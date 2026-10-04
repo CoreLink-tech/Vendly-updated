@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Exo_2, Fraunces } from "next/font/google";
 import "./global.css";
 import { Providers } from "./providers";
+import { ColorSchemeSync } from "@/components/ColorSchemeSync";
 
 const exo2 = Exo_2({
 	subsets: ["latin"],
@@ -48,15 +49,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en" className={`${exo2.variable} ${fraunces.variable}`} style={{ colorScheme: 'light' }}>
+		<html lang="en" className={`${exo2.variable} ${fraunces.variable}`} suppressHydrationWarning>
 			<head>
-				<meta name="color-scheme" content="light" />
+				<meta name="color-scheme" content="light dark" />
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `(function(){try{var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=document.documentElement;if(d){r.classList.add('dark');r.style.colorScheme='dark';}else{r.style.colorScheme='light';}}catch(e){}})();`,
+					}}
+				/>
 				<link
 					rel="stylesheet"
 					href="/fontawesome/releases/v6.3.0/css/pro.min.css?token=2c15cc0cc7"
 				/>
 			</head>
 			<body>
+				<ColorSchemeSync />
 				<Providers>
 					{children}
 				</Providers>
