@@ -464,32 +464,38 @@
 
 /* Storefront product cards — glass over vendor theme */
 .store-product-card {
-  backdrop-filter: blur(18px) saturate(170%);
-  -webkit-backdrop-filter: blur(18px) saturate(170%);
   box-shadow:
-    0 1.5px 0 0 rgba(255, 255, 255, 0.35) inset,
-    0 -1px 0 0 rgba(0, 0, 0, 0.06) inset,
-    0 4px 8px rgba(0, 0, 0, 0.06),
-    0 12px 28px -8px rgba(0, 0, 0, 0.14),
-    0 24px 48px -16px rgba(0, 0, 0, 0.1);
+    0 1.5px 0 0 rgba(255, 255, 255, 0.14) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.08) inset,
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 10px 24px -8px rgba(0, 0, 0, 0.18),
+    0 20px 40px -12px rgba(0, 0, 0, 0.12);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .store-product-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow:
-    0 1.5px 0 0 rgba(255, 255, 255, 0.4) inset,
-    0 -1px 0 0 rgba(0, 0, 0, 0.06) inset,
-    0 8px 16px rgba(0, 0, 0, 0.08),
-    0 20px 40px -8px rgba(0, 0, 0, 0.18),
-    0 36px 64px -16px rgba(0, 0, 0, 0.12);
+    0 1.5px 0 0 rgba(255, 255, 255, 0.16) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.08) inset,
+    0 6px 12px rgba(0, 0, 0, 0.12),
+    0 18px 36px -8px rgba(0, 0, 0, 0.22),
+    0 32px 56px -14px rgba(0, 0, 0, 0.14);
 }
+/* Opaque elevated panels — depth without see-through bleed */
 .store-product-modal {
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  /* No backdrop blur / transparency — solid readable sheet */
   box-shadow:
-    0 2px 0 0 rgba(255, 255, 255, 0.25) inset,
-    0 16px 48px -12px rgba(0, 0, 0, 0.35),
-    0 40px 80px -20px rgba(0, 0, 0, 0.25);
+    0 1.5px 0 0 rgba(255, 255, 255, 0.12) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.15) inset,
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    0 24px 48px -12px rgba(0, 0, 0, 0.35),
+    0 48px 80px -20px rgba(0, 0, 0, 0.3);
+}
+
+.store-header {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.2);
 }
 
 /* Storefront product image loading shimmer */

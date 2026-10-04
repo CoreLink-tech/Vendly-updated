@@ -54,7 +54,7 @@ export default function LogisticsShell({ children }: { children: React.ReactNode
   return (
     <div className="min-h-screen flex" style={{ color: theme.ink }}>
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 glass-strong ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 md:relative md:translate-x-0 admin-sidebar ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ width: 260, borderColor: 'var(--vendly-line)' }}
       >
         <div
@@ -126,7 +126,7 @@ export default function LogisticsShell({ children }: { children: React.ReactNode
 
       <div className="flex-1 flex flex-col min-w-0">
         <header
-          className="glass flex items-center justify-between px-4 py-3 border-b md:hidden"
+          className="admin-sidebar flex items-center justify-between px-4 py-3 border-b md:hidden"
           style={{ borderColor: 'var(--vendly-line)' }}
         >
           <button

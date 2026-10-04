@@ -435,7 +435,7 @@ export default function StoreClient({ slug }: { slug: string }) {
         </div>
       )}
       {/* Store header */}
-      <div className="border-b" style={{ borderColor: t.border, backgroundColor: t.surface }}>
+      <div className="store-header border-b sticky top-0 z-30" style={{ borderColor: t.border, backgroundColor: t.surface }}>
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-5">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3 min-w-0">
@@ -579,8 +579,8 @@ export default function StoreClient({ slug }: { slug: string }) {
                     key={p.id}
                     className="store-product-card rounded-xl border overflow-hidden cursor-pointer"
                     style={{
-                      backgroundColor: hexWithAlpha(t.surface, t.dark ? 'A8' : '99'),
-                      borderColor: t.dark ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.55)',
+                      backgroundColor: t.surface,
+                      borderColor: t.border,
                     }}
                     onClick={() => { setSelectedProduct(p); setSelectedQty(1); setSelectedImageIndex(0); if (vendor) trackView(p.id, vendor.id); }}
                   >
@@ -650,10 +650,10 @@ export default function StoreClient({ slug }: { slug: string }) {
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-8 overflow-y-auto" style={{ backgroundColor: 'rgba(0,0,0,0.75)' }}>
           <div
-            className="store-product-modal w-full max-w-lg rounded-xl border overflow-hidden"
+            className="store-product-modal w-full max-w-lg rounded-2xl border overflow-hidden"
             style={{
-              backgroundColor: hexWithAlpha(t.surfaceHigh, t.dark ? 'CC' : 'B8'),
-              borderColor: t.dark ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.5)',
+              backgroundColor: t.surfaceHigh,
+              borderColor: t.border,
             }}
           >
             <div className="relative aspect-video overflow-hidden" style={{ backgroundColor: t.surface }}>

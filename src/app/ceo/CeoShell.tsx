@@ -60,7 +60,7 @@ export default function CeoShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex" style={{ fontFamily: 'Inter, sans-serif' }}>
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r glass-strong transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r admin-sidebar transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ width: 240, borderColor: 'var(--vendly-line)' }}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: theme.line }}>
