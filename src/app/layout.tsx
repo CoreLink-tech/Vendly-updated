@@ -4,6 +4,7 @@ import { Exo_2, Fraunces } from "next/font/google";
 import "./global.css";
 import { Providers } from "./providers";
 import { ColorSchemeSync } from "@/components/ColorSchemeSync";
+import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 
 const exo2 = Exo_2({
 	subsets: ["latin"],
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			</head>
 			<body>
 				<ColorSchemeSync />
+				<AnalyticsTracker />
 				<Providers>
 					{children}
 				</Providers>
