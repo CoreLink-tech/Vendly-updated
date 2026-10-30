@@ -1,6 +1,12 @@
 import { betterAuth } from 'better-auth';
-import { createAuthMiddleware } from 'better-auth/api';
+import { APIError, createAuthMiddleware } from 'better-auth/api';
 import { bearer } from 'better-auth/plugins';
+import {
+  clientIpFromRequest,
+  isIpBlocked,
+  newEventId,
+  reportWatcherEvent,
+} from '@/lib/watcher';
 import { Pool } from 'pg';
 
 // Use SESSION pooler (port 5432) - supports prepared statements unlike transaction pooler
@@ -30,12 +36,53 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
+      // Block known-bad IPs on auth endpoints (fail-open if Watcher is down)
+      if (
+        ctx.path === '/sign-in/email' ||
+        ctx.path === '/sign-up/email' ||
+        ctx.path.startsWith('/sign-in')
+      ) {
+        const ip = clientIpFromRequest(ctx.request ?? null, ctx.headers ?? null);
+        if (await isIpBlocked(ip)) {
+          throw new APIError('FORBIDDEN', { message: 'Access denied' });
+        }
+      }
+
+      // Existing: derive name on email sign-up when missing
       if (ctx.path !== '/sign-up/email') return;
       const body = ctx.body as { email?: unknown; name?: unknown } | undefined;
       if (!body || typeof body.email !== 'string') return;
       if (typeof body.name === 'string' && body.name.trim().length > 0) return;
       const derived = body.email.split('@')[0];
       body.name = derived && derived.length > 0 ? derived : 'User';
+    }),
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== '/sign-in/email') return;
+
+      const body = ctx.body as { email?: string } | undefined;
+      const user =
+        (typeof body?.email === 'string' && body.email) ||
+        ctx.context.newSession?.user?.email ||
+        'unknown';
+      const ip = clientIpFromRequest(ctx.request ?? null, ctx.headers ?? null);
+      const event_id = newEventId();
+
+      if (ctx.context.newSession) {
+        reportWatcherEvent({
+          event_type: 'login_success',
+          ip_address: ip,
+          event_id,
+          metadata: { user },
+        });
+      } else {
+        // No session after sign-in attempt → treat as failed login
+        reportWatcherEvent({
+          event_type: 'login_failed',
+          ip_address: ip,
+          event_id,
+          metadata: { user },
+        });
+      }
     }),
   },
   advanced: {

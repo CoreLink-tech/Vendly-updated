@@ -1,8 +1,13 @@
 import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
+import { rejectIfBlocked } from '@/lib/watcher';
 
 export async function POST(request: Request) {
+  {
+    const blocked = await rejectIfBlocked(request);
+    if (blocked) return blocked;
+  }
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 

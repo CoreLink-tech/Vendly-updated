@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
 import { sanitizeSearchInput } from '@/lib/sanitize';
+import { rejectIfBlocked } from '@/lib/watcher';
 
 async function requireAdmin(userId: string) {
   const { data } = await supabase.from('user').select('role').eq('id', userId).single();
@@ -9,6 +10,10 @@ async function requireAdmin(userId: string) {
 }
 
 export async function GET(request: Request) {
+  {
+    const blocked = await rejectIfBlocked(request);
+    if (blocked) return blocked;
+  }
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   try { await requireAdmin(session.user.id); } catch { return Response.json({ error: 'Forbidden' }, { status: 403 }); }
@@ -24,6 +29,10 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  {
+    const blocked = await rejectIfBlocked(request);
+    if (blocked) return blocked;
+  }
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   try { await requireAdmin(session.user.id); } catch { return Response.json({ error: 'Forbidden' }, { status: 403 }); }
